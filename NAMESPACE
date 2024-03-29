@@ -1,0 +1,90 @@
+# functions
+export( data_cor,
+        data_dim,
+        data_names,
+        data_which_na,
+        data_sorter_names,
+        data_str,
+        y_distinct,
+        data_distinct,
+        data_cha2fac,
+        data_few2fac,
+        data_int2num,
+        data_xyplot,
+        data_plot,
+        data_bucket,
+        data_zscores,
+        y_zscores,
+        data_outliers,
+        y_outliers,
+        data_part,
+        data_rm,
+        data_exclude_class,
+        data_continuous,
+        data_rm1val,
+        data_pcor
+)
+################################################################################
+# ACE object
+#S3method(plot, ACE)
+#S3method(print, ACE)
+################################################################################
+# fit_PB object
+#S3method(print, Psplines)
+#S3method(coef, Psplines)
+#S3method(deviance, Psplines)
+#S3method(fitted, Psplines)
+#S3method(predict, Psplines)
+#S3method(residuals, Psplines)
+################################################################################
+importFrom("utils", "setTxtProgressBar", "txtProgressBar", "str")
+importFrom("utils", "head")
+importFrom("utils", "tail")
+################################################################################
+importFrom("grDevices", "hcl.colors", "colors")
+importFrom("graphics", "lines", "par", "points")
+importFrom("graphics", "abline")
+importFrom("graphics", "segments")
+################################################################################
+importFrom("mgcv", "gam")
+################################################################################
+import(gamlss)
+import(gamlss.dist)
+import(gamlss.foreach)
+importFrom("gamlss.ggplots", "moment_bucket", "y_dots", "y_hist")
+################################################################################
+import(ggridges)
+import(ggplot2)
+################################################################################
+importFrom("grid", "grid.layout", "grid.newpage", "pushViewport", "viewport")
+importFrom("stats", "model.matrix")
+################################################################################
+importFrom("gamlss.inf", "gen.Zadj", "gen.Inf0to1")
+################################################################################
+importFrom("grDevices", "devAskNewPage")
+importFrom("grDevices", "gray")
+################################################################################
+importFrom("methods", "is")
+importFrom("ellipse", "ellipse")
+################################################################################
+importFrom("stats", "quantile", "prcomp", "acf", "lag", "pacf",  "formula")
+importFrom("stats", "residuals", "model.frame", "naresid", "resid")
+importFrom("stats", "hatvalues", "vcov", "AIC")
+importFrom("stats", "terms", "hat", "pchisq")
+importFrom("stats", "loess", "sd", "uniroot")
+importFrom("stats", "as.formula", "deviance")
+importFrom("stats", "predict", "splinefun", "approxfun", "cor", "cov", "na.omit", "qchisq")
+importFrom("stats", "pnorm", "qnorm", "dnorm", "ppoints", "pbeta", "qbeta",
+            "IQR", "median")
+importFrom("stats", "fitted", "lm")
+importFrom("stats", "runif")
+importFrom("stats", "density")
+importFrom("stats", "get_all_vars")
+importFrom("stats", "optimise")
+################################################################################
+importFrom("foreach", "%dopar%", "foreach", "%do%")
+################################################################################
+importFrom("graphics", "axis", "contour", "image", "rect")
+importFrom("stats", "cmdscale", "ecdf", "family", "lm.wfit")
+importFrom("yaImpute", "ann")
+ importFrom("stats", "var")
