@@ -157,11 +157,12 @@ data_response <- function(data,
                          ifelse(nobs<1000000,.2, # 20% of data
                                 ifelse(nobs>1000000,1))))  # 10% of data
     ind <- sample(nobs, per*nobs)
-    data <- data[ind,]
+    cat("only", length(ind),"out of", dim(data[1]), "are selected in the plot", "\n")
+    data <- data.frame(data[ind,])
   }
   Y <-  deparse(substitute(response))
   if (any(!(Y %in%names(data)))) stop("the response should be in data")
-  actY <- data[,Y]
+  actY <-data[,Y]
   cY <- class(actY)
   cat("the class of the response is", cY, "is this correct?", "\n")
   if (cY=="character")

@@ -30,9 +30,9 @@
 ################################################################################
 data_scale <- function(data, response, 
         position.response = NULL,
-                    scale.to = c("z-scores", "0to1"),  
+                 scale.to = c("z-scores", "0to1"),  
                    family = "NO", # if "z-scores" 
-          scale.response = FALSE
+           scale.response = FALSE
                   )
 {
 # all the variable in data are used to create the data.frame
