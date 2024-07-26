@@ -21,16 +21,20 @@ if (is(data, "array"))
        PP <- list()
 for (i in 1:length(Names))
   {
-  PP[[i]] <- length(table(data[,Names[i]]))
-  }
+  PP[[i]] <-  length(table(data[,Names[i]]))
+  if( class(data[,Names[i]])[1]=="factor")  
+  {
+  PP[[i]] <- length(table(data[,Names[i]])[table(data[,Names[i]])!=0])
+  } 
+}
        pp <- unlist(PP)
 names(pp) <- Names
-if (any(pp==1))
+if (any(pp==1)) 
   {
    w1val <-  which(pp==1)
  removed <- names(data)[w1val]
   data[,w1val] <- NULL
-  cat("the var", removed, "has been removed \n")
+  cat("Removed the variable(s)", removed, "\n")
   }
   invisible(data)
 }
