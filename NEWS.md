@@ -1,7 +1,7 @@
 # Introduction
 
 The package `gamlss.prepdata` is a `R` package prepering data for used with the Generalised Additive Models for Location, Scale and Shape (GAMLSS). 
-It supplements the packages `gamlss` (an implementation of  Rigby and Stasinopoulos (2005),  Appl. Statist., 54,  pp. 507-554) and `gamlss.ggplots`.
+It supplements the packages `gamlss`, `gamlss2` (implementations of  Rigby and Stasinopoulos (2005),  Appl. Statist., 54,  pp. 507-554) and `gamlss.ggplots`.
 
 There are three book available for more information about GAMLSS; 
 
@@ -31,4 +31,6 @@ The GitHub repository is now hosted under the new `gamlss-dev` organization:
 * `data_pcor()` is added to the package 25--3-24
 
 * replacement  of the use of `class()==` with `inherits()` is done 
+
+* a bug in the function `data_re1val()` when the variable was a factor has amended.
 
