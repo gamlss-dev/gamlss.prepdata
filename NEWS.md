@@ -1,9 +1,8 @@
 # Introduction
 
-The package `gamlss.prepdata` is a `R` package prepering data for used with the Generalised Additive Models for Location, Scale and Shape (GAMLSS). 
-It supplements the packages `gamlss`, `gamlss2` (implementations of  Rigby and Stasinopoulos (2005),  Appl. Statist., 54,  pp. 507-554) and `gamlss.ggplots`.
+The package `gamlss.prepdata` is a `R` package preparing data to be used to fit the Generalised Additive Models for Location, Scale and Shape (GAMLSS) of Rigby and Stasinopoulos (2005),  Appl. Statist., 54,  pp. 507-554). It supplements the packages `gamlss`,  `gamlss2` and `gamlss.ggplots`.
 
-There are three book available for more information about GAMLSS; 
+There are three book available for more information about in general GAMLSS; 
 
  1) "Flexible Regression and Smoothing: Using GAMLSS in R" 
 explaining how the models can be used in R.
