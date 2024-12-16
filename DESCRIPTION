@@ -1,20 +1,23 @@
 Package: gamlss.prepdata
 Type: Package
-Title:  Prepering data for Generalized Additive Model for Location Scale and Shape
+Title:  Prepering data for fitting a Generalized Additive Model for Location Scale and Shape
 Version: 0.1.2
 Date: 2024-03-25
 Authors@R: c(person("Mikis", "Stasinopoulos", role = c("aut", "cre", "cph"), 
              email = "d.stasinopoulos@gre.ac.uk", comment = c(ORCID = "0000-0003-2407-5704")),
            person("Robert", "Rigby", role = "aut", email = "r.rigby@gre.ac.uk", comment = c(ORCID = "0000-0003-3853-1707")),
-           person("Fernanda", "De Bastiani", role = "aut", email = "fernandadebastiani@gmail.com", comment = c(ORCID = "0000-0001-8532-639X")))
-Description: It prepering data for  fiting a gamlss, Stasinopoulos and Rigby (2007) <doi:10.18637/jss.v023.i0.>. 
+           person("Fernanda", "De Bastiani", role = "aut", email = "fernandadebastiani@gmail.com", comment = c(ORCID = "0000-0001-8532-639X")),
+           person("Julian", "Merder", role = "ctb")
+           )
+Description: Functions for prepering data to fit a Generalized Additive Models for Location Scale and Shape from the 'gamlss' or `gamlss2` package, Stasinopoulos and Rigby (2007) <doi:10.18637/jss.v023.i07>, using for  graphical methods 'ggplot2'.
+License: GPL-2 | GPL-3
+URL: https://www.gamlss.com/
 BugReports: https://github.com/gamlss-dev/gamlss.data/issues
 Depends:  R (>= 3.5.0), gamlss.dist, gamlss (>= 4.3.3),  gamlss.foreach
 Imports: methods,  ggridges, ellipse, gamlss.inf, foreach, mgcv, ggplot2, yaImpute, gamlss.ggplots
 Suggests: glmnet, reshape2, igraph, networkD3, grid, gridExtra
 LazyLoad: yes
-License: GPL-2 | GPL-3
-URL: https://www.gamlss.com/
+
 
 
 
