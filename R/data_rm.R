@@ -5,7 +5,7 @@
 ################################################################################
 ################################################################################
 ################################################################################
-#remove variables with one observation
+#remove factors with only one level 
 data_rm1val <- function(data)
 {
   # what is the data
@@ -42,7 +42,7 @@ if (any(pp==1))
 ################################################################################
 ################################################################################
 ################################################################################
-# remove specified variables
+# removes specified variables
 data_rm <- function(data, vars)
 {
 if (is(data, "list"))
@@ -66,7 +66,7 @@ if (is.character(vars))
 ################################################################################
 ################################################################################
 ################################################################################
-# exclude columns beloning to a specified class
+# exclude columns  belonging to a specified class
 data_exclude_class <- function(data, class="factor")
 {
 if (is(data, "list"))
@@ -86,7 +86,7 @@ invisible(da)
 ################################################################################
 ################################################################################
 # function
-# get only continuous variables??
+# get only the continuous variables in the data set
 data_continuous <- function(data, response)
 {
 if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
