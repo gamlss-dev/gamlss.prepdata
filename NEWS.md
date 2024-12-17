@@ -27,7 +27,7 @@ The GitHub repository is now hosted under the new `gamlss-dev` organization:
 
 # Version 0.1-2
 
-* `data_pcor()` is added to the package 25--3-24
+* the partial correlation functiom is `data_pcor()` is added to the package 25--3-24
 
 * replacement  of the use of `class()==` with `inherits()` is done 
 
