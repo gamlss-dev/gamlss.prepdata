@@ -156,7 +156,9 @@ data_void <- function(data,
                    lab_col = "black", 
                   lab_size = 3,
                circle.size = 20,
-                        ...) # c(1,15) maybe will do
+             seed = 123, 
+             percentage
+             ) # c(1,15) maybe will do
 {
 ################################################################################
 ################################################################################
@@ -187,6 +189,10 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")    
      dimD <- dim(data)
+     data <- if (missing(percentage))
+     {
+       data_cut(data,seed=seed)
+     } else data_cut(data,percentage=percentage)     
 if (any(is.na(data)))
   {
        l1 <- dim(data)[1]
