@@ -33,7 +33,10 @@ data_pcor <- function(data,
                         lab = TRUE,
                     lab_col = "black",
                    lab_size = 3,
-                circle.size = 20  )
+                circle.size = 20,
+                       seed = 123,
+                       percentage
+              )
 {
 ################################################################################
 ################################################################################
@@ -72,6 +75,10 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")
             dimD <- dim(data)
+            data <- if (missing(percentage))
+            {
+              data_cut(data,seed=seed)
+            } else data_cut(data,percentage=percentage)            
 if (any(is.na(data)))
   {
     l1 <- dim(data)[1]
@@ -83,8 +90,8 @@ if (any(is.na(data)))
 if (is.null(dimD)) stop("only one variable in the data")
 if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
                                 "to detect non-linear correlations", "\n"))
-        daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
-              sapply(data,is.character)==TRUE, FALSE, TRUE))
+        daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|sapply(data,is.character)==TRUE,
+                                            FALSE, TRUE))
         Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")

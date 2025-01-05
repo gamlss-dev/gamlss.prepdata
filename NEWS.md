@@ -28,6 +28,8 @@ The GitHub repository is now hosted under the new `gamlss-dev` organization:
 
 * function `data_cut()` is added and use in `data_plot()` and `data_xyplot()`. 
 
+* the functions `void()` and `data_void()` are in but not documented.
+
 
 # Version 0.1-2
 
