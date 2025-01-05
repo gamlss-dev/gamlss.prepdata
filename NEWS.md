@@ -24,6 +24,10 @@ More more information about books and papers related to GAMLSS can be found in
 The GitHub repository is now hosted under the new `gamlss-dev` organization:
   <https://github.com/gamlss-dev/gamlss/>.
 
+# Version 0.1-3
+
+* function `data_cut()` is added and use in `data_plot()` and `data_xyplot()`. 
+
 
 # Version 0.1-2
 

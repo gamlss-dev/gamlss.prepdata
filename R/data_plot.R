@@ -6,7 +6,7 @@ data_plot <- function(data,
                   dens.fill = "#FF6666",
                        nrow = NULL,
                        ncol = NULL,
-                 percentage = TRUE, # for big data take % of data
+                 percentage, # for big data take % of data
                  seed = 123,
                   plot.hist = TRUE,
              plots.per.page = 9,
@@ -20,20 +20,10 @@ if (is(data, "table"))
 if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")
-if (percentage)
+data <- if (missing(percentage))
 {
-  nobs <- dim(data)[1]
-  # check the size of the data
-  per <- ifelse(nobs<50000,1,         # all data
-                ifelse(nobs<100000,.5,# 50% of data
-                       ifelse(nobs<1000000,.2, # 20% of data
-                              ifelse(nobs>1000000,1))))  # 10% of data
-  set.seed(seed)
-  ind <- sample(nobs, floor(per*nobs))
-  data <- data[ind,]
-  cat("only", per*100,"% of data are ploted,", "\n")
-  cat("that is,", floor(per*nobs),"observations.", "\n")
-}
+   data_cut(data,seed=seed)
+} else data_cut(data,percentage=percentage)
 
 # checking data
   class_Vars <- sapply(data,class)
@@ -202,3 +192,27 @@ data_response <- function(data,
 ################################################################################
 ################################################################################
 ################################################################################
+data_cut <- function(data,percentage, seed=123)
+{
+dm <- dim(data)
+nobs <- dm[1]
+if (missing(percentage)) 
+{
+  percentage <- ifelse(nobs<50000,1,         # all data
+                ifelse(nobs<100000,.5,# 50% of data
+                       ifelse(nobs<1000000,.2, # 20% of data
+                              ifelse(nobs>1000000,1))))  # 10% of data
+  
+}
+set.seed(seed)
+ind <- sample(nobs, floor(percentage*nobs))
+data <- data[ind,]
+cat("",  percentage*100,"% of data are saved,", "\n")
+cat("that is,", floor( percentage*nobs),"observations.", "\n")
+invisible(data)
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+

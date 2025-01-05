@@ -20,12 +20,12 @@ The function \code{y_zscores()}  calculates and plots the z-scores (obtained aft
 }
 \usage{
 data_xyplot(data, response, point.size = 0.5, nrow = NULL,
-           ncol = NULL, percentage = TRUE, seed = 123,
+           ncol = NULL, percentage, seed = 123,
            max.levels = 10, plots.per.page = 9, one.by.one = FALSE, title, ...)
 
 data_plot(data, value = 3, hist.col = "black", hist.fill = "white",
            dens.fill = "#FF6666", nrow = NULL, ncol = NULL,
-           percentage = TRUE, seed = 123,
+           percentage, seed = 123,
            plot.hist = TRUE, plots.per.page = 9,
            one.by.one = FALSE,
            title, ...)

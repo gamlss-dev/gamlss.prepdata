@@ -7,7 +7,7 @@ data_xyplot <- function(data, response,
                   point.size = 0.5,
                         nrow = NULL,
                         ncol = NULL,
-                  percentage = TRUE, # for big data take % of data
+                  percentage, # for big data take % of data
                         seed = 123,
                   max.levels = 10,
               plots.per.page = 9,
@@ -34,20 +34,10 @@ if (is(data, "array"))
 if (any(!(Y %in%names(data)))) stop("the response should be in data")
      dv <- y_distinct(data[,Y])
 if (dv < max.levels) stop("the response do not seems to have many distinct values")
-if (percentage)
-{
-# check the size of the data
-  nobs <- dim(data)[1]
-  per <- ifelse(nobs<50000,1,         # all data
-                ifelse(nobs<100000,.5,# 50% of data
-                       ifelse(nobs<1000000,.2, # 20% of data
-                              ifelse(nobs>1000000,1))))  # 10% of data
-  set.seed(seed)
-  ind <- sample(nobs, floor(per*nobs))
-  data <- data[ind,]
-  cat(per*100,"% of data are ploted,", "\n")
-  cat("that is,", floor(per*nobs),"observations.", "\n")
-}
+     data <- if (missing(percentage))
+     {
+       data_cut(data,seed=seed)
+     } else data_cut(data,percentage=percentage)
   class_Vars <- sapply(data,class)
   if (any(class_Vars=="character"))
   {
