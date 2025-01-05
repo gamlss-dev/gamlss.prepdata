@@ -180,6 +180,7 @@ data_void <- function(data,
 ################################################################################    
 # data.frame missing 
      i <- j <- NULL
+nameData <- deparse(substitute(data))
 if (missing(data) || NROW(data) <= 1) 
     stop("nothing to do for this data frame")
 # data obs na's
@@ -246,7 +247,7 @@ if (plot==FALSE) return(CC)
     lowerLim <- 25-floor((range(corr$value)[2]-range(corr$value)[1])*20)
   colnames(corr) <- c("var_1", "var_2", "value")
   txt.title <- if (missing(title))
-    paste("Empty spaces from data:", deparse(substitute(data)))
+    paste("Empty spaces from data:", nameData)
   else title
   corr$abs_corr <- abs(corr$value) * 10
   p <- ggplot2::ggplot(data = corr,

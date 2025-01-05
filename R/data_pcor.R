@@ -66,6 +66,7 @@ pcor  <- function (data)
 ################################################################################
 ################################################################################
 # if data.frame missing
+ nameData <- deparse(substitute(data))
 if (missing(data) || NROW(data) <= 1)
     stop("nothing to do for this data frame")
 # data obs na's
@@ -113,7 +114,7 @@ if (diffDim > 0)
 if ( diag.off) diag(CC) <- NA
 if (lower.tri.off)  CC[lower.tri(CC)]<-NA
        txt.title <- if (missing(title))
-          paste("Partial correlations from data",deparse(substitute(data)))
+          paste("Partial correlations from data", nameData)
               else title
 if (plot==FALSE) return(CC)
           method <- match.arg(method)

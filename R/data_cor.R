@@ -53,6 +53,7 @@ data_cor <- function(data,
 ####################################################################
 ####################################################################
 # data.frame missing
+  nameData <- deparse(substitute(data))
 if (missing(data) || NROW(data) <= 1)
     stop("nothing to do for this data frame")
 # data obs na's
@@ -101,7 +102,7 @@ if (diffDim > 0)
 if ( diag.off) diag(CC) <- NA
 if (lower.tri.off)  CC[lower.tri(CC)]<-NA
        txt.title <- if (missing(title))
-          paste("Correlations from data",deparse(substitute(data)))
+          paste("Correlations from data", nameData)
               else title
 if (plot==FALSE) return(CC)
           method <- match.arg(method)
@@ -109,7 +110,7 @@ if (plot==FALSE) return(CC)
             var_1 <-  var_2 <-  value <- NULL
   colnames(corr) <- c("var_1", "var_2", "value")
        txt.title <- if (missing(title))
-                paste("Correlations from data",deparse(substitute(data)))
+                paste("Correlations from data",nameData)
   else title
    corr$abs_corr <- abs(corr$value) * 10
                p <- ggplot2::ggplot(data = corr,
