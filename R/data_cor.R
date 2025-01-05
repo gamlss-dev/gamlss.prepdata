@@ -33,7 +33,9 @@ data_cor <- function(data,
                         lab = TRUE,
                     lab_col = "black",
                    lab_size = 3,
-                circle.size = 20  )
+                circle.size = 20,
+                       seed = 123,
+              percentage)
 {
 ################################################################################
 ################################################################################
@@ -59,14 +61,19 @@ if (is(data, "table")) stop("the data is a table the function needs a data.frame
 if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")
-            dimD <- dim(data)
+      dimD <- dim(data)
+      data <- if (missing(percentage))
+            {
+              data_cut(data,seed=seed)
+            } else data_cut(data,percentage=percentage)
 if (any(is.na(data)))
   {
     l1 <- dim(data)[1]
   data <- na.omit(data)
     l2 <- dim(data)[1]
   warning(cat(l1-l2, "observations were omitted from the data", "\n"))
-  }
+}
+            
 #  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data")
 if (dimD[1] < 20)   stop(cat("the size of the data set is too small", "\n",

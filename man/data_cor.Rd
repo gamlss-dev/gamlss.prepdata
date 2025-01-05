@@ -17,7 +17,8 @@ data_cor(data,  digits = 3, plot = TRUE, diag.off = TRUE,
         outline.color = "gray", colors = c("blue", "white", "red"),
         legend.title = "Corr", title, ggtheme = theme_minimal(),
         tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE,
-        lab_col = "black", lab_size = 3, circle.size = 20)
+        lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, 
+        percentage)
 
 data_pcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
         lower.tri.off = FALSE, method = c("square", "circle"),
@@ -47,6 +48,8 @@ data_pcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
   \item{lab_col}{the colour of the lettering of the correlation coefficients}
   \item{lab_size}{the size of the lettering of the correlation coefficients, increase (or decrease) if the defaul 3 is not appropriate}
   \item{circle.size}{the size of the circles, increase (or decrease) if the defaul 20 is not appropriate}
+   \item{percentage}{this is for big data sets. if more tha a milion ony 10\% is plotted, if from 100.00 to a milion, 20\%, if 50.000 to 100.000, 50\% otherwise 100\% of the data.}
+  \item{seed}{Setting a seed value for selection of the percantage of data (for big data sets)}
 }
 
 \value{
