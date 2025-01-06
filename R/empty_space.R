@@ -80,7 +80,7 @@
 ################################################################################   
 # data 
 # size<-c(100,200,300,400,500,600,700,800,900,1000,2000,3000,4000,5000,10000,20000,30000,40000,50000,100000, 500000,1000000)
-# log(length)~log(size)<-c(6,8,10,12,13,15,16,17,18,19,26,32,37,41,58,82,100,118,129,190,420,580)
+# length<-c(6,8,10,12,13,15,16,17,18,19,26,32,37,41,58,82,100,118,129,190,420,580)
 # plot(log(length)~log(size))
 # m1=lm(log(length)~log(size))
 # coef(m1)
@@ -143,7 +143,6 @@ data_void <- function(data,
                   diag.off = TRUE,
              lower.tri.off = FALSE,  
                     method = c("square", "circle"),
-                fit.method = c("P-splines", "loess"),
              outline.color = "gray",
                     colors = c("blue", "white", "red"),
               legend.title = "Void",
@@ -223,7 +222,6 @@ if (diffDim > 0)
   #get CC using foreach
       CC <- foreach(i=1:lcnames, .combine='rbind') %do% 
     {
-      browser()
       xi <- if(is.null(dim(daTa[,i]))) daTa[,i] else daTa[,i][,1]
       foreach(j=1:lcnames, .combine='c') %do% 
         {
@@ -243,7 +241,6 @@ if (diag.off) diag(CC) <- NA
 if  (lower.tri.off) CC[lower.tri(CC)] <- NA
 if (plot==FALSE) return(CC)
       method <- match.arg(method)
-  fit.method <- match.arg(fit.method)
         corr <- meltit(CC)
     lowerLim <- 25-floor((range(corr$value)[2]-range(corr$value)[1])*20)
   colnames(corr) <- c("var_1", "var_2", "value")

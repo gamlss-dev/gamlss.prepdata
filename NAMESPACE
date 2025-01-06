@@ -24,7 +24,9 @@ export( data_cor,
         data_rm1val,
         data_pcor,
         data_response,
-        data_cut
+        data_cut,
+        void,
+        data_void
 )
 ################################################################################
 # ACE object
