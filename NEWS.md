@@ -13,7 +13,7 @@ explaining the explicit and generated distributions available in the
 package gamlss.dist  
 
 3)  
-"Generized Additive Models for Location Scale and Shape: A distributional 
+"Generalized Additive Models for Location Scale and Shape: A distributional 
 regression  approach with applications" 
 explaining the different method for fitting GAMLSS i.e. penalised Likelihood, Bayesian and Boosting.  
  
@@ -26,9 +26,11 @@ The GitHub repository is now hosted under the new `gamlss-dev` organization:
 
 # Version 0.1-3
 
-* function `data_cut()` is added and use in `data_plot()` and `data_xyplot()`. 
+* function `data_cut()` is added. It is  used in plotting function like `data_plot()` and `data_xyplot()` to make sure that the plots are working in reasonable time for very large data sets. 
 
-* the functions `void()` and `data_void()` are in but not documented.
+* the functions `void()` and `data_void()` are in.
+
+* the function `data_part_list()` is added.
 
 
 # Version 0.1-2

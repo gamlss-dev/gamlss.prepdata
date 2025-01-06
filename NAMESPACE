@@ -26,7 +26,8 @@ export( data_cor,
         data_response,
         data_cut,
         void,
-        data_void
+        data_void,
+        data_part_list
 )
 ################################################################################
 # ACE object

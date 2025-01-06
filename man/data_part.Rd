@@ -1,18 +1,35 @@
 \name{data_part}
 \alias{data_part}
 \alias{data_cut}
+\alias{data_part_list}
 
 
 \title{
 A function to partition a data frame
 }
 \description{
-The function \code{data_part()} creates a index which partition randomly the observations of a \code{data.frame} into subsets.
-It creates randomly a factor  of length n called \code{partition}, which subdivide the data i) into either two sets, training, \code{train}, and test, \code{test}, or ii)  into three sets  training, \code{train}, validation, \code{val} and test, \code{test} or iii) into a k-fold cross validation sets.
+The function \code{data_part()} takes a data set and creates a new  identical data set with an extra factor called \code{partition} which  can be used to allocate data in different data sets. 
+
+i) if \code{partition=2L} the factor has two levels \code{train}, and \code{test}.
+
+ii)  if  \code{partition=3L} the factror  has three levels  \code{train}, for training data, \code{val} for validation data  and \code{test} for test data.
+
+
+ iii) if  \code{partition > 4L} say \code{K} then the levela are "1", "2"..."K". The factor then cen be used for  \code{K} cross validation sets.
+ 
+the function \code{data_part_list()} in does similar things like the function \code{data_part()} but instead of adding a factor to the data creates a \code{list} with ellements the training, test and validation data sets. Note that this function do not allow k-fold cross-validation or bootsrapping indexing.   
+ 
+ 
+The function \code{data_cut()} takes a \code{data.frame} and selects randomly specified \% of the data. For \code{data.frames} with more than 50.000 observations is automatically select part of the data. The function  
+\code{data_cut()} is used a lot in the plotting routines  to make sure that plots ate not take for ever.
+
+ 
 
 }
 \usage{
 data_part(data, partition = 2L, probs, setseed = 123, ...)
+
+data_part_list(data, partition = 2, probs, setseed = 123, ...)
 
 data_cut(data, percentage, seed = 123)
 
@@ -53,13 +70,20 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 \code{\link{data_str}}
 }
 \examples{
+
 da <- data_part(rent)
 head(da)
 mosaicplot(table(da$partition))
-da.train <- subset(da, da$partition=="train")
-da.test <- subset(da, da$partition=="test")
+
+da.train <- subset(da, partition=="train")
+da.test <- subset(da, partition=="test")
 dim(da.train)
 dim(da.test)
+
+
+allda <-  data_part_list(rent) 
+dim(allda[[1]]) # training data
+dim(allda[[2]]) # test data
 }
 
 \keyword{regression}

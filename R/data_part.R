@@ -2,11 +2,15 @@
 ################################################################################
 ################################################################################
 ################################################################################
-# PARTITION 
+# PARTITION OF DATA
 ################################################################################
 ################################################################################
-# function 1 saving data with a partition factor
+# function 1 saving the data with a partition factor
+# the data_part creates data set with an extra factor called partition
 ################################################################################
+################################################################################
+################################################################################
+################################################################################ 
 data_part <- function(data, partition=2L, probs, setseed=123, ...)
 {
   set.seed(setseed)
@@ -17,7 +21,7 @@ if (partition==2L)
   cat("data partition into two sets", "\n")
    probs <-   if (missing(probs)) c(0.6,0.4) 
              else probs
-if (sum(probs)!=1) stop("probs should add up to 1")   
+if (abs(sum(probs)-1)>1.0e-10) stop("probs should add up to 1")   
 if (length(probs)>2||length(probs)<=0) stop("the length of probs should be 2")
     rand <- sample(2, dim(data)[1], replace=TRUE, prob=probs)
     rand <- factor(rand, labels=c("train", "test"))
@@ -29,7 +33,7 @@ if (partition==3L)
   cat("data partition into three sets", "\n")
     probs <- if  (missing(probs)) c(0.6,0.2,0.2)
              else probs
-if (sum(probs)!=1) stop("probs should add up to 1")    
+if (abs(sum(probs)-1)>1.0e-10) stop("probs should add up to 1")    
 if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  3")
     rand <- sample(3, dim(data)[1], replace=TRUE, prob=probs)
     rand <- factor(rand, labels=c("train", "valid", "test"))
@@ -39,7 +43,7 @@ if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  3")
 if (partition>=4L)
   cat( paste0(partition,"-fold data partition"), "\n")
     probs <- rep(1/partition, partition) 
-    if (sum(probs)!=1) stop("probs should add up to 1")    
+    if (abs(sum(probs)-1)>1.0e-10) stop("probs should add up to 1")    
     rand <- sample(partition, dim(data)[1], replace=TRUE, prob=probs)
     rand <- factor(rand)
     out <- data.frame(data, partition=rand)
@@ -50,15 +54,74 @@ if (partition>=4L)
 ################################################################################
 ################################################################################
 ################################################################################
-data_indexing <- function(data, kfolds=2, bootstrap=FALSE)
+# This function greates a list with different partions of the same data 
+# no more tahn 3 partitions
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_part_list <- function(data, partition=2, probs, setseed=123, ...)
+{
+  set.seed(setseed)
+  if (partition<=1L) stop("data partition should be greater that one","\n")
+  if (partition>=20L) stop("data partition should be less that 20","\n")
+  if (partition!=2&&partition!=3) stop("partition should be 2 or 3")
+  if(missing(probs))
+  {
+    probs <- if (partition==2)  c(0.6,0.4) 
+             else c(0.6,0.2,0.2)
+  } else probs <- probs
+  
+  if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  2 o 3")
+  if (sum(probs)!=1) stop("probs should add up to 1")
+  if (partition==2)
+  {
+     rand <- sample(2, dim(data)[1], replace=TRUE, prob=probs)
+    train <- subset(data, rand==1)
+     test <- subset(data, rand==2)
+      out <- list(train=train , test=test)
+    return(out)
+  }
+  if (partition==3)
+  {
+     rand <- sample(3, dim(data)[1], replace=TRUE, prob=probs)
+    train <- subset(data, rand==1)
+    valid <- subset(data, rand==2)
+     test <- subset(data, rand==3)
+      out <- list(train=train, valid=valid, test=test)
+    return(out)              
+  }  
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_get_index <- function(data, K=2, bootstrap=FALSE)
 {
   dD <- dim(data)
+  N <- dim(data)[1]
   if (bootstrap)  
   {
-    mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:dD[1], length.out= dD[1]), replace=TRUE),"!=",1:kfolds))), which)    
+    mm <-    lapply(
+               as.data.frame(
+               t(
+                 sapply(
+                   sample(rep_len(1:N, length.out=N), replace=TRUE),
+                   "!=",1:K)
+                 )
+                            ), 
+                        which)    
   } else 
   {
-    mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:kfolds, length.out= dD[1]), replace=FALSE),"!=",1:kfolds))), which) 
+    mm <-    lapply(
+              as.data.frame(
+                t(
+                  sapply(
+                    sample(rep_len(1:K, length.out= N), replace=FALSE)
+                        ,"!=", 1:K )
+                  )
+                          ), 
+              which ) 
   } 
   mm
 }
@@ -69,15 +132,14 @@ data_indexing <- function(data, kfolds=2, bootstrap=FALSE)
 data_Kfold <- function(data, K=6, setseed=123 )
 {
   set.seed(setseed)
-  nfolds <- K
   n <- dim(data)[1]
   # folds for cross-validation 
   CVfolds <-  lapply(
     as.data.frame(
       t(
         sapply(
-          sample(rep_len(1:nfolds,length.out=n),replace=FALSE)
-          ,"!=", 1:nfolds)
+          sample(rep_len(1:K, length.out=n),replace=FALSE)
+          ,"!=", 1:K)
       )
     )
     , which )   
@@ -87,19 +149,21 @@ data_Kfold <- function(data, K=6, setseed=123 )
 ################################################################################
 ################################################################################
 ################################################################################
-data_boot <- function(data, K=10, setseed=123 )
+# get a data frame and creates a K bootstrap indices as a matrix or a list
+data_boot <- function(data, K=10, setseed=123 ,as.matrix=TRUE)
 {
   set.seed(setseed)
   nfolds <- K
   n <- dim(data)[1]
   BOOTfolds<- lapply( 
-    as.data.frame(
-      matrix(
+     as.data.frame(
+         matrix(
         sample(1:n, nfolds*n, replace=TRUE)
         , n)
     ),
     sort) 
-  BOOTfolds
+  if (as.matrix) return(matrix(unlist(BOOTfolds), nrow=n))
+  else return(BOOTfolds)
 }
 ################################################################################
 ################################################################################
@@ -177,41 +241,36 @@ data_boot <- function(data, K=10, setseed=123 )
 ################################################################################
 ################################################################################
 ################################################################################
-# old function from 2020
-data.partition <- function(data, partition=2, probs, setseed=123, ...)
-{
-  set.seed(setseed)
-  if (partition!=2&&partition!=3) stop("partition should be 2 or 3")
-  if(missing(probs))
-  {
-    probs <- if (partition==2)  c(0.6,0.4) 
-    else c(0.6,0.2,0.2)
-  } else probs <- probs
-  if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  2 o 3")
-  if (sum(probs)!=1) stop("probs should add up to 1")
-  if (partition==2)
-  {
-    rand <- sample(2, dim(data)[1], replace=TRUE, prob=probs)
-    train <- subset(data, rand==1)
-    test <- subset(data, rand==2)
-    out <- list(train=train , test=test)
-    return(out)
-  }
-  if (partition==3)
-  {
-    rand <- sample(3, dim(data)[1], replace=TRUE, prob=probs)
-    train <- subset(data, rand==1)
-    valid <- subset(data, rand==2)
-    test <- subset(data, rand==3)
-    out <- list(train=train, valid=valid, test=test)
-    return(out)              
-  }  
-}
-
-
-
-
-
+# # old function from 2020
+# data.partition <- function(data, partition=2, probs, setseed=123, ...)
+# {
+#   set.seed(setseed)
+#   if (partition!=2&&partition!=3) stop("partition should be 2 or 3")
+#   if(missing(probs))
+#   {
+#     probs <- if (partition==2)  c(0.6,0.4) 
+#     else c(0.6,0.2,0.2)
+#   } else probs <- probs
+#   if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  2 o 3")
+#   if (sum(probs)!=1) stop("probs should add up to 1")
+#   if (partition==2)
+#   {
+#     rand <- sample(2, dim(data)[1], replace=TRUE, prob=probs)
+#     train <- subset(data, rand==1)
+#     test <- subset(data, rand==2)
+#     out <- list(train=train , test=test)
+#     return(out)
+#   }
+#   if (partition==3)
+#   {
+#     rand <- sample(3, dim(data)[1], replace=TRUE, prob=probs)
+#     train <- subset(data, rand==1)
+#     valid <- subset(data, rand==2)
+#     test <- subset(data, rand==3)
+#     out <- list(train=train, valid=valid, test=test)
+#     return(out)              
+#   }  
+# }
 
 
 
