@@ -23,7 +23,7 @@ if (is(data, "array")) stop("the data is an array the function needs a data.fram
 data <- if (missing(percentage))
 {
    data_cut(data,seed=seed)
-} else data_cut(data,percentage=percentage)
+} else data_cut(data,percentage=)
 
 # checking data
   class_Vars <- sapply(data,class)
@@ -129,8 +129,9 @@ if (one.by.one)
 ################################################################################
 data_response <- function(data,
                           response,
-                          plot=TRUE,
-                          percentage = TRUE) # for big data take % of data)
+                          plot = TRUE,
+                          percentage,
+                          seed = 123) # for big data take % of data)
 {
   #  what is the data
   if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
@@ -138,18 +139,11 @@ data_response <- function(data,
   if (is(data, "matrix"))    data <- as.data.frame(data)
   if (is(data[1],"mts"))     data <- as.data.frame(data)
   if (is(data, "array")) stop("the data is an array the function needs a data.frame")
-  if (percentage)
+data <- if (missing(percentage))
   {
-    nobs <- dim(data)[1]
-    # check the size of the data
-    per <- ifelse(nobs<50000,1,         # all data
-                  ifelse(nobs<100000,.5,# 50% of data
-                         ifelse(nobs<1000000,.2, # 20% of data
-                                ifelse(nobs>1000000,1))))  # 10% of data
-    ind <- sample(nobs, per*nobs)
-    cat("only", length(ind),"out of", dim(data[1]), "are selected in the plot", "\n")
-    data <- data.frame(data[ind,])
-  }
+    data_cut(data,seed=seed)
+  } else data_cut(data,percentage=)
+  
   Y <-  deparse(substitute(response))
   if (any(!(Y %in%names(data)))) stop("the response should be in data")
   actY <-data[,Y]

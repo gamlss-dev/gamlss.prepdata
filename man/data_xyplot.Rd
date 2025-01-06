@@ -4,6 +4,8 @@
 \alias{data_bucket}
 \alias{y_zscores}
 \alias{data_zscores}
+\alias{data_response}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Plotting the response against the explanatory variables}
 \description{
@@ -17,6 +19,9 @@ The function \code{data_bucket()} plots the bucket plot for all continuous varia
 The function \code{data_zscores()} calculates and plots the z-scores (obtained after fitting the SHASHo distribution) for  all continuous variables.
 
 The function \code{y_zscores()}  calculates and plots the z-scores (obtained after fitting the SHASHo distribution) for a single variable.
+
+The function \code{data_response()}  calculates and plots the z-scores (obtained after fitting the SHASHo distribution) for the response variable.
+
 }
 \usage{
 data_xyplot(data, response, point.size = 0.5, nrow = NULL,
@@ -29,10 +34,10 @@ data_plot(data, value = 3, hist.col = "black", hist.fill = "white",
            plot.hist = TRUE, plots.per.page = 9,
            one.by.one = FALSE,
            title, ...)
-
+           
 data_bucket(data, value = 3, max.levels = 20,
            nrow = NULL, ncol = NULL, plots.per.page = 9,
-           one.by.one = FALSE, title, percentage = TRUE, seed = 123,
+           one.by.one = FALSE, title, percentage, seed = 123,
            ...)
 
 y_zscores(x, family = SHASHo, plot = TRUE, hist = FALSE, ...)
@@ -40,8 +45,10 @@ y_zscores(x, family = SHASHo, plot = TRUE, hist = FALSE, ...)
 data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
           max.levels = 10, hist.col = "black", hist.fill = "white",
           dens.fill = "#FF6666", nrow = NULL, ncol = NULL,
-          plots.per.page = 9, one.by.one = FALSE, title, percentage = TRUE,
+          plots.per.page = 9, one.by.one = FALSE, title, percentage,
           seed = 123,...)
+
+data_response(data, response, plot = TRUE, percentage, seed = 123)
 
 }
 
@@ -54,8 +61,6 @@ data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
   \item{nrow}{the number of rows in the plot}
   \item{ncol}{the number of columns in the plot}
   \item{plots.per.page}{maximu plots per page}
-  \item{percentage}{this is for big data sets. if more tha a milion ony 10\% is plotted, if from 100.00 to a milion, 20\%, if 50.000 to 100.000, 50\% otherwise 100\% of the data.}
-  \item{seed}{Setting a seed value for selection of the percantage of data (for big data sets)}
   \item{one.by.one}{whether plotted individually}
   \item{value}{value to identify outliers if  \code{y_dots} is used
   i.e. for upper tail an outliers is if it is greater than Q_3+value*IQ}
@@ -67,6 +72,8 @@ data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
   \item{hist}{whether histiogram or dot plot}
   \item{max.levels}{excludes from plotting bucket plots for variables with less than \code{max.levels}, distinct values}
    \item{title}{title of the plot}
+    \item{percentage}{if set, i.e. 0.50, plots a portotion of data  otherwise for big data sets greater than 50.000 observartions it plots a porpotion}
+    \item{seed}{the \code{set.seed()} argument}
    \item{\dots}{other arguments}
 }
 \details{
@@ -110,6 +117,7 @@ da <- rent99[,-2]
 data_xyplot(da, rent)
 data_plot(da)
 y_zscores(da$rent)
+data_response(da, response=rent)
 }
 
 \keyword{regression}

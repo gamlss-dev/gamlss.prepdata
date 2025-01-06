@@ -11,7 +11,7 @@ data_bucket <- function(data,
               plots.per.page = 9,
                   one.by.one = FALSE,
                       title,
-                  percentage = TRUE, 
+                  percentage, 
                         seed = 123,
                             ...)
 {
@@ -36,20 +36,11 @@ if (any(is.na(data)))
 if (is.null(dimD)) stop("only one variable in the data") 
 if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
                              "for the bucket plot", "\n"))  
-if (percentage)
+data <- if (missing(percentage))
       {
-        # check the size of the data 
-        nobs <- dim(data)[1] 
-        per <- ifelse(nobs<50000,1,         # all data 
-                      ifelse(nobs<100000,.5,# 50% of data 
-                             ifelse(nobs<1000000,.2, # 20% of data 
-                                    ifelse(nobs>1000000,1))))  # 10% of data  
-        set.seed(seed)
-        ind <- sample(nobs, floor(per*nobs))
-        data <- data[ind,]
-        cat("only", per*100,"% of data are ploted,", "\n") 
-        cat("that is,", floor(per*nobs),"observations.", "\n")   
-      }          
+        data_cut(data,seed=seed)
+      } else data_cut(data,percentage=)
+      
              sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
                          data_distinct(data, get.distinct=TRUE) < max.levels|
                          sapply(data, function(x) is(x, class2="Date"))

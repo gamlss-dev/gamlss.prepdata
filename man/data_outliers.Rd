@@ -4,7 +4,7 @@
 
 \title{Outlier identification}
 \description{
-Those two function idententify outliers in variables oor data
+Those two function idententify outliers in variables in data
 }
 \usage{
 data_outliers(data, value = 4, min.distinct = 50, family = SHASHo)

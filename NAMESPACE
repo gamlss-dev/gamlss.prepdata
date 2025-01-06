@@ -22,7 +22,8 @@ export( data_cor,
         data_exclude_class,
         data_continuous,
         data_rm1val,
-        data_pcor
+        data_pcor,
+        data_response
 )
 ################################################################################
 # ACE object

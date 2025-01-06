@@ -221,8 +221,9 @@ if (diffDim > 0)
   lcnames <- length(cnames)
        CC <- matrix(0, ncol=lcnames, nrow=lcnames)
   #get CC using foreach
-      CC <- foreach(i=1:lcnames, .combine='rbind') %dopar% 
+      CC <- foreach(i=1:lcnames, .combine='rbind') %do% 
     {
+      browser()
       xi <- if(is.null(dim(daTa[,i]))) daTa[,i] else daTa[,i][,1]
       foreach(j=1:lcnames, .combine='c') %do% 
         {

@@ -15,13 +15,10 @@ The DESCRIPTION file:
 \packageIndices{gamlss.prepdata}
 The following convention has been used to name the functions:
 
-\code{fitted_NAME}: plots concerning  fitted values from a single fitted model
+\code{y_NAME}: plots concerning  fitted values from a single fitted model
 
-\code{resid_NAME}: plots concerning  residuals  from a single fitted model
+\code{data_NAME}: plots concerning  residuals  from a single fitted model
 
-\code{predict_NAME}: plots concerning prediction values from a single fitted  model usually having \code{newdata} option.
-
-\code{model_NAME}: plots concerning  different  fitted models
 
 where \code{NAME} refer to different characteristics.
 }
