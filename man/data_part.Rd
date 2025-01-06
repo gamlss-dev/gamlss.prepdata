@@ -1,5 +1,7 @@
 \name{data_part}
 \alias{data_part}
+\alias{data_cut}
+
 
 \title{
 A function to partition a data frame
@@ -11,6 +13,9 @@ It creates randomly a factor  of length n called \code{partition}, which subdivi
 }
 \usage{
 data_part(data, partition = 2L, probs, setseed = 123, ...)
+
+data_cut(data, percentage, seed = 123)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,6 +23,8 @@ data_part(data, partition = 2L, probs, setseed = 123, ...)
   \item{partition}{2, 3 or a number less than 20}
   \item{probs}{probabilities for the random selection}
   \item{setseed}{setting the sead so the proccess can be repeated}
+    \item{percentage}{The percentage of data to keep. If set, i.e. \code{percentage=0.5} only 50\% are kept otherwise for large data set (more that 50.000) only percentage of data are kept. }
+  \item{seed}{the \code{set.seed()} argument}
   \item{\dots}{extra arguments}
 }
 

@@ -23,7 +23,8 @@ export( data_cor,
         data_continuous,
         data_rm1val,
         data_pcor,
-        data_response
+        data_response,
+        data_cut
 )
 ################################################################################
 # ACE object
