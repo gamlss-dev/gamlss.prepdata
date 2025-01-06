@@ -2,6 +2,7 @@
 \alias{data_part}
 \alias{data_cut}
 \alias{data_part_list}
+\alias{data_part_index}
 
 
 \title{
@@ -19,6 +20,8 @@ ii)  if  \code{partition=3L} the factror  has three levels  \code{train}, for tr
  
 the function \code{data_part_list()} in does similar things like the function \code{data_part()} but instead of adding a factor to the data creates a \code{list} with ellements the training, test and validation data sets. Note that this function do not allow k-fold cross-validation or bootsrapping indexing.   
  
+
+The function \code{data_part_index()} takes a \code{data.frame} and produces a list of indeces which then can be used to select  diffetent sections of the data.  
  
 The function \code{data_cut()} takes a \code{data.frame} and selects randomly specified \% of the data. For \code{data.frames} with more than 50.000 observations is automatically select part of the data. The function  
 \code{data_cut()} is used a lot in the plotting routines  to make sure that plots ate not take for ever.
@@ -31,6 +34,8 @@ data_part(data, partition = 2L, probs, setseed = 123, ...)
 
 data_part_list(data, partition = 2, probs, setseed = 123, ...)
 
+data_part_index(data, K = 2, bootstrap = FALSE)
+
 data_cut(data, percentage, seed = 123)
 
 }
@@ -38,6 +43,8 @@ data_cut(data, percentage, seed = 123)
 \arguments{
   \item{data}{a \code{data.frame}}
   \item{partition}{2, 3 or a number less than 20}
+   \item{K}{the number of partitions}
+   \item{bootstrap}{whether bootstrap of k-fold cross validation samples}
   \item{probs}{probabilities for the random selection}
   \item{setseed}{setting the sead so the proccess can be repeated}
     \item{percentage}{The percentage of data to keep. If set, i.e. \code{percentage=0.5} only 50\% are kept otherwise for large data set (more that 50.000) only percentage of data are kept. }
@@ -84,6 +91,14 @@ dim(da.test)
 allda <-  data_part_list(rent) 
 dim(allda[[1]]) # training data
 dim(allda[[2]]) # test data
+
+index <-  data_part_index(rent) 
+ trdata<- rent[index[[1]],]
+ tedata<- rent[index[[2]],]
+ dim(trdata)
+ dim(tedata)
+ dim(trdata)[1]+dim(tedata)[1]
+ dim(rent)
 }
 
 \keyword{regression}

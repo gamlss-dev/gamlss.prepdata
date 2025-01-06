@@ -96,7 +96,7 @@ data_part_list <- function(data, partition=2, probs, setseed=123, ...)
 ################################################################################
 ################################################################################
 ################################################################################
-data_get_index <- function(data, K=2, bootstrap=FALSE)
+data_part_index <- function(data, K=2, bootstrap=FALSE)
 {
   dD <- dim(data)
   N <- dim(data)[1]
@@ -129,6 +129,7 @@ data_get_index <- function(data, K=2, bootstrap=FALSE)
 ################################################################################
 ################################################################################
 ################################################################################
+# I was not sure if this function is working so it is not documented in the package 
 data_Kfold <- function(data, K=6, setseed=123 )
 {
   set.seed(setseed)
@@ -149,6 +150,7 @@ data_Kfold <- function(data, K=6, setseed=123 )
 ################################################################################
 ################################################################################
 ################################################################################
+# I was not sure if this function is working so it is not documented in the package 
 # get a data frame and creates a K bootstrap indices as a matrix or a list
 data_boot <- function(data, K=10, setseed=123 ,as.matrix=TRUE)
 {

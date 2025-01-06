@@ -19,7 +19,7 @@
 # standardise of as z-scores ot as 0 to 1 variables
 # the function data_create() takes a data frame and creates a data frame 
 # using a `main effects' or `first order` interactions formula
-# the new data frame will have all factors as dummies raher in their original 
+# the new data frame will have all factors as dummies rather in their original 
 # scale 
 # if scaling for the continuous variables is required the function have to used 
 # recursively
@@ -31,7 +31,7 @@
 data_scale <- function(data, response, 
         position.response = NULL,
                  scale.to = c("z-scores", "0to1"),  
-                   family = "NO", # if "z-scores" 
+                   family = "NO", # or SHASH  if "z-scores" 
            scale.response = FALSE
                   )
 {
@@ -75,7 +75,7 @@ if (missing(response)&&is.null(position.response)) stop("response (or its positi
 if (is.null(position.response))
 {
   response_t <- deparse(substitute(response))   # response
-  pos_res <- match(response_t, names(data))  # position  
+     pos_res <- match(response_t, names(data))  # position  
 } else 
 {
      pos_res <-  position.response
@@ -125,6 +125,8 @@ if (scale.to  =="0to1")                              # if 0 to 1
 ################################################################################
 ################################################################################
 ################################################################################          
+# this function creates a data frame where the continuous are remain the same 
+# but the factors becomes dummies   
 data_form2df <- function(data, response, 
                          exclude = NULL,
                          type = c("main.effect", "first.order"),
@@ -134,12 +136,12 @@ data_form2df <- function(data, response,
                          arg = 2 
 )
 {
-  ################################################################################  
-  # all the variable in data are used to create the data.frame
-  # unless the 'exclude' is used
-  # the argument `data' is compulsory 
-  # the argument `response' is compulsory
-  ################################################################################   
+################################################################################  
+# all the variable in data are used to create the data.frame
+# unless the 'exclude' is used
+# the argument `data' is compulsory 
+# the argument `response' is compulsory
+################################################################################   
   if (missing(data)) stop("the data frame is missing")  
   if (missing(response)) stop("response should be given")
   if (!is.null(exclude))  data <- data[, setdiff(names(data),exclude)]    
