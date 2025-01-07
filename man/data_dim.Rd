@@ -3,6 +3,7 @@
 \alias{data_which_na}
 \alias{data_names}
 \alias{data_sorter_names}
+\alias{data_rename}
 
 \title{Function to deal with data sets}
 \description{
@@ -10,16 +11,21 @@ This is a set of function are designed to help the user to deal with new data se
 }
 \usage{
 data_dim(data)
+
 data_which_na(data)
+
 data_names(data)
+
 data_sorter_names(data, max = 5, newnames)
 
+data_rename(data, oldnames, newnames)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{a data frame}
   \item{max}{the maximum number of characters allowed}
-  \item{newnames}{New names if not abbreviated required}
+  \item{newnames}{New names if not abbreviated required, as character}
+  \item{oldnames}{the old names as character}
 }
 \details{
 The function \code{data_dim()} gives the dimensions and whether missing values exist.
@@ -30,6 +36,7 @@ The function \code{data_names()} gives the names of the variables
 
 The function \code{data_sorter_names()} takes the current names and abbreviates to \code{max} characters.
 
+The function \code{data_rename()} renames variable from the \code{data}.
 }
 \value{
 The function \code{data_dim()} print the dimensions and whether missing values exist.
@@ -67,6 +74,8 @@ data_dim(rent)
 data_which_na(rent)
 data_names(rent)
 data_sorter_names(rent)
+pp=data_rename(rent, c("R", "Fl"), c("rent", "floor"))
+data_names(pp)
 }
 
 \keyword{regression}

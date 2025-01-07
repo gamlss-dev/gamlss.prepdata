@@ -8,16 +8,12 @@
 # function available
 ################################################################################
 #  NOT THIS ONE 1) data_check       : will be fixed in the end
-################################################################################
-#  3) data_response    :
-#  5) xy_power_trans   :
-# 14) y_power_trans    : takes x and y and find power transformation for x
-# 16) datetime2datehour: from datetime to date and hour
-# 18) y_zscores        : transform one variable to SHASH or other dist. z-scores
-# 19) y_outliers       : identify outliers of one x by taking z-scores
-# 20) data_outliers    : identify outliers using z-scores SHASH
-# 20) data_zscores_plot: for continuous variables plots the z scores SHASH
-# 21) y_trans
+################################################################################   :
+#  1) xy_power_trans   :
+#  2) y_power_trans    : takes x and y and find power transformation for x
+#  3) data_trans_plot
+#  4) datetime2datehour: from datetime to date and hour
+#  5) time2num 
 #
 ################################################################################
 ################################################################################

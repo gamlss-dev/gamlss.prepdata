@@ -106,7 +106,7 @@ data_names <- function(data)
 # function 4
 data_sorter_names <- function(data, max=5, newnames)
 {
-  # what is the data
+# what is the data
   if (is(data, "list"))  
     stop("the data is list  the function needs a data.frame") 
   if (is(data, "table")) 
@@ -147,6 +147,28 @@ data_sorter_names <- function(data, max=5, newnames)
 ################################################################################
 ################################################################################
 ################################################################################
+data_rename <- function(data, oldnames, newnames)
+{
+# what is the data
+if (is(data, "list"))  
+    stop("the data is list  the function needs a data.frame") 
+if (is(data, "table")) 
+    stop("the data is a table the function needs a data.frame")
+if (is(data, "matrix"))    data <- as.data.frame(data)
+if (is(data[1],"mts"))     data <- as.data.frame(data)
+if (is(data, "array")) 
+    stop("the data is an array the function needs a data.frame")  
+#cat("**************************************************************",  "\n")
+#cat("**************************************************************",  "\n")
+if (!is.character(oldnames)) stop("oldnames should be a character")
+if (!is.character(newnames)) stop("oldnames should be a character")
+if (length(oldnames)!=length(newnames))  stop("oldnames and newnames should have the same length")
+     Names <- names(data)  
+       pos <- match(oldnames, Names)
+Names[pos] <- newnames
+names(data) <- Names
+invisible(data)
+}
 # END of DIM, NAMES functions 
 ################################################################################
 ################################################################################
