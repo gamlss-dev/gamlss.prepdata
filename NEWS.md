@@ -32,6 +32,8 @@ The GitHub repository is now hosted under the new `gamlss-dev` organization:
 
 * the function `data_part_list()` is added.
 
+* the function `data_rename()` is added.
+
 
 # Version 0.1-2
 
