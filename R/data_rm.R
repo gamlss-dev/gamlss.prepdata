@@ -53,7 +53,7 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
-if (is.character(vars))
+if (is.character(vars)) 
   {
     da <- subset(data, select=setdiff(names(data), vars))
   } else
@@ -67,7 +67,7 @@ if (is.character(vars))
 ################################################################################
 ################################################################################
 # exclude columns  belonging to a specified class
-data_exclude_class <- function(data, class="factor")
+data_exclude_class <- function(data, class.out="factor")
 {
 if (is(data, "list"))
     stop("the data is list  the function needs a data.frame")
@@ -77,8 +77,8 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
-  CData <- sapply(data,class)
-     da <- subset(data, select=CData!=class)
+  CData <- sapply(data,function(x) class(x))
+     da <- subset(data, select=CData!=class.out)
 invisible(da)
 }
 ################################################################################
@@ -86,8 +86,8 @@ invisible(da)
 ################################################################################
 ################################################################################
 # function
-# get only the continuous variables in the data set
-data_continuous <- function(data, response)
+# get only the contixnuous variables in the data set
+data_continuous <- function(data)
 {
 if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
 if (is(data, "table"))
@@ -96,16 +96,31 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
-         Y <-  deparse(substitute(response))
-if (any(!(Y %in%names(data)))) stop("the response should be in data")
+#         Y <-  deparse(substitute(response))
+#if (any(!(Y %in%names(data)))) stop("the response should be in data")
      Names <- names(data)
-       pos <- match(Y, Names)
-      daTa <- data[,-pos] # data without response
-class_Vars <- sapply(daTa,class)
-      daTa <- daTa[,(class_Vars=="numeric")|(class_Vars=="integer")]
+     #  pos <- match(Y, Names)
+     # daTa <- data[,-pos] # data without response
+class_Vars <- sapply(data,function(x) class(x))
+      data <- data[,(class_Vars=="numeric")|(class_Vars=="integer")]
       # only numeric
-  invisible(daTa)
+  invisible(data)
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_classes <- function(df) 
+  {
+  t(
+    as.data.frame(
+      lapply(df, function(x) paste(class(x), collapse = ','))
+                 )
+   )
+}
+#purrr::map_df(rent, class)
+#as.data.frame(purrr::map_chr(rent, class))
+#unlist(lapply(rent, function(x) class(x)))
 ################################################################################
 ################################################################################
 ################################################################################

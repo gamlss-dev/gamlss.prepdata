@@ -8,13 +8,13 @@
 \description{
 There are several function operating on a \code{data.frame} and export a \code{data.frame}. The functions are
 
-1) \code{data_rm}: this function removes the variables specified by \code{vars} from the \code{data.frame}.
+1) \code{data_rm()}: this function removes the variables specified by \code{vars} from the \code{data.frame}. Note that \code{vars} can take either character names or numbers.
 
-2) \code{data_rm1val}: This function looks for varables with a unique distinct value (most likely left from a previous  \code{subset} operation) and remove them form the data.
+2) \code{data_rm1val()}: This function looks for varables with a unique distinct value (most likely factors left from a previous \code{subset()} operation) and remove them form the data. 
 
-3) \code{data_exclude_class}: This function looks for variable (columns) of a specified `R` class and remove them from the data.
+3) \code{data_exclude_class()}: This function looks for variable (columns) of a specified `R` class and remove them from the data. The default class is "factor".
 
-4) \code{data_continuous}": This function pickups only continuous variable in the \code{data.frame}.
+4) \code{data_continuous()}": This function pick up only the continuous variable in the \code{data.frame}.
 
 
 }
@@ -23,17 +23,16 @@ data_rm(data, vars)
 
 data_rm1val(data)
 
-data_exclude_class(data, class = "factor")
+data_exclude_class(data, class.out = "factor")
 
-data_continuous(data, response)
+data_continuous(data)
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{a data frame}
   \item{vars}{selected variables (columns from the data frame)}
-  \item{class}{a specific variable class to be excluded form the data frame}
-  \item{response}{the response variable of the data frame.}
+  \item{class.out}{a specific variable class to be excluded form the data frame}
 }
 \details{
  All the above  functions can be used for piping i.e. \code{da |> data_rm1val()}.
@@ -62,6 +61,12 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 \examples{
 library(gamlss)
 da <- rent |> data_rm( vars=c("Sp", "Sm"))
+head(da)
+
+da<- rent |> data_exclude_class() 
+head(da)
+
+da<- data_continuous(rent)
 head(da)
 }
 

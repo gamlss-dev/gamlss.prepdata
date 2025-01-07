@@ -135,6 +135,7 @@ if (is(data, "table"))
   if (is(data, "array")) stop("the data is an array the function needs a data.frame")
       Y <-  deparse(substitute(response))
   if (any(!(Y %in%names(data)))) stop("the response should be in data")
+      browser()
   Names <- names(data)
   pos <- match(Y, Names)
   daTa <- data[,-pos] # data without response
