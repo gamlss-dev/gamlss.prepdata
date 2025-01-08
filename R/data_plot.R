@@ -195,7 +195,7 @@ if (missing(percentage))
   percentage <- ifelse(nobs<50000,1,         # all data
                 ifelse(nobs<100000,.5,# 50% of data
                        ifelse(nobs<1000000,.2, # 20% of data
-                              ifelse(nobs>1000000,1))))  # 10% of data
+                              ifelse(nobs>1000000,.1))))  # 10% of data
   
 }
 set.seed(seed)
