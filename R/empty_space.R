@@ -31,7 +31,7 @@
 #     table.length = c(5,10,15,20,25,30, 35,40,45,50, 60, 70,80,90,100),
 #             Plot = TRUE)
 # {
-# ################################################################################
+################################################################################
 #   emply_spaces <- function(x,y, table.length = 10)
 #   {
 #      xr <- range(x)
@@ -48,7 +48,7 @@
 #     pen <- abs(perc-(1-prob0))
 #   c(pen=pen, perc=perc, prob0=prob0)
 #   }
-# ################################################################################  
+################################################################################  
 #      lt <- length(table.length)
 #   prob0 <- rep(0, lt)
 #    pen <- rep(0, lt)
@@ -87,19 +87,18 @@
 #  -0.5165698   0.4983922 
 #  
 ################################################################################
-# THE FUNCTION VOID() i my latest idea of calculation  empty spaces ian x ans y direction 
-# For given x and y 
-# get the length of the variables , `n`,
+# THE FUNCTION VOID() i my latest idea of calculation  empty spaces in the x and 
+# y direction for a given x and y 
+# i) get the length of the variables , `n`,
 # for the number of variables calculates the length, of the table `table.length`,
 #  to use to calculate empty spaces
-# create a table of size `table.length*table.length`
+# ii( create a table of size `table.length*table.length`
 #  and calculates the number of zeros in the table.
 # the way  the length of the table is  calculated is like this 
-# i) for a given `n` use the function fn() to calculate the table length `table.length`
-# ii) the coefficients in fn() are obtain by fitting a linear model to log(length)
-# against log(size) of the data given above 
-# Th way the data were calculated is as follows 
-#  for given size create two runif(n) variables and calculare which values of 
+# a) for a given `n` use the function fn() to calculate the table length `table.length`
+# b) the coefficients in fn() are obtain by fitting a linear model to log(length)
+# against log(size) of the data given above The way the data were calculated is as follows 
+#  for given size create two runif(n) variables and calculate which values of 
 #  `table.length gives a close to 0.05 value       
 ################################################################################
 ################################################################################
@@ -107,12 +106,15 @@
 ################################################################################     
 # the function void() looks of % of empty spaces in the x and y direction
 ################################################################################ 
-void <-  function(x,y,  plot=TRUE, print=TRUE)
+# I added the `table.length` as argument in case we want to overrule the method 
+# for calculating it  using function fn()
+void <-  function(x,y,  plot=TRUE, print=TRUE, table.length)
   {
-  n <-length(x)
+     fn <- function(n) exp(-0.5165698+0.4983922*log(n) )  
+      n <-length(x)
 if (length(y)!=n) stop("the x and y should have the same length")  
-  fn<-function(n) exp(-0.5165698+0.4983922*log(n) )
-  table.length <- floor(fn(n))
+table.length <- if (missing(table.length)) floor(fn(n)) 
+              else table.length
     xr <- range(x)
     yr <- range(y)
     xg <- cut(x, table.length) #seq(xr[1], xr[2], length.out=length+1))
@@ -208,31 +210,47 @@ if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
      daTa <- subset(data, select=
               ifelse(sapply(data,is.factor) | sapply(data,is.character) |
                     sapply(data,is.integer)&lapply(TT, length)<10, FALSE, TRUE))
+     
       Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")             
-if (Dim[2]==1) stop("only one variable is left after taking out the factors")              
+if (Dim[2]==1) stop("only one variable is left after taking out the factors")  
+    
+      daTa |> as.data.frame() -> daTa # |> data_int2num()  -> daTa
+
  diffDim  <- dimD[2]-Dim[2]
 if (diffDim > 0)
   {
     warning(cat(diffDim, 'factors have been omited from the data', "\n"))
-  }
+}
+ 
    cnames <- names(daTa)
   lcnames <- length(cnames)
        CC <- matrix(0, ncol=lcnames, nrow=lcnames)
-  #get CC using foreach
-      CC <- foreach(i=1:lcnames, .combine='rbind') %do% 
+  #index1 <- outer(1:lcnames, 1:lcnames, "paste0")  
+   #index <- index1[ upper.tri(index1)]
+    #lind <- length(index)
+#    ((lcnames*lcnames)-length(diag(CC)))/2
+  i_index <- col(CC)[upper.tri(CC)] 
+  j_index <- row(CC)[upper.tri(CC)]
+   liind <- length(i_index)
+   ljind <- length(i_index)
+       Cv <- rep(0, length=liind)
+       Cv <- foreach(i=1:liind, .combine=cbind) %dopar% 
     {
-      xi <- if(is.null(dim(daTa[,i]))) daTa[,i] else daTa[,i][,1]
-      foreach(j=1:lcnames, .combine='c') %do% 
-        {
-          xj <- if(is.null(dim(daTa[,j]))) daTa[,j] else daTa[,j][,1] 
-          if (i<j) CC[i,j]  <- void(xi, xj, plot=FALSE, print=FALSE)
-          else CC[i,j] <- 0
-        }
+           ii <- i_index[i]
+           jj <- j_index[i]
+          xi <- daTa[,ii]
+          xj <- daTa[,jj]
+       Cv[i] <- void(xi, xj, plot=FALSE, print=FALSE)
     }
+  Cv <- as.vector(Cv)     
+  for (i in 1:liind)
+  {
+    ii <- i_index[i]
+    jj <- j_index[i]
+    CC[ ii, jj ] <- Cv[i]
+  }
    CC <- CC+t(CC)  # to get the full matrix (rather than diagonal)
-#  CC1 <- cor(daTa)
-#  CC1 <- base::round(x = CC, digits = digits)            
   rownames(CC) <- cnames
   colnames(CC) <- cnames
       diag(CC) <- 1
@@ -241,7 +259,7 @@ if (diag.off) diag(CC) <- NA
 if  (lower.tri.off) CC[lower.tri(CC)] <- NA
 if (plot==FALSE) return(CC)
       method <- match.arg(method)
-        corr <- meltit(CC)
+        corr <- meltit(t(CC))
     lowerLim <- 25-floor((range(corr$value)[2]-range(corr$value)[1])*20)
   colnames(corr) <- c("var_1", "var_2", "value")
   txt.title <- if (missing(title))

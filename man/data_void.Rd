@@ -20,7 +20,7 @@ legend.title = "Void", title, ggtheme = ggplot2::theme_minimal(),
 tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE, 
 lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, percentage)
 
-void(x, y, plot = TRUE, print = TRUE)
+void(x, y, plot = TRUE, print = TRUE, table.length)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -48,6 +48,7 @@ void(x, y, plot = TRUE, print = TRUE)
   \item{x}{the first variable in \code{void()}}
   \item{y}{the second variable in \code{void()}}
    \item{print}{whether to print the results }
+   \item{table.length}{the table length (if siging is calculated automatically)}
 }
 
  
