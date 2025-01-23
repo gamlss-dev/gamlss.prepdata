@@ -53,24 +53,13 @@ void(x, y, plot = TRUE, print = TRUE, table.length)
 
  
 \details{
-The functions \code{void()} and \code{data_void()} work with discretising the data in the \code{x} and \code{y} direction and then calculate the \% of zeros.  By discretising the data  we mean cut the \code{x} variable in equal spaced \code{k} points. The same for  \code{y}.
+The functions \code{void()} and \code{data_void()} work with discretising the data in the \code{x} and \code{y} direction and then calculate the \% of zeros.  
+By discretising the data  we mean cut both variable \code{x} variables abd \code{y}, at an equal spaced  grid of \code{k} points and create a  \code{(k x k)} dimenstional matrix containing the number of data points in the grid. The problem thought, with any attempt to calculated the \% of empty spaces is that  by increasing \code{k}) in the \code{x} and \code{y} directions would resulst more zeros cells and therefore  more \% empty spaces. To avoid this we need a way to stop the discretazation at a stage before the data become too sparce. The waythis is done in tjhe current function  is the following;
 
-The problem with any attempt to calculated the \% of empty spaces is that more detailed discretation (that is increasing \code{k}) in the \code{x} and \code{y} direction will results more \% empty spaces. To avoid this we need a way to stop the discretazation at a stage before the data become too sparce. The way is done here is as follows;
+i) If the \code{n} points \code{(x,y)} are randomly allocated we would expect the number of counts in the cells of the matrix of a discretised  two dimestional data set to be Poisson distributed with a probability for zeros equal to \eqn{exp(-\mu)} where \eqn{\mu} is the mean of the Poisson distribution. That is, under the null hypothesis that the \code{n} points are spead randomly we expect some of the cell to be zero with probability \eqn{exp(-\mu)}. Given \code{n} the number of obsrvations,  we can use this information to find out at which disretation point \code{k} we should stop.  
 
-i) If the points are randomly allocated we would expect the number of counts in the table to be Poisson distributed with a probability for zeros equal to \eqn{exp(-\mu)} where \eqn{\mu} is the mean of the Poisson.
-
-ii) To identify at which stage we should stop \code{k} for given number of observations say \code{n}, we have genarated randomly from the uniform distribution \code{n} values for \code{x} and \code{n} values for \code{y} and calculate which \code{k} will gives a probability of zero close to 0.05. We have found tha this relationship is firmly holding.
-\eqn{\log k= -0.516+ 0.498 \log n} 
-so \code{k} can be easlily calclated using the equation 
-\eqn{k= \exp [-0.516+ 0.498 \log n]}.  This will quaranty that all data sets are treated equally.
-
-
-
-
-
-
-
-
+ii) To identify at which stage \code{k} we should stop  for given number of observations say \code{n}, we have genarated randomly from a  uniform distribution \code{n} values for \code{x} and \code{y}. We use those values to calculate at which point \code{k} this will  give a probability of zero close to 0.05. We calculate those probabilities using \eqn{exp(-xbar)} where \code{xbar} is the mean of the cells. By doing this we found that that the following is holding; 
+\eqn{\log k= -0.516+ 0.498 \log n}. This equation provide us with an easy way to calculate \code{k} given \code{n}. 
 }
 
 \value{
