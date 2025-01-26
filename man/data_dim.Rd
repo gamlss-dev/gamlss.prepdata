@@ -2,50 +2,76 @@
 \alias{data_dim}
 \alias{data_which_na}
 \alias{data_names}
-\alias{data_sorter_names}
+\alias{data_shorter_names}
 \alias{data_rename}
+\alias{data_omit}
 
-\title{Function to deal with data sets}
+
+\title{Function to get information  from data.}
 \description{
 This is a set of function are designed to help the user to deal with new data sets.
+
+\code{data_dim()}: the class, the  dimension and the \% NA's in the data  
+
+\code{data_which_na()}: which variables have NA's and how many
+
+\code{data_omit()}: omit the NA's from the data.
+
+\code{data_names()}: The names of the variables in the data.
+
+\code{data_shorter_names()}: abbriviate the names up to specified digits. 
+
+
+\code{data_rename()} renames some of of the variables.
+
+
 }
 \usage{
+
 data_dim(data)
 
 data_which_na(data)
 
+data_omit(data)
+
 data_names(data)
 
-data_sorter_names(data, max = 5, newnames)
+data_shorter_names(data, max = 5, newnames)
 
 data_rename(data, oldnames, newnames)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{a data frame}
-  \item{max}{the maximum number of characters allowed}
-  \item{newnames}{New names if not abbreviated required, as character}
-  \item{oldnames}{the old names as character}
+  \item{max}{the maximum number of characters allowed, with default 5. Make sure that you are using enought characters otherwise you could end up with variables with the some name }
+  \item{newnames}{New names if not abbreviation is required, as characters}
+  \item{oldnames}{the old names as characters}
 }
 \details{
-The function \code{data_dim()} gives the dimensions and whether missing values exist.
+The function \code{data_dim()} gives the the class, the dimension and the \% NA's in the data.
 
-The function \code{data_which_na()} gives the number of missing observation for each variable in the data
+The function \code{data_which_na()} gives the number of missing observation for each variable in the data.
 
-The function \code{data_names()} gives the names of the variables
 
-The function \code{data_sorter_names()} takes the current names and abbreviates to \code{max} characters.
+The function \code{data_omit()}: omits the NA's from the data.
+
+The function \code{data_names()} gives the names of the variables.
+
+The function \code{data_shorter_names()} takes the current names and abbreviates to \code{max} characters.
 
 The function \code{data_rename()} renames variable from the \code{data}.
 }
 \value{
-The function \code{data_dim()} print the dimensions and whether missing values exist.
 
-The function \code{data_which_na()} prints the number of missing observation for each variable in the data
+The function \code{data_dim()} after printing gives the originasl data set. 
 
-The function \code{data_names()} prints the names of the variables
+The function \code{data_which_na()} prints the number of missing observation for each variable in the data and passes the original data set. 
 
-The function \code{data_sorter_names()} takes the current names and abbreviates to \code{max} characters and return a new data frame
+The function \code{data_omit()}: omits the NA's from the data and passes the new data set.
+
+The function \code{data_names()} prints the names of the variables in the data andpasses the original data  
+
+The function \code{data_shorter_names()} takes the current names and abbreviates to \code{max} characters and return the  data with shorter names.
 }
 \references{
 Rigby, R. A. and  Stasinopoulos D. M. (2005). Generalized additive models for location, scale and shape,(with discussion),
@@ -72,8 +98,9 @@ Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani
 \examples{
 data_dim(rent)
 data_which_na(rent)
+data_omit(rent)
 data_names(rent)
-data_sorter_names(rent)
+data_shorter_names(rent)
 pp=data_rename(rent, c("R", "Fl"), c("rent", "floor"))
 data_names(pp)
 }

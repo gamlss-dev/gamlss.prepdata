@@ -11,7 +11,7 @@
 #  4) data_cha2fac     : transform character to factors (if levels are small)
 #  5) data_few2fac     : takes any variable with few disctict values and make
 #                        into a factor
-#
+#. 6) data_int2num.    : take integer 
 ################################################################################
 ################################################################################
 ################################################################################
@@ -79,15 +79,15 @@ cat("the structure of the data", "\n")
     str(data)
          Names <- names(data)
     class_Vars <- sapply(data,class)
+    for (i in 1:length(class_Vars)) class_Vars[[i]] <- class_Vars[[i]][1]
 cat("**************************************************************",  "\n")
 cat("**************************************************************",  "\n")
 cat("table of the class of variabes", "\n")
-  tab <- table(class_Vars)
+  tab <- table(unlist(class_Vars))
 print(tab)
 cat("**************************************************************",  "\n")
 cat("**************************************************************",  "\n")
        nCh <- nchar(Names)
-class_Vars <- sapply(data,class)
 cat("distinct values in variables","\n")
       dist <- data_distinct(data, get.distinct=TRUE)
        out <- data.frame(class=class_Vars,  dist.values=dist, name.no.ch=nCh)
