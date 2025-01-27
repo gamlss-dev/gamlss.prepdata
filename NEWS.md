@@ -2,7 +2,7 @@
 
 The package `gamlss.prepdata` is a `R` package preparing data to be used to fit the Generalised Additive Models for Location, Scale and Shape (GAMLSS) of Rigby and Stasinopoulos (2005),  Appl. Statist., 54,  pp. 507-554). It supplements the packages `gamlss`,  `gamlss2` and `gamlss.ggplots`.
 
-There are three book available for more information about in general GAMLSS; 
+There are three book available for more information about GAMLSS; 
 
  1) "Flexible Regression and Smoothing: Using GAMLSS in R" 
 explaining how the models can be used in R.
@@ -26,7 +26,11 @@ The GitHub repository is now hosted under the new `gamlss-dev` organization:
 
 # Version 0.1-3
 
-* function `data_cut()` is added. It is  used in plotting function like `data_plot()` and `data_xyplot()` to make sure that the plots are working in reasonable time for very large data sets. 
+* the functions `data_str()` and `data_exclude_class()`  are modified to work with `POSIXct` class. 
+
+* the functions `data_dim()` and `data_omit()` are separated. 
+
+* function `data_cut()` is added. This function insures that for very large data sets the plotting function like `data_plot()` and `data_xyplot()` only use a random part of the data so they are are working fast. 
 
 * the functions `void()` and `data_void()` are in.
 

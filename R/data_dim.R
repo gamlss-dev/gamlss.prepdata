@@ -37,7 +37,7 @@ data_dim <- function(data)
   dif1 <- DIM[1]-DimOm[1]
   dif2 <- DIM[2]-DimOm[2]
   cat("number of observations with missing values;", dif1, "\n" )   
-  cat("% NA's in data;", (dif1/DIM[1])*100,"%", "\n")
+  cat("% of NA's in the data;", (dif1/DIM[1])*100,"%", "\n")
   cat("**************************************************************",  "\n")
   cat("**************************************************************",  "\n") 
   invisible(data)  
@@ -69,8 +69,7 @@ data_omit <- function(data)
   dif1 <- DIM[1]-DimOm[1]
   dif2 <- DIM[2]-DimOm[2]
   cat("the dimensions of the data saved after omition are:",DimOm[1],"x",DimOm[2], "\n") 
-  cat("number of observations omited;", dif1, "\n" )   
-  #cat("% NA's in data;", (dif1/DIM[1])*100,"%", "\n")
+  cat("the number of observations omited;", dif1, "\n" )   
   cat("**************************************************************",  "\n")
   cat("**************************************************************",  "\n") 
   invisible(Data)  
