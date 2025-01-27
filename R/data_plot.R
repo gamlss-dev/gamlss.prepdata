@@ -24,13 +24,12 @@ data <- if (missing(percentage))
 {
    data_cut(data,seed=seed)
 } else data_cut(data,percentage=)
-
+data <- data_exclude_class(data, class.out="POSIXct")
 # checking data
   class_Vars <- sapply(data,class)
 if (any(class_Vars=="character"))
   {
     chr.pos <- match("character",class_Vars)
-
   data <- data[,-chr.pos]
   }
        Names <- names(data)
