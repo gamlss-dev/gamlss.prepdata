@@ -77,7 +77,7 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
-  CData <- sapply(data,function(x) class(x))
+  CData <- sapply(data,function(x) class(x)[1])
      da <- subset(data, select=CData!=class.out)
 invisible(da)
 }
@@ -86,7 +86,7 @@ invisible(da)
 ################################################################################
 ################################################################################
 # function
-# get only the contixnuous variables in the data set
+# get only the continuous variables in the data set
 data_continuous <- function(data)
 {
 if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
@@ -101,7 +101,7 @@ if (is(data, "array"))
      Names <- names(data)
      #  pos <- match(Y, Names)
      # daTa <- data[,-pos] # data without response
-class_Vars <- sapply(data,function(x) class(x))
+class_Vars <-  sapply(data,function(x) class(x)[1])
       data <- data[,(class_Vars=="numeric")|(class_Vars=="integer")]
       # only numeric
   invisible(data)
@@ -114,7 +114,7 @@ data_classes <- function(df)
   {
   t(
     as.data.frame(
-      lapply(df, function(x) paste(class(x), collapse = ','))
+      lapply(df, function(x) paste(class(x)[1], collapse = ','))
                  )
    )
 }

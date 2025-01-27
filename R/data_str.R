@@ -78,8 +78,9 @@ cat("**************************************************************",  "\n")
 cat("the structure of the data", "\n")
     str(data)
          Names <- names(data)
-    class_Vars <- sapply(data,class)
-    for (i in 1:length(class_Vars)) class_Vars[[i]] <- class_Vars[[i]][1]
+            
+    class_Vars <- sapply(data,function(x) class(x)[1]) 
+  #  for (i in 1:length(class_Vars)) class_Vars[[i]] <- class_Vars[[i]][1]
 cat("**************************************************************",  "\n")
 cat("**************************************************************",  "\n")
 cat("table of the class of variabes", "\n")
