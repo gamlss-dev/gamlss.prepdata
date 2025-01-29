@@ -56,7 +56,7 @@ data_outliers <- function(data,
   if (Dim[2]==0) stop("no variable is left after taking out the factors")         
   if (Dim[2]==1) stop("only one variable is left after taking out the factors")   
   Names <- names(daTa)
-  class_Vars <- sapply(daTa,class)
+  class_Vars <- sapply(daTa,function(x) class(x)[1]) 
   PP <- list()
   for (i in 1:length(class_Vars))
   { 

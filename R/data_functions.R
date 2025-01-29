@@ -138,7 +138,7 @@ if (is(data, "table"))
   Names <- names(data)
   pos <- match(Y, Names)
   daTa <- data[,-pos] # data without response
-  class_Vars <- sapply(daTa,class)
+  class_Vars <- sapply(data,function(x) class(x)[1]) 
   daTa <- data_continuous(daTa) 
   #daTA <- daTa[,(inherits(class_Vars,"numeric")|inherits(class_Vars,"integer"))]
   # only numeric

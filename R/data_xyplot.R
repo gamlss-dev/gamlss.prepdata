@@ -38,7 +38,7 @@ if (dv < max.levels) stop("the response do not seems to have many distinct value
      {
        data_cut(data,seed=seed)
      } else data_cut(data,percentage=percentage)
-  class_Vars <- sapply(data,class)
+     class_Vars <- sapply(data,function(x) class(x)[1]) 
   if (any(class_Vars=="character"))
   {
     chr.pos <- match("character",class_Vars)

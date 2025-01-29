@@ -48,7 +48,7 @@ if (missing(weights)) weights <- rep(1, dim(data)[1])
 if (dv < max.levels)
   stop("the response do not seems to have many distinct values")
   #.   Names <- names(data)
-  class_Vars <- sapply(data,class)
+ class_Vars <- sapply(data,function(x) class(x)[1]) 
 if (any(inherits(class_Vars,"character")))## take out character variables
   {
     chr.pos <- match("character",class_Vars)

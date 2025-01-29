@@ -143,7 +143,7 @@ if (is(data, "array"))
 # checking data
 cat("**************************************************************",  "\n")
        Names <- names(data)
-  class_Vars <- sapply(data,class)
+  class_Vars <- sapply(data,function(x) class(x)[1]) 
    which_cha <- class_Vars=="character"
      all_Cha <- Names[which_cha]
          ind <- length(all_Cha)
@@ -191,7 +191,7 @@ if (is(data, "array"))
 # checking data
 cat("**************************************************************",  "\n")
        Names <- names(data)
-  class_Vars <- sapply(data,class)
+  class_Vars <- sapply(data,function(x) class(x)[1]) 
       dvdata <- data_distinct(data, get.distinct=TRUE)
          ind <- 0
 for (i in 1:length(Names))
@@ -238,7 +238,7 @@ if (is(data, "array"))
 # checking data
 cat("**************************************************************",  "\n")
       Names <- names(data)
- class_Vars <- sapply(data,class)
+ class_Vars <- sapply(data,function(x) class(x)[1]) 
   which_Int <- class_Vars=="integer"
 if (!any(which_Int))  return(cat("no integer vector is found", "\n"))
     dis.val <- data_distinct(data, get.distinct=TRUE)
