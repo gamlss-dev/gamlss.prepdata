@@ -140,7 +140,13 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array"))
                 stop("the data is an array the function needs a data.frame")
+if (is(data,"tbl_df")|is(data, "tbl")) 
+{
+  data <- data.frame(data)
+  warning("the tibble was transform to data.frame")
+}
 # checking data
+
 cat("**************************************************************",  "\n")
        Names <- names(data)
   class_Vars <- sapply(data,function(x) class(x)[1]) 
@@ -155,6 +161,7 @@ if (ind==0)
 for (i in 1:ind)
  {
 #if   (dval[i] < min.levels)
+  cat("class:", class_Vars[i], "\n"  )    
   data[,all_Cha[i]] <- factor(data[,all_Cha[i]])
 }
 if (show.str)
@@ -188,6 +195,12 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
+if (is(data, "tbl_df")|is(data, "tbl")) 
+  {
+  data<- data.frame(data)
+  
+  warning("the tibble was transform to data.frame")
+}
 # checking data
 cat("**************************************************************",  "\n")
        Names <- names(data)
