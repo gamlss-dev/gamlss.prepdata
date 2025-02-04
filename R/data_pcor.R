@@ -167,47 +167,47 @@ else if (method == "circle") {
 ################################################################################
 ################################################################################
 #-------------------------------------------------------------
-data_high_cor <- function(data, r=.90, digits=3, plot=FALSE, igraph=TRUE)
-{
-if (abs(r)>=1||abs(r)<=0) stop("r should be greater than  0 and lass than 1")
-  daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|sapply(data,is.character)==TRUE, FALSE, TRUE))
-   Dim <- dim(daTa)
-    CC <- cor(daTa)
-    CC <- base::round(x = CC, digits = digits)
-   CCC <- CC-diag(rep(1,Dim[2]))
-if (is.null(colnames(daTa))) colnames(daTa) <- paste0("X", seq(1:dim(data)[2]))
-if (!any(which(abs(CCC)>r))) return(cat("no correlation above", r, "\n"))
-    mm <- which(abs(CCC)>r, arr.ind=T)
-    nn <- mm[mm[,1]< mm[,2],]
-if (is.vector(nn))
-  {
-    name1 <- colnames(data)[nn[1]]
-    name2 <- colnames(data)[nn[2]]
-    corrs <- CCC[nn[1],nn[2]]
-  } else
-  {
-   name1 <- colnames(data)[nn[,1]]
-   name2 <- colnames(data)[nn[,2]]
-   corrs <- CCC[nn]
-  }
-M <-  cbind(name1, name2, corrs)
-if (plot)
-{
- # dd <- which.Data.Corr(InfMort, r=0.5)[,c(1,2)]
-#  network <- graph_from_data_frame(d=dd, directed=F)
-  # plot it
-#  plot(network)
-#  InfMort |> which.Data.Corr( r=0.5) |>  as.data.frame() |>
-#    simpleNetwork(CC, height="100px", width="100px")
-  dd <- as.data.frame(M)
- if (igraph) plot(igraph::graph_from_data_frame(d=dd, directed=F))
-  else{
-    p <- networkD3::simpleNetwork(dd, height="100px", width="100px")
-    print(p)
-  }
-} else
-  return(M)
-}
+# data_high_cor <- function(data, r=.90, digits=3, plot=FALSE, igraph=TRUE)
+# {
+# if (abs(r)>=1||abs(r)<=0) stop("r should be greater than  0 and lass than 1")
+#   daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|sapply(data,is.character)==TRUE, FALSE, TRUE))
+#    Dim <- dim(daTa)
+#     CC <- cor(daTa)
+#     CC <- base::round(x = CC, digits = digits)
+#    CCC <- CC-diag(rep(1,Dim[2]))
+# if (is.null(colnames(daTa))) colnames(daTa) <- paste0("X", seq(1:dim(data)[2]))
+# if (!any(which(abs(CCC)>r))) return(cat("no correlation above", r, "\n"))
+#     mm <- which(abs(CCC)>r, arr.ind=T)
+#     nn <- mm[mm[,1]< mm[,2],]
+# if (is.vector(nn))
+#   {
+#     name1 <- colnames(data)[nn[1]]
+#     name2 <- colnames(data)[nn[2]]
+#     corrs <- CCC[nn[1],nn[2]]
+#   } else
+#   {
+#    name1 <- colnames(data)[nn[,1]]
+#    name2 <- colnames(data)[nn[,2]]
+#    corrs <- CCC[nn]
+#   }
+# M <-  cbind(name1, name2, corrs)
+# if (plot)
+# {
+#  # dd <- which.Data.Corr(InfMort, r=0.5)[,c(1,2)]
+# #  network <- graph_from_data_frame(d=dd, directed=F)
+#   # plot it
+# #  plot(network)
+# #  InfMort |> which.Data.Corr( r=0.5) |>  as.data.frame() |>
+# #    simpleNetwork(CC, height="100px", width="100px")
+#   dd <- as.data.frame(M)
+#  if (igraph) plot(igraph::graph_from_data_frame(d=dd, directed=F))
+#   else{
+#     p <- networkD3::simpleNetwork(dd, height="100px", width="100px")
+#     print(p)
+#   }
+# } else
+#   return(M)
+# }
 ################################################################################
 ################################################################################
 ################################################################################
