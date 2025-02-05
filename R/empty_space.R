@@ -284,7 +284,8 @@ if (plot==FALSE) return(CC)
   label <- round(x = CC, digits = digits)
   p <- p + ggplot2::scale_fill_gradient2(low = colors[1], high = colors[3],
                                          mid = colors[2],  midpoint = 0.5, limit = c(0, 1),
-                                         space = "Lab",
+                                   
+                                               space = "Lab",
                                          name = legend.title)+ggplot2::ggtitle(txt.title)
   if (class(ggtheme)[[1]] == "function") {
     p <- p + ggtheme

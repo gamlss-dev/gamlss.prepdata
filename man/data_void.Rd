@@ -13,12 +13,14 @@ The function \code{data_void()} is looking pair-wise for  empty spaces in all th
 
 }
 \usage{
-data_void(data, digits = 3, plot = TRUE, diag.off = TRUE, lower.tri.off = FALSE, 
-method = c("square", "circle"), 
-outline.color = "gray", colors = c("blue", "white", "red"), 
-legend.title = "Void", title, ggtheme = ggplot2::theme_minimal(), 
-tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE, 
-lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, percentage)
+data_void(data, digits = 3, plot = TRUE, diag.off = TRUE, 
+         lower.tri.off = FALSE, 
+         method = c("square", "circle"), 
+         outline.color = "gray", colors = c("blue", "white", "red"), 
+         legend.title = "Void", title, ggtheme = ggplot2::theme_minimal(), 
+         tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE, 
+         lab_col = "black", lab_size = 3, circle.size = 20, seed = 123,
+         percentage)
 
 void(x, y, plot = TRUE, print = TRUE, table.length)
 

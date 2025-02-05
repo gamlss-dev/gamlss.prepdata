@@ -2,9 +2,9 @@
 \alias{data_rm}
 \alias{data_exclude_class}
 \alias{data_rm1val}
-\alias{data_continuous}
+\alias{data_only_continuous}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Function operating on data}
+\title{Functions operating on variables in the data}
 \description{
 There are several function operating on a \code{data.frame} and export a \code{data.frame}. The functions are
 
@@ -14,7 +14,7 @@ There are several function operating on a \code{data.frame} and export a \code{d
 
 3) \code{data_exclude_class()}: This function looks for variable (columns) of a specified `R` class and remove them from the data. The default class is "factor".
 
-4) \code{data_continuous()}": This function pick up only the continuous variable in the \code{data.frame}.
+4) \code{data_only_continuous()}": This function pick up only the continuous variable in the \code{data.frame}.
 
 
 }
@@ -25,7 +25,7 @@ data_rm1val(data)
 
 data_exclude_class(data, class.out = "factor")
 
-data_continuous(data)
+data_only_continuous(data)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -66,7 +66,7 @@ head(da)
 da<- rent |> data_exclude_class() 
 head(da)
 
-da<- data_continuous(rent)
+da<- data_only_continuous(rent)
 head(da)
 }
 

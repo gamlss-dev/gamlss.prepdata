@@ -3,9 +3,9 @@
 # function 1; data_rm1val()
 # function 2;  data_rm(data, vars)
 # function 3; data_exclude_class(data, class.out="factor")
-# function 4: data_continuous(data)
-# function 5: data_continuous(data)
-# function 6: data_classes()  (secrete)
+# function 4: data_only_continuous(data)
+# function 5: data_classes()  (secrete)
+# function 6: data_select()  (secrete)
 ################################################################################
 ################################################################################
 ################################################################################
@@ -95,7 +95,7 @@ invisible(da)
 ################################################################################
 # function 4
 # get only the continuous variables in the data set
-data_continuous <- function(data)
+data_only_continuous <- function(data)
 {
 if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
 if (is(data, "table"))
@@ -154,3 +154,7 @@ data_select <- function(data, vars)
   }
   invisible(da)
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################

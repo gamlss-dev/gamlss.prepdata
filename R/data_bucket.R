@@ -3,7 +3,6 @@
 ################################################################################
 ################################################################################
 # data_bucket -> plot -> saved plots 
-# function 4
 data_bucket <- function(data, 
                         value = 3, 
                    max.levels = 20,
@@ -25,7 +24,8 @@ if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) 
     stop("the data is an array the function needs a data.frame")
       dimD <- dim(data)
-# checking data  
+# checking data
+browser()
 if (any(is.na(data)))
   {
       l1 <- dim(data)[1]
@@ -50,11 +50,12 @@ data <- if (missing(percentage))
 if (Dim[2]==0) stop("no variable is left after taking out the factors")         
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")   
                 Names <- names(daTa)
-           class_Vars <- sapply(data,function(x) class(x)[1]) 
+       #    class_Vars <- sapply(data,function(x) class(x)[1]) 
                    PP <- list()
-for (i in 1:length(class_Vars))
+for (i in 1:dim(daTa)[2])
 {
-    PP[[i]] <-   moment_bucket(daTa[,i],  text_to_show=Names[i]) #
+  x_var <- daTa[,i]
+    PP[[i]] <-   gamlss.ggplots::moment_bucket(x_var,  text_to_show=Names[i]) #
 }
               n.plots <- length(PP)       
 if (one.by.one)
@@ -64,11 +65,11 @@ if (one.by.one)
  for (i in 1:n.plots) print(PP[[i]])
   } else
   { # multiple plots
-################################################################# 
+################################################################################ 
     define_region <- function(row, col){
       viewport(layout.pos.row=row, layout.pos.col=col) }
-#################################################################  
-    if (n.plots>plots.per.page)
+################################################################################  
+if (n.plots>plots.per.page)
     {
       pages <- ceiling(n.plots/plots.per.page)  
        page <- n.plots%/%plots.per.page
@@ -128,3 +129,4 @@ if (one.by.one)
 ################################################################################
 ################################################################################
 ################################################################################
+##########################################################################
