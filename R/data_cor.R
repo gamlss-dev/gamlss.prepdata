@@ -44,7 +44,7 @@ data_cor <- function(data,
   {
      rna <- rownames(mat)
     lrna <- length(rna)
-  value <- as.vector(mat)
+   value <- as.vector(mat)
     Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
     Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
      daf <-  na.omit(data.frame(Var1, Var2, value=value))
@@ -87,7 +87,7 @@ if (Dim[2]==1) stop("only one variable is left after taking out the factors")
         diffDim  <- dimD[2]-Dim[2]
 if (any(is.na(data)))
         {
-           l1 <- dim(data)[1]
+            l1 <- dim(data)[1]
           data <- na.omit(data)
             l2 <- dim(data)[1]
           warning(cat(l1-l2, "observations were omitted from the data", "\n"))
@@ -200,3 +200,39 @@ if (plot)
 ################################################################################
 ################################################################################
 ################################################################################
+high_cor <- function(table, r=.90, digits=3, plot=FALSE, igraph=TRUE)
+{
+  if (abs(r)>=1||abs(r)<=0) stop("r should be greater than  0 and lass than 1")
+ 
+ 
+  mm <- which(abs(table)>r, arr.ind=T)
+  nn <- mm[mm[,1]< mm[,2],]
+  if (is.vector(nn))
+  {
+    name1 <- colnames(table)[nn[1]]
+    name2 <- colnames(table)[nn[2]]
+    corrs <- table[nn[1],nn[2]]
+  } else
+  {
+    name1 <- colnames(table)[nn[,1]]
+    name2 <- colnames(table)[nn[,2]]
+    corrs <- table[nn]
+  }
+  M <-  cbind(name1, name2, corrs)
+  if (plot)
+  {
+    # dd <- which.Data.Corr(InfMort, r=0.5)[,c(1,2)]
+    #  network <- graph_from_data_frame(d=dd, directed=F)
+    # plot it
+    #  plot(network)
+    #  InfMort |> which.Data.Corr( r=0.5) |>  as.data.frame() |>
+    #    simpleNetwork(CC, height="100px", width="100px")
+    dd <- as.data.frame(M)
+    if (igraph) plot(igraph::graph_from_data_frame(d=dd, directed=F))
+    else{
+      p <- networkD3::simpleNetwork(dd, height="100px", width="100px")
+      print(p)
+    }
+  } else
+    return(M)
+}

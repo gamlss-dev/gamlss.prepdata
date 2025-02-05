@@ -1,6 +1,7 @@
 \name{data_cor}
 \alias{data_cor}
 \alias{data_pcor}
+\alias{high_cor}
 
 \title{
 Plotting pairwise linear and partial correlations.
@@ -8,7 +9,7 @@ Plotting pairwise linear and partial correlations.
 \description{
 The function \code{data_cor} takes a data frame and plots the pairwise Pearson's correlation coefficients of all continuous variables in the data.
 
-
+t()
 The function \code{data_pcor} takes a data frame and plots the pairwise partial Pearson's correlation coefficients of all continuous variables in the data.
 }
 \usage{
@@ -28,10 +29,13 @@ data_pcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
         lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, 
         percentage)
 
+high_cor(table, r = 0.9, digits = 3, plot = FALSE, igraph = TRUE)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{a data frame}
+   \item{table}{a correlation table obtained by \code{data_cor(,plot=FALSE)} or \code{data_pcor(,plot=FALSE)}}
   \item{digits}{the digits for printing the correlation coefficients}
   \item{plot}{whether to plot or not}
   \item{diag.off}{whether to show the diagonal ellements}
@@ -51,6 +55,8 @@ data_pcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
   \item{circle.size}{the size of the circles, increase (or decrease) if the defaul 20 is not appropriate}
    \item{percentage}{this is for big data sets. if more tha a milion ony 10\% is plotted, if from 100.00 to a milion, 20\%, if 50.000 to 100.000, 50\% otherwise 100\% of the data.}
   \item{seed}{Setting a seed value for selection of the percantage of data (for big data sets)}
+   \item{r}{the theshold for correlation to be reported in \code{data_high_cor()}}
+   \item{igraph}{if in \code{data_high_cor()}, the option \code{plot=TRUE}, then there are two options for plotting; i)  \code{igraph::graph_from_data_frame()} with \code{igraph=TRUE} or ii) \code{networkD3::simpleNetwork()} with \code{igraph=FALSE} }
 }
 
 \value{
@@ -73,9 +79,15 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 
 \seealso{mcor}
 \examples{
-data_cor(rent)
+data_cor(rent99)
+Pearson.cor <-  data_cor(rent99, plot=FALSE)
 
-data_pcor(rent)
+data_pcor(rent99)
+partial.cor  <-  data_cor(rent99, plot=FALSE) 
+
+
+high_cor(partial.cor, r=0.5)
+high_cor(Pearson.cor, r=0.5)
 }
 
 \keyword{regression}

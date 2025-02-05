@@ -25,7 +25,6 @@ if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
       dimD <- dim(data)
 # checking data
-browser()
 if (any(is.na(data)))
   {
       l1 <- dim(data)[1]
