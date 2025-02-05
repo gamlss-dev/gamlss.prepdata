@@ -1,6 +1,7 @@
 # functions
 export( data_cor,
-        high_cor,
+        high_val,
+        low_val,
         data_dim,
         data_names,
         data_which_na,

@@ -1,8 +1,8 @@
 \name{data_cor}
 \alias{data_cor}
 \alias{data_pcor}
-\alias{high_cor}
-
+\alias{high_val}
+\alias{low_val}
 \title{
 Plotting pairwise linear and partial correlations.
 }
@@ -29,8 +29,9 @@ data_pcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
         lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, 
         percentage)
 
-high_cor(table, r = 0.9, digits = 3, plot = FALSE, igraph = TRUE)
+high_val(table, val = 0.9, digits = 3, plot = FALSE, igraph = TRUE)
 
+low_val(table, val = 0.05, digits = 3, plot = FALSE, igraph = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -55,8 +56,8 @@ high_cor(table, r = 0.9, digits = 3, plot = FALSE, igraph = TRUE)
   \item{circle.size}{the size of the circles, increase (or decrease) if the defaul 20 is not appropriate}
    \item{percentage}{this is for big data sets. if more tha a milion ony 10\% is plotted, if from 100.00 to a milion, 20\%, if 50.000 to 100.000, 50\% otherwise 100\% of the data.}
   \item{seed}{Setting a seed value for selection of the percantage of data (for big data sets)}
-   \item{r}{the theshold for correlation to be reported in \code{data_high_cor()}}
-   \item{igraph}{if in \code{data_high_cor()}, the option \code{plot=TRUE}, then there are two options for plotting; i)  \code{igraph::graph_from_data_frame()} with \code{igraph=TRUE} or ii) \code{networkD3::simpleNetwork()} with \code{igraph=FALSE} }
+   \item{val}{the theshold value so if tha actul value is  greater than \code{val} it will be reported in \code{high_val()}}
+   \item{igraph}{if in \code{high_val()}, the option \code{plot=TRUE} is set, then there are two options for plotting; i)  \code{igraph::graph_from_data_frame()} with \code{igraph=TRUE} or ii) \code{networkD3::simpleNetwork()} with \code{igraph=FALSE} }
 }
 
 \value{
@@ -86,8 +87,8 @@ data_pcor(rent99)
 partial.cor  <-  data_cor(rent99, plot=FALSE) 
 
 
-high_cor(partial.cor, r=0.5)
-high_cor(Pearson.cor, r=0.5)
+high_val(partial.cor, val=0.5)
+high_val(Pearson.cor, val=0.5)
 }
 
 \keyword{regression}
