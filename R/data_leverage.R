@@ -4,17 +4,14 @@
 ################################################################################
 # function 3
 data_leverage <- function(data, response, weights,
-                  point.size = 0.5,
-                        nrow = NULL,
-                        ncol = NULL,
                    quan.val = 0.99,
                    annotate = TRUE,
                    line.col = "steelblue4",
                   point.col = "steelblue4",
                   annot.col = "darkred",
-                  max.levels = 10,#
                         plot = TRUE,
-                        title,...)#value = NULL#quan.val = 0.99,
+                        title, percentage, seed=123,
+                  ...)
 {
 ########################################################################
 # local functions
@@ -33,28 +30,63 @@ out$fct_color <- ordered(factor(out$color), levels =
     return(out)
   }
 #####################################################################
-if (is(data, "list"))
-    stop("the data is list  the function needs a data.frame")
-if (is(data, "table"))
-    stop("the data is a table the function needs a data.frame")
+nameData <- deparse(substitute(data))
+if (missing(data) || NROW(data) <= 1)
+  stop("nothing to do for this data frame")
+# data obs na's
+if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
+if (is(data, "table")) stop("the data is a table the function needs a data.frame")
 if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
-if (is(data, "array"))
-    stop("the data is an array the function needs a data.frame")
-           Y <- deparse(substitute(response))
-if (any(!(Y %in%names(data)))) stop("the response should be in data")
+if (is(data, "array")) stop("the data is an array the function needs a data.frame")
+dimD <- dim(data)
+data <- if (missing(percentage))
+{
+  data_cut(data,seed=seed)
+} else data_cut(data,percentage=percentage)
+if (any(is.na(data)))
+{
+  l1 <- dim(data)[1]
+  data <- na.omit(data)
+  l2 <- dim(data)[1]
+  warning(cat(l1-l2, "observations were omitted from the data", "\n"))
+}
+
+#  if is a list or table
+if (is.null(dimD)) stop("only one variable in the data")
+if (dimD[1] < 20)   stop(cat("the size of the data set is too small", "\n",
+                             "to detect non-linear correlations", "\n"))
+daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
+                                      sapply(data,is.character)==TRUE, FALSE, TRUE))
+Dim <- dim(daTa)
+if (Dim[2]==0) stop("no variable is left after taking out the factors")
+if (Dim[2]==1) stop("only one variable is left after taking out the factors")
+diffDim  <- dimD[2]-Dim[2]
+if (any(is.na(data)))
+{
+  l1 <- dim(data)[1]
+  data <- na.omit(data)
+  l2 <- dim(data)[1]
+  warning(cat(l1-l2, "observations were omitted from the data", "\n"))
+}
+if (is.null(dimD)) stop("only one variable in the data")
+if (diffDim > 0)
+{
+  warning(cat(diffDim, 'factors have been omited from the data', "\n"))
+}
+
+# if (is(data, "list"))
+#     stop("the data is list  the function needs a data.frame")
+# if (is(data, "table"))
+#     stop("the data is a table the function needs a data.frame")
+# if (is(data, "matrix"))    data <- as.data.frame(data)
+# if (is(data[1],"mts"))     data <- as.data.frame(data)
+# if (is(data, "array"))
+#     stop("the data is an array the function needs a data.frame")
+          Y <- deparse(substitute(response))
+# if (any(!(Y %in%names(data)))) stop("the response should be in data")
 if (missing(weights)) weights <- rep(1, dim(data)[1])
-          dv <- y_distinct(data[,Y])
-if (dv < max.levels)
-  stop("the response do not seems to have many distinct values")
-  #.   Names <- names(data)
- class_Vars <- sapply(data,function(x) class(x)[1]) 
-if (any(inherits(class_Vars,"character")))## take out character variables
-  {
-    chr.pos <- match("character",class_Vars)
-       data <- data[,-chr.pos]
-  }
-        pos <- match(Y, names(data))
+        pos <- match(Y, names(daTa))
       nameS <- names(data)[-pos] ## get out the response
          f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')),
                     data=data,      envir=globalenv())#.GlobalEnv

@@ -115,13 +115,16 @@ void <-  function(x,y,  plot=TRUE, print=TRUE, table.length)
 if (length(y)!=n) stop("the x and y should have the same length")  
 table.length <- if (missing(table.length)) floor(fn(n)) 
               else table.length
+    
     xr <- range(x)
     yr <- range(y)
+    xn <- deparse(substitute(x))
+    yn <- deparse(substitute(y))
     xg <- cut(x, table.length) #seq(xr[1], xr[2], length.out=length+1))
     yg <- cut(y, table.length) #seq(yr[1], yr[2], length.out=length+1))
     df <- data.frame(x=xg, y=yg)
-    tt <- table(df$x,df$y)
-    if (plot) image(tt)
+    tt <- table(df$x,df$y, dnn= c(xn, yn))
+    if (plot) image(tt, xlab=xn, ylab=yn)
     if (print)
     {
       cat("% void", (sum(tt==0)/(table.length^2)), "\n")
@@ -166,15 +169,18 @@ data_void <- function(data,
 #  require(foreach)
 ################################################################################
 ################################################################################
-  # local function 
-  meltit <- function(mat)
+# local function matrix (table) to data frame  
+  mat2df <- function(mat)
   {
-    rna <- rownames(mat)
+     rna <- rownames(mat)
+     cna <- colnames(mat)
     lrna <- length(rna)
-    value <- as.vector(mat)
-    Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
-    Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
-    daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
+    lcna <- length(cna)
+   value <- as.vector(mat)
+#if (length(mat)!=lrna*lcna) stop("incomatible lengths")   
+    fac1 <- gl(lrna, 1, length = lrna*lcna, labels=rna)
+    fac2 <- gl(lcna, lrna, length = lrna*lcna, labels=cna)
+     daf <- na.omit(data.frame(fac1, fac2, value=value)) 
     daf
   }
 ################################################################################ 
@@ -210,19 +216,16 @@ if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
      daTa <- subset(data, select=
               ifelse(sapply(data,is.factor) | sapply(data,is.character) |
                     sapply(data,is.integer)&lapply(TT, length)<10, FALSE, TRUE))
-     
       Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")             
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")  
-    
       daTa |> as.data.frame() -> daTa # |> data_int2num()  -> daTa
-
  diffDim  <- dimD[2]-Dim[2]
 if (diffDim > 0)
   {
     warning(cat(diffDim, 'factors have been omited from the data', "\n"))
 }
- 
+
    cnames <- names(daTa)
   lcnames <- length(cnames)
        CC <- matrix(0, ncol=lcnames, nrow=lcnames)
@@ -230,11 +233,14 @@ if (diffDim > 0)
    #index <- index1[ upper.tri(index1)]
     #lind <- length(index)
 #    ((lcnames*lcnames)-length(diag(CC)))/2
+       # data_comb = expand.grid(names(data), names(data),  stringsAsFactors = F) |> 
+       #   stats::setNames(c("X1", "X2"))
   i_index <- col(CC)[upper.tri(CC)] 
   j_index <- row(CC)[upper.tri(CC)]
-   liind <- length(i_index)
-   ljind <- length(i_index)
+    liind <- length(i_index)
+    ljind <- length(j_index)
        Cv <- rep(0, length=liind)
+################################################################################       
        Cv <- foreach(i=1:liind, .combine=cbind) %dopar% 
     {
            ii <- i_index[i]
@@ -243,8 +249,15 @@ if (diffDim > 0)
           xj <- daTa[,jj]
        Cv[i] <- void(xi, xj, plot=FALSE, print=FALSE)
     }
+################################################################################       
   Cv <- as.vector(Cv)     
-  for (i in 1:liind)
+# for vector 2 table 
+# vec2tab <- function(vec, cha1, cha2)
+# {
+#   lvec <- length(vec)
+#  if (length(cha1)*length(cha2)!=lvec) stop("the lenth of vec is not compatible"")
+# }
+         for (i in 1:liind)
   {
     ii <- i_index[i]
     jj <- j_index[i]
@@ -259,7 +272,7 @@ if (diag.off) diag(CC) <- NA
 if  (lower.tri.off) CC[lower.tri(CC)] <- NA
 if (plot==FALSE) return(CC)
       method <- match.arg(method)
-        corr <- meltit(t(CC))
+        corr <- mat2df(t(CC))
     lowerLim <- 25-floor((range(corr$value)[2]-range(corr$value)[1])*20)
   colnames(corr) <- c("var_1", "var_2", "value")
   txt.title <- if (missing(title))

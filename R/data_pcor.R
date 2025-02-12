@@ -41,16 +41,16 @@ data_pcor <- function(data,
 ################################################################################
 ################################################################################
 # local function
-  meltit <- function(mat)
-  {
-     rna <- rownames(mat)
-    lrna <- length(rna)
-  value <- as.vector(mat)
-    Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
-    Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
-     daf <-  na.omit(data.frame(Var1, Var2, value=value))
-    daf
-  }
+  # mat2df <- function(mat)
+  # {
+  #    rna <- rownames(mat)
+  #   lrna <- length(rna)
+  # value <- as.vector(mat)
+  #   Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
+  #   Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
+  #    daf <-  na.omit(data.frame(Var1, Var2, value=value))
+  #   daf
+  # }
 ################################################################################
 pcor  <- function (data)
   {
@@ -118,7 +118,7 @@ if (lower.tri.off)  CC[lower.tri(CC)]<-NA
               else title
 if (plot==FALSE) return(CC)
           method <- match.arg(method)
-            corr <- meltit(CC)
+            corr <- mat2df(CC)
             var_1 <-  var_2 <-  value <- NULL
   colnames(corr) <- c("var_1", "var_2", "value")
        txt.title <- if (missing(title))

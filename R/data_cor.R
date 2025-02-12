@@ -40,16 +40,16 @@ data_cor <- function(data,
 ################################################################################
 ################################################################################
 # local function
-  meltit <- function(mat)
-  {
-     rna <- rownames(mat)
-    lrna <- length(rna)
-   value <- as.vector(mat)
-    Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
-    Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
-     daf <-  na.omit(data.frame(Var1, Var2, value=value))
-    daf
-  }
+  # mat2df <- function(mat)
+  # {
+  #    rna <- rownames(mat)
+  #   lrna <- length(rna)
+  #  value <- as.vector(mat)
+  #   Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
+  #   Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
+  #    daf <-  na.omit(data.frame(Var1, Var2, value=value))
+  #   daf
+  # }
 ####################################################################
 ####################################################################
 # data.frame missing
@@ -106,7 +106,7 @@ if (lower.tri.off)  CC[lower.tri(CC)]<-NA
               else title
 if (plot==FALSE) return(CC)
           method <- match.arg(method)
-            corr <- meltit(CC)
+            corr <- mat2df(CC)
             var_1 <-  var_2 <-  value <- NULL
   colnames(corr) <- c("var_1", "var_2", "value")
        txt.title <- if (missing(title))
@@ -298,7 +298,7 @@ low_val <- function(table, val=.05, digits=3, plot=FALSE, igraph=TRUE)
     name2 <- colnames(table)[nn[,2]]
     corrs <- table[nn]
   }
-  M <-  cbind(name1, name2, corrs)
+  M <-  cbind(name1, name2, value=corrs)
   if (plot)
   {
     # dd <- which.Data.Corr(InfMort, r=0.5)[,c(1,2)]

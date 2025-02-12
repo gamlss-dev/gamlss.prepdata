@@ -5,10 +5,11 @@
 # INTERACTIONS
 ################################################################################
 ################################################################################
-# fitting  interactions for a data.frame
+# fitting  pair-wise interactions for a data.frame
 # it check whether they are factor and only show the
 # interactions for continuous variables
-# to do : it needs also factors fitting
+# to do : it needs also factors interactions fitting 
+# what about the response? 
 ################################################################################ 
 # This version uses foreach
 data_inter <- function(data, 
@@ -16,7 +17,7 @@ data_inter <- function(data,
                        weights,
                      digits = 3,
                        plot = TRUE,
-                   diag.off = TRUE,
+   #                diag.off = TRUE,
               lower.tri.off = TRUE,  
                      method = c("circle", "square"),
                  fit.method = c("linear", "nonlinear"),
@@ -32,26 +33,17 @@ data_inter <- function(data,
                     lab_col = "black", 
                    lab_size = 3,
                 circle.size = 20,
-                       ...) # c(1,15) maybe will do
+                       seed = 123,
+                      percentage)
+    # c(1,15) maybe will do
 {
 ################################################################################
 ################################################################################
 # require(foreach)
 ################################################################################
 ################################################################################
-# local function 
-meltit <- function(mat)
-  {
-     rna <- rownames(mat)
-    lrna <- length(rna)
-   value <- as.vector(mat)
-    Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
-    Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
-     daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
-    daf
-  }
-################################################################################
-################################################################################
+# for linear with continuous response do not matter what x is 
+# still will do the right thing
 pw_inter<-function(y, x1, x2, weights)
   {
       N <- length(y)
@@ -61,9 +53,10 @@ if (missing(weights)) weights <- rep(1,N)
      m0 <- lm(y~x1+x2, data=DaTa, weights=weights)
     CHI <-  1-pchisq(AIC(m0, k=0)-AIC(m1, k=0), df=1)
     CHI
-  }
+}
 ################################################################################
 ################################################################################
+# this is OK for continuous x's
 pw_nl_inter<-function(y, x1, x2, weights)
 {
      N <- length(y)
@@ -77,13 +70,27 @@ if (missing(weights)) weights <- rep(1,N)
 }
 ################################################################################
 ################################################################################
+pw_nl_inter_x_f<-function(y, x1, f2, weights)
+{
+  N <- length(y)
+  if (missing(weights)) weights <- rep(1,N)
+  DaTa <- data.frame(y=y, x1 = x1, f2 = f2)
+  m1 <- gam(y~s(x1)+f2, data=DaTa)
+  m0 <- gam(y~s(x1, by=f2), data=DaTa)
+  CHI <- 1-pchisq(AIC(m0, k=0)-AIC(m1, k=0),df=
+                    (m0$df.residual-m1$df.residual))
+  CHI
+}
+################################################################################
+################################################################################
 ################################################################################
 # main function stats here
-  i <- j <- NULL
+      i <- j <- NULL
   fit.method <- match.arg(fit.method)
+      method <- match.arg(method)
 if (missing(data) || NROW(data) <= 1) 
     stop("nothing to do for this data frame")
-# data obs na's
+# data obs 
 if (is(data, "list"))  
     stop("the data is list  the function needs a data.frame") 
 if (is(data, "table")) 
@@ -91,24 +98,34 @@ if (is(data, "table"))
 if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) 
-    stop("the data is an array the function needs a data.frame")  
+  stop("the data is an array the function needs a data.frame")  
+   data <- if (missing(percentage))
+      {
+        data_cut(data,seed=seed)
+      } else data_cut(data,percentage=percentage)
      Y <- deparse(substitute(response))
+# what type is the response?
+#is_numeric(data[,Y]) 
+clRes <- class(data[,Y])
+if (clRes!="numeric") stop("only numeric vectors as resposnces")
+# the response in data     
 if (any(!(Y %in%names(data)))) stop("the response should be in data")
   actY <- data[,Y]
-# standardise data  
+# standardise the response since we fit a Normal distribution 
   stdY <- y_zscores(actY, plot=FALSE)
    pos <- match(Y,names(data))
-daTA  <- data[,-pos] # take out response
-   TT <- lapply(daTA, unique)
+ daTa  <- data[,-pos] # take out response
+    TT <- lapply(daTa, unique)
+ CData <- sapply(daTa,function(x) class(x)[1])
   # browser()
   #         ifelse(sapply(daTA,is.factor)
   #        |
   #          sapply(daTA,is.character)|
   #          apply(daTA,2,FUN=is.integer)&sapply(TT, length)<10, FALSE, TRUE)
-    daTa <-  subset(daTA, select= 
-              ifelse(sapply(daTA,is.character)|
-                     apply(daTA,2,FUN=is.integer)&
-                     sapply(TT, length)<10, FALSE, TRUE))
+    # daTa <-  subset(daTA, select= 
+    #           ifelse(sapply(daTA,is.character)|
+    #                  apply(daTA,2,FUN=is.integer)&
+    #                  sapply(TT, length)<10, FALSE, TRUE))
      namesD <- names(daTa)
        daTa <- cbind(daTa, actY)
 names(daTa) <- c(namesD, Y) 
@@ -127,10 +144,10 @@ if (dimD[1]<20)    stop(cat("the size of the data set is too small", "\n",
 if (Dim[2]==0) stop("no variable is left after taking out unwanded variables")         
 if (Dim[2]==1) stop("only one variable is left")    
   diffDim <- dimD[2]-Dim[2]
-if (diffDim > 0)
-{
-    warning(cat(diffDim, 'variables have been omited from the data', "\n"))
-} 
+#if (diffDim > 0)
+#{
+#    warning(cat(diffDim, 'variables have been omited from the data', "\n"))
+#} 
    cnames <-  namesD
   lcnames <- length(cnames)
        CC <- matrix(0, ncol=lcnames, nrow=lcnames)
@@ -156,11 +173,11 @@ foreach(j=1:lcnames, .combine='c') %do%
    colnames(CC) <- cnames
        diag(CC) <- NA
              CC <- base::round(x = CC, digits = digits)   
-if (diag.off) diag(CC) <- NA
+diag(CC) <- NA
 if  (lower.tri.off) CC[lower.tri(CC)] <- NA
 if (plot==FALSE) return(CC)
          method <- match.arg(method)
-          inter <- meltit(CC)
+          inter <- mat2df(CC)
        lowerLim <- 25-floor((range(inter$value)[2]-range(inter$value)[1])*20)
 colnames(inter) <- c("var_1", "var_2", "value")
   if (fit.method=="linear")

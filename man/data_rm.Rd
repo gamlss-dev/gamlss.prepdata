@@ -3,6 +3,8 @@
 \alias{data_exclude_class}
 \alias{data_rm1val}
 \alias{data_only_continuous}
+\alias{data_select}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Functions operating on variables in the data}
 \description{
@@ -16,6 +18,7 @@ There are several function operating on a \code{data.frame} and export a \code{d
 
 4) \code{data_only_continuous()}": This function pick up only the continuous variable in the \code{data.frame}.
 
+5) \code{data_select()}": This function select only the variables in the  \code{vars} list and save the data.
 
 }
 \usage{
@@ -26,6 +29,8 @@ data_rm1val(data)
 data_exclude_class(data, class.out = "factor")
 
 data_only_continuous(data)
+
+data_select(data, vars)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -68,6 +73,10 @@ head(da)
 
 da<- data_only_continuous(rent)
 head(da)
+
+da <- rent |> data_select( vars=c("R", "Fl", "A"))
+head(da)
+
 }
 
 \keyword{regression}

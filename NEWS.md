@@ -24,6 +24,10 @@ More more information about books and papers related to GAMLSS can be found in
 The GitHub repository is now hosted under the new `gamlss-dev` organization:
   <https://github.com/gamlss-dev/gamlss/>.
 
+# Vertion 0.1-4
+
+* the the function `data_leverage()` is added
+
 # Version 0.1-3
 
 * the functions `data_str()` and `data_exclude_class()`  are modified to work with `POSIXct` class. 
