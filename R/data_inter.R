@@ -85,9 +85,10 @@ pw_nl_inter_x_f<-function(y, x1, f2, weights)
 ################################################################################
 ################################################################################
 # main function stats here
-      i <- j <- NULL
-  fit.method <- match.arg(fit.method)
-      method <- match.arg(method)
+nameData <- deparse(substitute(data))
+       i <- j <- NULL
+   fit.method <- match.arg(fit.method)
+       method <- match.arg(method)
 if (missing(data) || NROW(data) <= 1) 
     stop("nothing to do for this data frame")
 # data obs 
@@ -183,12 +184,12 @@ colnames(inter) <- c("var_1", "var_2", "value")
   if (fit.method=="linear")
   {
       txt.title <- if (missing(title))
-      paste("Linear pair-wise interactions for:", deparse(substitute(data)))
+      paste("Linear pair-wise interactions for:", nameData)
     else title
   } else 
   {
       txt.title <- if (missing(title))
-      paste("Nonlinear pair-wise interactions for:", deparse(substitute(data)))
+      paste("Nonlinear pair-wise interactions for:", nameData)
     else title 
   }  
   #inter$abs_inter <- (1-abs(inter$value)) * 10

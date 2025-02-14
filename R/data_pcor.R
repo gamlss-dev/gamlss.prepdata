@@ -40,17 +40,6 @@ data_pcor <- function(data,
 {
 ################################################################################
 ################################################################################
-# local function
-  # mat2df <- function(mat)
-  # {
-  #    rna <- rownames(mat)
-  #   lrna <- length(rna)
-  # value <- as.vector(mat)
-  #   Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
-  #   Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
-  #    daf <-  na.omit(data.frame(Var1, Var2, value=value))
-  #   daf
-  # }
 ################################################################################
 pcor  <- function (data)
   {
@@ -65,8 +54,10 @@ pcor  <- function (data)
   }
 ################################################################################
 ################################################################################
-# if data.frame missing
- nameData <- deparse(substitute(data))
+################################################################################
+
+  nameData <- deparse(substitute(data))
+# if data.frame missing  
 if (missing(data) || NROW(data) <= 1)
     stop("nothing to do for this data frame")
 # data obs na's
@@ -122,7 +113,7 @@ if (plot==FALSE) return(CC)
             var_1 <-  var_2 <-  value <- NULL
   colnames(corr) <- c("var_1", "var_2", "value")
        txt.title <- if (missing(title))
-                paste("Partial correlations from data",deparse(substitute(data)))
+                paste("Partial correlations from data", nameData)
   else title
    corr$abs_corr <- abs(corr$value) * 10
                p <- ggplot2::ggplot(data = corr,

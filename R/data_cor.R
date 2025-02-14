@@ -50,8 +50,8 @@ data_cor <- function(data,
   #    daf <-  na.omit(data.frame(Var1, Var2, value=value))
   #   daf
   # }
-####################################################################
-####################################################################
+################################################################################
+################################################################################
 # data.frame missing
   nameData <- deparse(substitute(data))
 if (missing(data) || NROW(data) <= 1)
@@ -74,13 +74,12 @@ if (any(is.na(data)))
     l2 <- dim(data)[1]
   warning(cat(l1-l2, "observations were omitted from the data", "\n"))
 }
-            
 #  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data")
 if (dimD[1] < 20)   stop(cat("the size of the data set is too small", "\n",
                                 "to detect non-linear correlations", "\n"))
         daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
-              sapply(data,is.character)==TRUE, FALSE, TRUE))
+                sapply(data,is.character)==TRUE, FALSE, TRUE))
         Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")
@@ -99,12 +98,13 @@ if (diffDim > 0)
               }
               CC <- cor(daTa)
               CC <- base::round(x = CC, digits = digits)
+if (plot==FALSE) return(CC)
+  browser()            
 if ( diag.off) diag(CC) <- NA
 if (lower.tri.off)  CC[lower.tri(CC)]<-NA
-       txt.title <- if (missing(title))
-          paste("Correlations from data", nameData)
+              txt.title <- if (missing(title))
+                paste("Correlations from data", nameData)
               else title
-if (plot==FALSE) return(CC)
           method <- match.arg(method)
             corr <- mat2df(CC)
             var_1 <-  var_2 <-  value <- NULL
@@ -120,7 +120,6 @@ if (method == "square") {
                p <- p + ggplot2::geom_tile(color = outline.color)
   }
 else if (method == "circle") {
-
     p <- p + ggplot2::geom_point(color = outline.color, shape = 21,
              ggplot2::aes(size = .data[["abs_corr"]])) +
             # scale_size(range = c(5, 20)) +

@@ -225,7 +225,6 @@ if (diffDim > 0)
   {
     warning(cat(diffDim, 'factors have been omited from the data', "\n"))
 }
-
    cnames <- names(daTa)
   lcnames <- length(cnames)
        CC <- matrix(0, ncol=lcnames, nrow=lcnames)
@@ -245,9 +244,9 @@ if (diffDim > 0)
     {
            ii <- i_index[i]
            jj <- j_index[i]
-          xi <- daTa[,ii]
-          xj <- daTa[,jj]
-       Cv[i] <- void(xi, xj, plot=FALSE, print=FALSE)
+           xi <- daTa[,ii]
+           xj <- daTa[,jj]
+        Cv[i] <- void(xi, xj, plot=FALSE, print=FALSE)
     }
 ################################################################################       
   Cv <- as.vector(Cv)     
@@ -257,24 +256,28 @@ if (diffDim > 0)
 #   lvec <- length(vec)
 #  if (length(cha1)*length(cha2)!=lvec) stop("the lenth of vec is not compatible"")
 # }
+## take the vector and create a diagonal matrix
          for (i in 1:liind)
   {
     ii <- i_index[i]
     jj <- j_index[i]
     CC[ ii, jj ] <- Cv[i]
-  }
-   CC <- CC+t(CC)  # to get the full matrix (rather than diagonal)
+         }
+## get the full matrix (rather than diagonal)
+   CC <- CC+t(CC)  
+## put names back   
   rownames(CC) <- cnames
   colnames(CC) <- cnames
       diag(CC) <- 1
             CC <- base::round(x = CC, digits = digits)   
 if (diag.off) diag(CC) <- NA
-if  (lower.tri.off) CC[lower.tri(CC)] <- NA
+if (lower.tri.off) CC[lower.tri(CC)] <- NA
 if (plot==FALSE) return(CC)
-      method <- match.arg(method)
-        corr <- mat2df(t(CC))
-    lowerLim <- 25-floor((range(corr$value)[2]-range(corr$value)[1])*20)
-  colnames(corr) <- c("var_1", "var_2", "value")
+       method <- match.arg(method)
+## from matrix to df for ggplots
+         corr <- mat2df(t(CC))
+     lowerLim <- 25-floor((range(corr$value)[2]-range(corr$value)[1])*20)
+colnames(corr) <- c("var_1", "var_2", "value")
   txt.title <- if (missing(title))
     paste("Empty spaces from data:", nameData)
   else title

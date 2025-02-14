@@ -95,6 +95,7 @@ importFrom("stats", "runif")
 importFrom("stats", "density")
 importFrom("stats", "get_all_vars")
 importFrom("stats", "optimise")
+importFrom("stats", "chisq.test")
 ################################################################################
 importFrom("foreach", "%dopar%", "foreach", "%do%")
 ################################################################################
