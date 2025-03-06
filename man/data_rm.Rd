@@ -4,6 +4,7 @@
 \alias{data_rm1val}
 \alias{data_only_continuous}
 \alias{data_select}
+\alias{data_rmNAvars}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Functions operating on variables in the data}
@@ -20,6 +21,8 @@ There are several function operating on a \code{data.frame} and export a \code{d
 
 5) \code{data_select()}": This function select only the variables in the  \code{vars} list and save the data.
 
+
+
 }
 \usage{
 data_rm(data, vars)
@@ -32,6 +35,7 @@ data_only_continuous(data)
 
 data_select(data, vars)
 
+data_rmNAvars(data)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

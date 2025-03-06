@@ -158,3 +158,23 @@ data_select <- function(data, vars)
 ################################################################################
 ################################################################################
 ################################################################################
+data_rmNAvars <- function(data)
+{
+  # what is the data
+  if (is(data, "list"))
+    stop("the data is list  the function needs a data.frame")
+  if (is(data, "table"))
+    stop("the data is a table the function needs a data.frame")
+  if (is(data, "matrix"))    data <- as.data.frame(data)
+  if (is(data[1],"mts"))     data <- as.data.frame(data)
+  if (is(data, "array"))
+    stop("the data is an array the function needs a data.frame")
+  Names <- names(data)
+  dist <- data_distinct(data,get.distinct = TRUE, print=FALSE)
+  data <- data[,Names[dist>0]] 
+  invisible(data)
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################

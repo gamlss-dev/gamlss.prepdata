@@ -5,7 +5,7 @@
 \alias{data_cha2fac}
 \alias{data_few2fac}
 \alias{data_int2num}
-
+\alias{data_fac2num}
 
 
 \title{Function applied to data}
@@ -14,12 +14,18 @@ his is a set of function are designed to help the user to deal with the structur
 }
 \usage{
 data_str(data, min.values = 100, min.levels = 10)
+
 y_distinct(var)
+
 data_distinct(data, get.distinct = FALSE, print=TRUE)
+
 data_cha2fac(data, show.str = FALSE)
+
 data_few2fac(data, min.levels = 10, show.str = FALSE)
+
 data_int2num(data, min.values = 50, show.str = FALSE)
 
+data_fac2num(data, vars)
 }
 
 \arguments{
@@ -27,6 +33,7 @@ data_int2num(data, min.values = 50, show.str = FALSE)
   \item{min.values}{the minimal value distinct values befor warning }
   \item{min.levels}{the minimal value distinct levels befor warning}
   \item{var}{a vector}
+  \item{vars}{a character vector with names from the data}
    \item{get.distinct}{TRUE if you need to save the values FALSE if not not}
   \item{show.str}{whether to show the structure}
    \item{print}{TRUE or FALSE}
@@ -43,6 +50,8 @@ The function \code{data_cha2fac()} tranforms all character vectors to factors
 The function \code{data_few2fac()} transform all vectors with fewer values than \code{min.levels} into factors
 
 The function \code{data_int2num()} transform all integer vectors with more values than \code{min.values} into numeric
+
+The function \code{data_fac2num() transform sellected variables factors into numeric vectors} 
 }
 
 \references{

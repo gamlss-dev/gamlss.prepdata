@@ -146,7 +146,6 @@ if (is(data,"tbl_df")|is(data, "tbl"))
   warning("the tibble was transform to data.frame")
 }
 # checking data
-
 cat("**************************************************************",  "\n")
        Names <- names(data)
   class_Vars <- sapply(data,function(x) class(x)[1]) 
@@ -156,7 +155,7 @@ cat("**************************************************************",  "\n")
 if (ind==0)
   {
   cat("not character vector was found", "\n")
-  return(data)
+  return(invisible(data))
   }
 for (i in 1:ind)
  {
@@ -283,7 +282,36 @@ invisible(data)
 }
 ################################################################################
 ################################################################################
-# enf of STR functions
+################################################################################
+################################################################################
+data_fac2num <- function(data, vars) # or as character or numbers
+{
+if (is(data, "list"))
+    stop("the data is list  the function needs a data.frame")
+if (is(data, "table"))
+    stop("the data is a table the function needs a data.frame")
+if (is(data, "matrix"))    data <- as.data.frame(data)
+if (is(data[1],"mts"))     data <- as.data.frame(data)
+if (is(data, "array"))
+    stop("the data is an array the function needs a data.frame")
+class_AVars <-  sapply(data,function(x) class(x)[1])
+class_SVars <-  sapply(data[,vars],function(x) class(x)[1])
+for (i in 1:length(vars))
+{
+  if (class_SVars[1]=="character"||class_SVars[1]=="factor")
+    data[,vars[i]] <- as.numeric(data[,vars[i]])
+  else 
+    stop( "At least one of the vars is not character or factor")
+}  
+data <- data_omit(data)
+invisible(data)
+}
+# data_fac2var  <-  function(data, vars)
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# end of STR functions
 ################################################################################
 ################################################################################
 ################################################################################
