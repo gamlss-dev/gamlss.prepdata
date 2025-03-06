@@ -131,6 +131,7 @@ invisible(data)
 # is less than 20
 data_cha2fac <- function(data, show.str=FALSE)
 {
+  browser()
 # what is the data
 if (is(data, "list"))
                 stop("the data is list  the function needs a data.frame")
@@ -160,7 +161,7 @@ if (ind==0)
 for (i in 1:ind)
  {
 #if   (dval[i] < min.levels)
-  cat("class:", class_Vars[i], "\n"  )    
+ # cat("class:", class_Vars[i], "\n"  )    
   data[,all_Cha[i]] <- factor(data[,all_Cha[i]])
 }
 if (show.str)
