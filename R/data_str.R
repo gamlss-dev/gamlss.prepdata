@@ -131,7 +131,6 @@ invisible(data)
 # is less than 20
 data_cha2fac <- function(data, show.str=FALSE)
 {
-  browser()
 # what is the data
 if (is(data, "list"))
                 stop("the data is list  the function needs a data.frame")
