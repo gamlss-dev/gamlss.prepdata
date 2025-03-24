@@ -20,6 +20,7 @@ The functions \code{high_val} and \code{low_val} take the square matrix generate
 \usage{
 data_cor(data,  digits = 3, plot = TRUE, diag.off = TRUE,
         lower.tri.off = FALSE, method = c("square", "circle"),
+        type = c("pearson", "kendall", "spearman"),
         outline.color = "gray", colors = c("blue", "white", "red"),
         legend.title = "Corr", title, ggtheme = theme_minimal(),
         tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE,
@@ -54,6 +55,7 @@ low_val(table, val = 0.05, digits = 3, plot = FALSE, igraph = TRUE)
   \item{diag.off}{whether to show the diagonal ellements}
   \item{lower.tri.off}{whether to show the lower part of the matrix}
   \item{method}{plotting in \code{"square"} or \code{"cicle"}}
+  \item{type}{type of correlation c("pearson", "kendall", "spearman")}
   \item{outline.color}{the outline colour}
   \item{colors}{the range of colours}
   \item{legend.title}{title for the legend}

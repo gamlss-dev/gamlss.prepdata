@@ -22,6 +22,7 @@ data_cor <- function(data,
                    diag.off = TRUE,
               lower.tri.off = FALSE,
                      method = c("square", "circle"),
+                       type = c("pearson", "kendall", "spearman"),
               outline.color = "gray",
                      colors = c("blue", "white", "red"),
                legend.title = "Corr",
@@ -52,6 +53,7 @@ data_cor <- function(data,
   # }
 ################################################################################
 ################################################################################
+  type <- match.arg(type)
 # data.frame missing
   nameData <- deparse(substitute(data))
 if (missing(data) || NROW(data) <= 1)
@@ -95,21 +97,21 @@ if (is.null(dimD)) stop("only one variable in the data")
 if (diffDim > 0)
                {
                warning(cat(diffDim, 'factors have been omited from the data', "\n"))
-              }
-              CC <- cor(daTa)
+}
+              CC <- cor(daTa, method=type)
               CC <- base::round(x = CC, digits = digits)
 if (plot==FALSE) return(CC)
 if ( diag.off) diag(CC) <- NA
 if (lower.tri.off)  CC[lower.tri(CC)]<-NA
               txt.title <- if (missing(title))
-                paste("Correlations from data", nameData)
+                paste(type,"correlations, data",nameData)
               else title
           method <- match.arg(method)
             corr <- mat2df(CC)
             var_1 <-  var_2 <-  value <- NULL
   colnames(corr) <- c("var_1", "var_2", "value")
        txt.title <- if (missing(title))
-                paste("Correlations from data",nameData)
+                paste(type,"correlations, data",nameData)
   else title
    corr$abs_corr <- abs(corr$value) * 10
                p <- ggplot2::ggplot(data = corr,
