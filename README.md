@@ -6,7 +6,7 @@
 
 The purpose of this package is to provide functions to facilitate the
 creation of `data.frame`’s suitable for statistical modelling analysis
-and especial for the used with distributional regression models using
+and especially distributional regression models using
 [`gamlss`](https://cran.r-project.org/package=gamlss) and.
 [`gamlss2`](https://github.com/gamlss-dev/gamlss2) packages.
 
