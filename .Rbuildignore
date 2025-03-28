@@ -1,0 +1,8 @@
+README.qmd
+.github
+^_quarto$
+^altdoc$
+^docs$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.Rproj\.user$

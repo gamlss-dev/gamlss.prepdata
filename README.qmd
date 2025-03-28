@@ -1,96 +1,114 @@
----
-title: ""
-format: gfm
-editor: visual
----
+<!-- README.md is generated from README.qmd via: quarto render README.qmd --to gfm -->
 
-# gamlss.prepdata: Preparing data for Distributional Regression
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "##",
+  fig.path = "man/figures/README-",
+  fig.width = 12,
+  fig.height = 8,
+  fig.align = "center",
+  dev = "png"
+)
+```
 
+
+# gamlss.prepdata: Preparing Data for Distributional Regression
 
 ## Overview
 
-The purpose of this package is to provide functions to facilitate the creation of `data.frame`'s suitable for  statistical modelling analysis and especially distributional regression models using [`gamlss`](https://cran.r-project.org/package=gamlss) and. [`gamlss2`](https://github.com/gamlss-dev/gamlss2)  packages.
+The purpose of this package is to provide functions to facilitate the creation
+of `data.frame`'s suitable for  statistical modeling analysis and especially
+distributional regression models using
+[`gamlss`](https://cran.R-project.org/package=gamlss) and.
+[`gamlss2`](https://github.com/gamlss-dev/gamlss2)  packages.
 
-There is a lot of information which can be gain using a preliminary data analysis. One could seeking information about the _variables_ in the data set themselves, on _outliers_, on _associations_  between variables, what  _type_ of relationships  exist between the response and the explanatory variables (linear or not linear) and  possible _interactions_ between the explanatory variables.  In addition, one, at this stage, could  decide  appropriate  _partitions_ of to maximise statistical inference. While answers to those questions are not necessarily final, at this pre-modelling stage, they could help at the next stage of the fitting  process. All functions in the package can be used before the functions  \texttt{gamlss()} or \texttt{gamlss2()} are used for modelling. 
+There is a lot of information which can be gain using a preliminary data
+analysis. One could seeking information about the _variables_ in the data set
+themselves, on _outliers_, on _associations_  between variables, what  _type_ of
+relationships  exist between the response and the explanatory variables (linear
+or not linear) and  possible _interactions_ between the explanatory variables. 
+In addition, one, at this stage, could  decide  appropriate  _partitions_ of to
+maximize statistical inference. While answers to those questions are not
+necessarily final, at this pre-modeling stage, they could help at the next
+stage of the fitting  process. All functions in the package can be used before
+the functions  \texttt{gamlss()} or \texttt{gamlss2()} are used for modeling. 
 
 ## Installation
 
-You need the package `devtools`;
+The package is not yet on CRAN but can be installed from
+[R-universe](https://gamlss-dev.R-universe.dev/).
+
 ```{r}
+#| label: install
 #| eval: false
-library(devtools)
-install_github("mstasinopoulos/gamlss.prepdata") 
+install.packages("gamlss.prepdata", repos = "https://gamlss-dev.R-universe.dev")
 ```
-
-## Licence
-
-The package is available under the [General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.html) 
-
-
 
 ## Functions
 
 The functions for manipulation of variables are shown below
 
-| Functions.   | usage                                    |
-|:---------------|:---------------------------------------|
-| `data_dim()`   | dimensions & % of omitted observations |
-| `data_names()` | names of the data                      |
-| `data_distrinct()`| distinct values in variables.       |
-| `data_which(()` | NA's in variables                     |
-| `data_str()`.  | the class of  variables e.t.c |
-|  `data_omit()`  |  Omit all the NA's |
-| `data_char2fac()`  | from characters to factors |
-| `data_few2fac()`   | from few distinct obs. to factors |
-| `data_int2num()`  | from integers to  numeric |
-| `data _rm()`       | remove variables |
-| `data _rm1val()`  | remove factors with one level |
-| `data _rename()`  | rename variables |
-| `data _renamove()`  | remove variables |
-| `data _select()`  | select variables |
-| `data _exclude_class()`  | exclude a specified class |
-| `data _only_continous()`  | includes only continuous |
-| `data_rmNAvars()`    | remove variables with NA values |
-| `data_fac2num()`    | make factor numeric |
+| Functions                | Usage                                  |
+|:-------------------------|:---------------------------------------|
+| `data_dim()`             | Dimensions & % of omitted observations |
+| `data_names()`           | Names of the data                      |
+| `data_distrinct()`       | Distinct values in variables           |
+| `data_which(()`          | NA's in variables                      |
+| `data_str()`.            | The class of  variables etc.           |
+| `data_omit()`            | Omit all the `NA`s                     |
+| `data_char2fac()`        | From characters to factors             |
+| `data_few2fac()`         | From few distinct obs. to factors      |
+| `data_int2num()`         | From integers to  numeric              |
+| `data _rm()`             | Remove variables                       |
+| `data _rm1val()`         | Remove factors with one level          |
+| `data _rename()`         | Rename variables                       |
+| `data _renamove()`       | Remove variables                       |
+| `data _select()`         | Select variables                       |
+| `data _exclude_class()`  | Exclude a specified class              |
+| `data _only_continous()` | Includes only continuous               |
+| `data_rmNAvars()`        | Remove variables with NA values        |
+| `data_fac2num()`         | Make factor numeric                    |
 
 The function for graphics are show below
 
-| Functions.   | usage                                    |
-|:---------------|:---------------------------------------|
-| `data_plot()`   | univariate plots of all variables |
-| `data_xyplot()` | pairwise plots of the response against all others |                     |
-| `data_bucket()` |  bucket plots of all variables |
-| `data_cor(()` | pairwise correlations|
-| `data_pcor(()` |pairwise partial correlations|
-| `data_void()` | pairwise % of empty spaces |
-| `data_inter()` | pairwise interactions |
-| `data_respose()`  | response variable plots |
-| `data_zscores()`  | univariate plots using z-scores |
-| `data_outliers()`  | univariate detection of outliers |
-| `data_leverage()`  | detection of outliers in the x's  space |
-| `data_scale()`  | univariate scaling the x's |
-| `data_trans_plot()`  | checking for univivariate transformations in the x's |
+| Functions           | Usage                                                |
+|:--------------------|:-----------------------------------------------------|
+| `data_plot()`       | Univariate plots of all variables                    |
+| `data_xyplot()`     | Pairwise plots of the response against all others    |
+| `data_bucket()`     | Bucket plots of all variables                        |
+| `data_cor(()`       | Pairwise correlations                                |
+| `data_pcor(()`      | Pairwise partial correlations                        |
+| `data_void()`       | Pairwise % of empty spaces                           |
+| `data_inter()`      | Pairwise interactions                                |
+| `data_response()`   | Response variable plots                              |
+| `data_zscores()`    | Univariate plots using z-scores                      |
+| `data_outliers()`   | Univariate detection of outliers                     |
+| `data_leverage()`   | Detection of outliers in the x's  space              |
+| `data_scale()`      | Univariate scaling the x's                           |
+| `data_trans_plot()` | Checking for univivariate transformations in the x's |
 
 
 ## Graphics
 
 
-
 Here some of the  graphical functions examples
 
 ```{r}
-#| message: false
+#| label: packages
 #| fig-show: hide
-#| warning: false
-rm(list=ls())
-library(gamlss)
-library(gamlss2)
-library(ggplot2)
-library(gamlss.ggplots)
-library(gamlss.prepdata)
+library("gamlss")
+library("gamlss2")
+library("ggplot2")
+library("gamlss.ggplots")
+library("gamlss.prepdata")
 library("dplyr") 
 packageVersion("gamlss.prepdata")
-da <- data_rm(rent99, c(2,9)) 
+da <- data_rm(rent99, c(2, 9)) 
 dim(rent99)
 dim(da)
 ```
@@ -99,7 +117,7 @@ dim(da)
 
 The function `data_plot` plots all the variable of the data individually. It plots;
 
--   the continuous variable as *histograms* with a density plots superimposed, (see the plots for `rent` and `yearc` below). Alternatively a *dot plots* can be requested, (see the example in @sec-data_response).
+-   the continuous variable as *histograms* with a density plots superimposed, (see the plots for `rent` and `yearc` below). Alternatively a *dot plots* can be requested, (see the example in @sec-data_xyplot).
 
 -   the integers as *needle* plots, (see the plot for `area` below).
 
@@ -108,7 +126,7 @@ The function `data_plot` plots all the variable of the data individually. It plo
 The message `100 % of data are saved` below is the result of the function `data_cut()` which is use before any `ggplot2` plot.
 
 ```{r}
-#| warning: false
+#| label: data_plot
 da |> data_plot()
 ```
 
@@ -124,6 +142,7 @@ At the moment there is no provision for categorical response variables.
 :::
 
 ```{r}
+#| label: data_xyplot
 da |> data_xyplot(response=rent )
 ```
 
@@ -134,6 +153,6 @@ The output of the function saves the `ggplot2` figures.
 The function `data_bucket` can be used to identifies hight skewness and kurtosis on continuous variables in the data. Note that if the continuous variable is normaly distribueterd looking should be in the center of the figure.
 
 ```{r}
-#| warning: false
+#| label: data_bucket
 data_bucket(da, response=rent )
 ```
