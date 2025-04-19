@@ -1,18 +1,19 @@
 # removing data functions
 ################################################################################
 # function 1; data_rm1val()
-# function 2;  data_rm(data, vars)
+# function 2; data_rm(data, vars)
 # function 3; data_exclude_class(data, class.out="factor")
 # function 4: data_only_continuous(data)
-# function 5: data_classes()  (secrete)
-# function 6: data_select()  (secrete)
+# function 5: data_classes()  (secret)
+# function 6: data_select()   (secret)
+# function 7: data_rmNAvars()
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
 # function 1 removing variables with only one value
 ################################################################################
-#remove factors with only one level 
+# remove factors with only one level (probably left by mistake)
 data_rm1val <- function(data)
 {
   # what is the data
@@ -49,7 +50,8 @@ if (any(pp==1))
 ################################################################################
 ################################################################################
 ################################################################################
-# removes specified variables
+# function 2 : removes specified variables
+################################################################################ 
 data_rm <- function(data, vars)
 {
 if (is(data, "list"))
@@ -75,6 +77,7 @@ if (is.character(vars))
 ################################################################################
 # exclude columns  belonging to a specified class
 # function 3
+################################################################################ 
 data_exclude_class <- function(data, class.out="factor")
 {
 if (is(data, "list"))
@@ -95,6 +98,7 @@ invisible(da)
 ################################################################################
 # function 4
 # get only the continuous variables in the data set
+################################################################################ 
 data_only_continuous <- function(data)
 {
 if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
@@ -118,6 +122,8 @@ class_Vars <-  sapply(data,function(x) class(x)[1])
 ################################################################################
 ################################################################################
 ################################################################################
+# function 5: data_classes()  (secret)
+################################################################################
 data_classes <- function(df) 
   {
   t(
@@ -133,6 +139,7 @@ data_classes <- function(df)
 ################################################################################
 ################################################################################
 ################################################################################
+# function 6: data_select()   (secret)
 # removes specified variables
 data_select <- function(data, vars)
 {
@@ -158,6 +165,7 @@ data_select <- function(data, vars)
 ################################################################################
 ################################################################################
 ################################################################################
+# function 7: data_rmNAvars()   remove variable with all NA values
 data_rmNAvars <- function(data)
 {
   # what is the data
