@@ -57,7 +57,7 @@ The functions for manipulation of variables are shown below
 |:-------------------------|:---------------------------------------|
 | `data_dim()`             | Dimensions & % of omitted observations |
 | `data_names()`           | Names of the data                      |
-| `data_distrinct()`       | Distinct values in variables           |
+| `data_distinct()`        | Distinct values in variables           |
 | `data_which(()`          | NA's in variables                      |
 | `data_str()`.            | The class of  variables etc.           |
 | `data_omit()`            | Omit all the `NA`s                     |
@@ -67,12 +67,12 @@ The functions for manipulation of variables are shown below
 | `data _rm()`             | Remove variables                       |
 | `data _rm1val()`         | Remove factors with one level          |
 | `data _rename()`         | Rename variables                       |
-| `data _renamove()`       | Remove variables                       |
+| `data _remove()`         | Remove variables                       |
 | `data _select()`         | Select variables                       |
 | `data _exclude_class()`  | Exclude a specified class              |
 | `data _only_continous()` | Includes only continuous               |
 | `data_rmNAvars()`        | Remove variables with NA values        |
-| `data_fac2num()`         | Make factor numeric                    |
+| `data_fac2num()`         | Make factors to numerics               |
 
 The function for graphics are show below
 
