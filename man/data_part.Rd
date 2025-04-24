@@ -2,29 +2,31 @@
 \alias{data_part}
 \alias{data_cut}
 \alias{data_part_list}
-\alias{data_part_index}
-
+\alias{data_Kfold}
 
 \title{
 A function to partition a data frame
 }
 \description{
-The function \code{data_part()} takes a data set and creates a new  identical data set with an extra factor called \code{partition} which  can be used to allocate data in different data sets. 
+The function \code{data_part()} takes a \code{data.frame} and creates a new  identical  \code{data.frame} with an extra factor called \code{partition} which  can be used to allocate data in different data sets. 
 
-i) if \code{partition=2L} the factor has two levels \code{train}, and \code{test}.
+i) if the option of the function is \code{partition=2L} the factor has two levels \code{train}, and \code{test}.
 
-ii)  if  \code{partition=3L} the factror  has three levels  \code{train}, for training data, \code{val} for validation data  and \code{test} for test data.
+ii)  if the option of the function is \code{partition=3L} the factror  has three levels  \code{train}, for training data, \code{val} for validation data  and \code{test} for test data.
 
 
- iii) if  \code{partition > 4L} say \code{K} then the levela are "1", "2"..."K". The factor then cen be used for  \code{K} cross validation sets.
+ iii) if  the option of the function is \code{partition > 4L} say \code{K} then the levels of the factor are "1", "2"..."K". The factor then can be used to identify  \code{K-fold} cross validation sets (up to K=20). 
  
-the function \code{data_part_list()} in does similar things like the function \code{data_part()} but instead of adding a factor to the data creates a \code{list} with ellements the training, test and validation data sets. Note that this function do not allow k-fold cross-validation or bootsrapping indexing.   
+The function \code{data_part_list()} in does similar things like the function \code{data_part()} but instead of adding a factor to the data creates a \code{list} with ellements \code{data.frame}s. Note that this function do  allow K-fold cross-validation creation but see also the function \code{data_Kfold()}.   
  
 
-The function \code{data_part_index()} takes a \code{data.frame} and produces a list of indeces which then can be used to select  diffetent sections of the data.  
+The function \code{data_Kfold()} takes a \code{data.frame} and produces a matrix of indeces which then can be used to fit  diffetent sections of the data.
+
  
-The function \code{data_cut()} takes a \code{data.frame} and selects randomly specified \% of the data. For \code{data.frames} with more than 50.000 observations is automatically select part of the data. The function  
-\code{data_cut()} is used a lot in the plotting routines  to make sure that plots ate not take for ever.
+ 
+ 
+ 
+The function \code{data_cut()} takes a \code{data.frame} and selects randomly specified \% of the data. It is usually applied to graphical function =to reduce time for plotting; For \code{data.frame}s with more than 50.000 observations is automatically select part of the data. 
 
  
 
@@ -32,9 +34,9 @@ The function \code{data_cut()} takes a \code{data.frame} and selects randomly sp
 \usage{
 data_part(data, partition = 2L, probs, setseed = 123, ...)
 
-data_part_list(data, partition = 2, probs, setseed = 123, ...)
+data_part_list(data, partition = 2L, probs, setseed = 123, ...)
 
-data_part_index(data, K = 2, bootstrap = FALSE)
+data_Kfold(data, K = 10, setseed = 123)
 
 data_cut(data, percentage, seed = 123)
 
@@ -43,8 +45,7 @@ data_cut(data, percentage, seed = 123)
 \arguments{
   \item{data}{a \code{data.frame}}
   \item{partition}{2, 3 or a number less than 20}
-   \item{K}{the number of partitions}
-   \item{bootstrap}{whether bootstrap of k-fold cross validation samples}
+   \item{K}{the number of partitions, (maximum 20 for CV)}
   \item{probs}{probabilities for the random selection}
   \item{setseed}{setting the sead so the proccess can be repeated}
     \item{percentage}{The percentage of data to keep. If set, i.e. \code{percentage=0.5} only 50\% are kept otherwise for large data set (more that 50.000) only percentage of data are kept. }
@@ -92,13 +93,6 @@ allda <-  data_part_list(rent)
 dim(allda[[1]]) # training data
 dim(allda[[2]]) # test data
 
-index <-  data_part_index(rent) 
- trdata<- rent[index[[1]],]
- tedata<- rent[index[[2]],]
- dim(trdata)
- dim(tedata)
- dim(trdata)[1]+dim(tedata)[1]
- dim(rent)
 }
 
 \keyword{regression}

@@ -1,3 +1,8 @@
+
+# # gamlss.prepdata 0.1-5
+
+*  the functions `data_part()`, `data_part_list()`, `data_Kfold()`, `data_boot_index()` and `data_boot_weights()` are updated to added. 
+
 # gamlss.prepdata 0.1-4
 
 * Function `data_leverage()` added.
