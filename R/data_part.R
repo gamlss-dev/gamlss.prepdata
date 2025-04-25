@@ -105,7 +105,8 @@ data_part_list <- function(data, partition=2L, probs, setseed=123, ...)
 for (i in 1:partition)
     {
       out[[i]] <- subset(data, rand==i)  
-    }
+}
+    names(out) <- paste(1:partition) 
     invisible(return(out))   
   } 
 }
@@ -168,10 +169,10 @@ data_Kfold <- function(data, K = 10, setseed=123)
 # I was not sure if this function is working so it is not documented in the package 
 # Mikis 22-4-25 It look OK to me 
 # get a data frame and creates a K bootstrap indices as a matrix or a list
-data_boot_index <- function(data, K=10, setseed=123 , as.matrix=TRUE)
+data_boot_index <- function(data, B=10, setseed=123 )
 {
 set.seed(setseed)
-     nfolds <- K
+     nfolds <- B
           n <- dim(data)[1]
   BOOTfolds <- lapply( 
      as.data.frame(
@@ -181,160 +182,57 @@ set.seed(setseed)
     ),
     sort) 
   BOOTnotfolds <- list()
-  for (i in 1:K)
+  for (i in 1:B)
     BOOTnotfolds[[i]] <-  setdiff(1:n,BOOTfolds[[i]]) 
  return(list(IB=BOOTfolds,OOB=BOOTnotfolds))  
-  # if (as.matrix) return(matrix(unlist(BOOTfolds), nrow=n))
-  # else return(BOOTfolds)
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-data_boot_weights <- function(data, K=10, setseed=123 , as.matrix=TRUE)
+data_boot_weights <- function(data, B=10, setseed=123)
 {
-  set.seed(setseed)
-  nfolds <- K
-  n <- dim(data)[1]
-  BOOTfolds <- lapply( 
+  
+set.seed(setseed)
+   nfolds <- B
+        n <- dim(data)[1]
+BOOTfolds <- lapply( 
     as.data.frame(
       matrix(
         sample(1:n, nfolds*n,replace=TRUE)
         , n)
     ),
     sort) 
-  BOOTnotfolds <- list()
-  for (i in 1:K)
-    BOOTnotfolds[[i]] <-  setdiff(1:n,BOOTfolds[[i]]) 
-  return(list(IB=BOOTfolds,OOB=BOOTnotfolds))  
-  # if (as.matrix) return(matrix(unlist(BOOTfolds), nrow=n))
-  # else return(BOOTfolds)
+BOOT <- list()
+for (i in 1:B)
+{ 
+      boot <- rep(0,n)
+       tab <- table(BOOTfolds[[i]])
+      tab1 <- as.numeric(unclass(tab))
+       ind <- as.numeric(unlist(attributes(table(BOOTfolds[[i]]))$dimnames[[1]]))
+ boot[ind] <- tab1
+ BOOT[[i]] <- boot
 }
-# get_kfolds <- function(data, K=6, setseed=123 )
-# {
-#   set.seed(setseed)
-#   nfolds <- K
-#   n <- dim(data)[1]
-#   # folds for cross-validation 
-#   CVfolds <-  lapply(
-#     as.data.frame(
-#       t(
-#         sapply(
-#           sample(rep_len(1:nfolds,length=n),replace=FALSE)
-#           ,"!=", 1:nfolds)
-#       )
-#     )
-#     , which )   
-#   CVfolds
-# }
-
-
-
-
-
-
-################################################################################
-################################################################################
-################################################################################
-################################################################################            
-# type none
-
-# nofunction <- function(x)
-# {
-#   
-# if (type=="first.order")
-# {
-# if (nonlinear)
-#   {
-#      daC <- data[,-c(pp, pos_res)]
-#      ndc <- names(daC)
-#     lndc <- length(ndc)
-#     args <- deparse(substitute(arg))
-#     newn <- paste0(basis, "(", ndc, ",", args, ")")
-#     mindex <- match(ndc,x_Names)
-#     qq <- character(length=lndc)
-#     for (i in 1:lndc) qq[i] <- gsub(ndc[i], newn[i], x_Names[mindex[i]])
-#     x_Names[mindex] <- qq
-#     formula <- as.formula(paste(paste0(response_t,"~"), 
-#                                 paste0(paste0("(",paste(x_Names, collapse='+')), ")^2")))  
-#     XX <- model.matrix(formula, weights=weights, data=data)[,-1]
-#     d2 <- dim(XX)[2]
-#     Names <- character(d2)
-#     for (i in 1:d2) 
-#     {
-#       Names[i] <-  gsub(":", ".", colnames(XX)[i])
-#     }
-#     #for (i in 1:length(Names)) colnames(XX)[grep(ndc[i], colnames(XX))] <- paste0(ndc[i], 1:pp)      
-#     colnames(XX) <- Names
-#     ## create a data frame  
-#     ## 
-#     #for (i in 1:lndc) colnames(XX)[grep(ndc[i], colnames(XX))] <- paste0(ndc[i], 1:pp)   
-#     dXX <-  as.data.frame(XX)
-#     dXX[, response_t] <- data[, response_t]
-#     return(dXX)
-#   } else 
-#   {
-#           
-#      formula <- as.formula(paste(paste0(response_t,"~"), 
-#                                 paste0(paste0("(",paste(x_Names, collapse='+')), ")^2"))) 
-#                XX <- model.matrix(formula, weights=weights, data=data)[,-1]
-#                d2 <- dim(XX)[2]
-#             Names <- character(d2)
-#     for (i in 1:d2) 
-#     {
-#          Names[i] <-  gsub(":", ".", colnames(XX)[i])
-#     }
-#      colnames(XX) <- Names
-#               dXX <-  as.data.frame(XX)
-# ## in order to have a complete data frame we need also the response 
-# dXX[, response_t] <- data[, response_t]
-#     return(dXX)
-#   }  
-# } # type= first order 
-#   
-# }
-# }
+  return(matrix(unlist(BOOT),ncol=B))  
+}
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# # old function from 2020
-# data.partition <- function(data, partition=2, probs, setseed=123, ...)
-# {
-#   set.seed(setseed)
-#   if (partition!=2&&partition!=3) stop("partition should be 2 or 3")
-#   if(missing(probs))
-#   {
-#     probs <- if (partition==2)  c(0.6,0.4) 
-#     else c(0.6,0.2,0.2)
-#   } else probs <- probs
-#   if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  2 o 3")
-#   if (sum(probs)!=1) stop("probs should add up to 1")
-#   if (partition==2)
-#   {
-#     rand <- sample(2, dim(data)[1], replace=TRUE, prob=probs)
-#     train <- subset(data, rand==1)
-#     test <- subset(data, rand==2)
-#     out <- list(train=train , test=test)
-#     return(out)
-#   }
-#   if (partition==3)
-#   {
-#     rand <- sample(3, dim(data)[1], replace=TRUE, prob=probs)
-#     train <- subset(data, rand==1)
-#     valid <- subset(data, rand==2)
-#     test <- subset(data, rand==3)
-#     out <- list(train=train, valid=valid, test=test)
-#     return(out)              
-#   }  
-# }
+#                 END
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+
 
 #CVfolds<- lapply(as.data.frame(t(sapply(sample(rep_len(1:nfolds,length=n),replace=FALSE)
 #                                        ,"!=", 1:nfolds))), which)  
 #BOOTfolds<- lapply(as.data.frame(matrix(sample(1:n, nfolds*n, replace=TRUE), n)),sort)  
 
 #BOOTfolds<- lapply(as.data.frame(matrix(sample(1:10, 10*10, replace=TRUE), 19)),sort) 
-#matrix(unlist(BOOTfolds),nrow=10)
+#matrix(unlist(BOOT),nrow=10)
 ########
 
 #data_rm(rent99, c("rentsqm", "district"))

@@ -3,6 +3,8 @@
 \alias{data_cut}
 \alias{data_part_list}
 \alias{data_Kfold}
+\alias{data_boot_index}
+\alias{data_boot_weights}
 
 \title{
 A function to partition a data frame
@@ -14,13 +16,21 @@ i) if the option of the function is \code{partition=2L} the factor has two level
 
 ii)  if the option of the function is \code{partition=3L} the factror  has three levels  \code{train}, for training data, \code{val} for validation data  and \code{test} for test data.
 
+ iii) if  the option of the function is \code{partition > 4L} say \code{K} then the levels of the factor are "1", "2"..."K". The factor then can be used to identify \code{K-fold} cross validation sets (up to K=20). 
 
- iii) if  the option of the function is \code{partition > 4L} say \code{K} then the levels of the factor are "1", "2"..."K". The factor then can be used to identify  \code{K-fold} cross validation sets (up to K=20). 
+
  
-The function \code{data_part_list()} in does similar things like the function \code{data_part()} but instead of adding a factor to the data creates a \code{list} with ellements \code{data.frame}s. Note that this function do  allow K-fold cross-validation creation but see also the function \code{data_Kfold()}.   
+The function \code{data_part_list()} in parform a similar  task like the function \code{data_part()} but instead of adding a factor to the data creates a \code{list} with ellements \code{data.frame}s. Note that this function do  allow K-fold cross-validation creation (up to 20 K-folds), see also the function \code{data_Kfold()}.   
  
 
-The function \code{data_Kfold()} takes a \code{data.frame} and produces a matrix of indeces which then can be used to fit  diffetent sections of the data.
+
+The function \code{data_boot_index()} takes a \code{data.frame} and produces two list of length \code{K},  the in-bag list, \code{IB}, and the out-of-bag list, \code{OOB}.
+
+
+The function \code{data_boot_weights()} takes a \code{data.frame} and produces  a matrix of dimensions  \code{n x K} which column of wich  can be used as prior weight in a regression situation.
+
+The function \code{data_Kfold()} takes a \code{data.frame} and produces a matrix of indeces which then can be used to fit diffetent sections of the data for cross validation.
+
 
  
  
@@ -36,7 +46,11 @@ data_part(data, partition = 2L, probs, setseed = 123, ...)
 
 data_part_list(data, partition = 2L, probs, setseed = 123, ...)
 
-data_Kfold(data, K = 10, setseed = 123)
+data_boot_index(data, B = 10, setseed = 123)
+
+data_boot_weights()(data, B = 10, setseed = 123)
+
+data_Kfold()(data, K = 10, setseed = 123)
 
 data_cut(data, percentage, seed = 123)
 
@@ -46,6 +60,7 @@ data_cut(data, percentage, seed = 123)
   \item{data}{a \code{data.frame}}
   \item{partition}{2, 3 or a number less than 20}
    \item{K}{the number of partitions, (maximum 20 for CV)}
+   \item{B}{the number of bootstrap samples}
   \item{probs}{probabilities for the random selection}
   \item{setseed}{setting the sead so the proccess can be repeated}
     \item{percentage}{The percentage of data to keep. If set, i.e. \code{percentage=0.5} only 50\% are kept otherwise for large data set (more that 50.000) only percentage of data are kept. }
@@ -54,7 +69,7 @@ data_cut(data, percentage, seed = 123)
 }
 
 \value{
-Both function produce a data frame. The function \code{data_part()} adds a factor  \code{partition} while \code{data_rm1val()}  removes variable with only one value.
+The  functions \code{data_part()}, \code{data_part_list()}, \code{data_boot_index()},  \code{data_boot_weights()},  \code{data_Kfold()}  produce a \code{data.frame}, lists or matrices to be later used  for data partition during the fitting process. The function \code{data_cut()} randomly select  part of the data.
 }
 \references{
 Rigby, R. A., Stasinopoulos, D. M.,  Heller, G. Z.,  and De Bastiani, F. (2019)
