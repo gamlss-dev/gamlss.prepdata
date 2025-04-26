@@ -32,7 +32,8 @@ y_outliers <- function(var, value=4, family=SHASH)
 data_outliers <- function(data, 
                           value = 4,
                           min.distinct = 50, 
-                          family = SHASHo)
+                          family = SHASHo
+                          )
 {
   # what is the data
   if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
@@ -63,7 +64,7 @@ data_outliers <- function(data,
     PP[[i]] <-  y_outliers(daTa[,i], value=value, family=family)
   }
   names(PP) <- Names       
-  PP 
+   PP 
 }
 ################################################################################
 ################################################################################
