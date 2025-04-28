@@ -149,7 +149,7 @@ for (i in 1:partition)
 ################################################################################
 ################################################################################
 # I was not sure if this function is working so it is not documented in the package 
-data_Kfold <- function(data, K = 10, setseed=123)
+data_Kfold_weights <- function(data, K = 10, setseed=123)
 {
   set.seed(setseed)
   n <- dim(data)[1]
@@ -162,6 +162,26 @@ data_Kfold <- function(data, K = 10, setseed=123)
               )*1 #if you want it numeric
   return(CVfolds)
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# I was not sure if this function is working so it is not documented in the package 
+data_Kfold_index <- function(data, K = 10, setseed=123)
+{
+  set.seed(setseed)
+  n <- dim(data)[1]
+  # folds for cross-validation 
+  CVfolds <-
+    t(
+      sapply(
+        sample(rep_len(1:K, length.out=n),replace=FALSE)
+        ,"!=", 1:K)
+    )*1 #if you want it numeric
+  index <- CVfolds*(1:n)
+  return(index)
+}
+
 ################################################################################
 ################################################################################
 ################################################################################

@@ -38,7 +38,8 @@
 xy_power_trans <- function(x,y, data = NULL,  lim.trans = c(0, 1.5), prof=FALSE,
                      k=2,  c.crit = 0.01, step=0.1)
 {
-  #  cat("*** Checking for transformation for x ***", "\n")
+  #  cat("*** Checking for t
+  #  ransformation for x ***", "\n")
   cY <- class(y)
   cX <- class(x)
   if (any( inherits(c(cY, cX),"numeric"))) return(NA)
@@ -104,6 +105,7 @@ if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
   PP <-  moment_bucket(ptrans(x,par),x, text_to_show=c("+","*"))
   if (bucket) print(PP)
   # 1-pchisq(momentSK(ptrans(x,par))$jarque.bera.test, 2)
+  # 
   # 1-pchisq(momentSK(ptrans(x,1))$jarque.bera.test, 2)
   # hist(ptrans(x,par))
   #  hist(ptrans(x,1))
@@ -243,7 +245,7 @@ if (is(data, "table"))
 ################################################################################
 ################################################################################
 # function 16 for time series
-datetime2datehour <- function(datetime, format=NULL)
+y_dtime2dhour <- function(datetime, format=NULL)
 {
             X <- t(as.data.frame(strsplit(datetime,' ')))
   rownames(X) <- NULL
@@ -257,7 +259,7 @@ datetime2datehour <- function(datetime, format=NULL)
 ################################################################################
 ################################################################################
 # function 16 for time series
-time2num <- function(time, pattern=":")
+y_time2num <- function(time, pattern=":")
 {
 t <-  gsub(pattern, ".", time)
 as.numeric(t)

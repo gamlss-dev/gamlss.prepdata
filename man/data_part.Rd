@@ -2,7 +2,8 @@
 \alias{data_part}
 \alias{data_cut}
 \alias{data_part_list}
-\alias{data_Kfold}
+\alias{data_Kfold_index}
+\alias{data_Kfold_weights}
 \alias{data_boot_index}
 \alias{data_boot_weights}
 
@@ -50,7 +51,9 @@ data_boot_index(data, B = 10, setseed = 123)
 
 data_boot_weights()(data, B = 10, setseed = 123)
 
-data_Kfold()(data, K = 10, setseed = 123)
+data_Kfold_index()(data, K = 10, setseed = 123)
+
+data_Kfold_weights()(data, K = 10, setseed = 123)
 
 data_cut(data, percentage, seed = 123)
 
