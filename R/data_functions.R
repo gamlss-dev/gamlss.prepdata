@@ -35,17 +35,17 @@
 ################################################################################
 ################################################################################
 # function 5
-xy_power_trans <- function(x,y, data = NULL,  lim.trans = c(0, 1.5), prof=FALSE,
+xy_power_trans <- function(x, y, data = NULL,  lim.trans = c(0, 1.5), prof=FALSE,
                      k=2,  c.crit = 0.01, step=0.1)
 {
-  #  cat("*** Checking for t
-  #  ransformation for x ***", "\n")
-  cY <- class(y)
-  cX <- class(x)
-  if (any( inherits(c(cY, cX),"numeric"))) return(NA)
-  ptrans<- function(x, p) if (abs(p)<=0.0001) log(x) else I(x^p)
-  fn <- function(p) AIC(lm(y~ptrans(x,p)), k=k)
-  if (prof) # profile dev
+#  cat("*** Checking for t
+#  ransformation for x ***", "\n")
+      cY <- class(y)
+      cX <- class(x)
+if (any( inherits(c(cY, cX),"numeric"))) return(NA)
+  ptrans <- function(x, p) if (abs(p)<=0.0001) log(x) else I(x^p)
+      fn <- function(p) AIC(lm(y~ptrans(x,p)), k=k)
+if (prof) # profile dev
   {
     pp <- seq(lim.trans[1],lim.trans[2], step)
     pdev <- rep(0, length(pp))
@@ -60,8 +60,8 @@ xy_power_trans <- function(x,y, data = NULL,  lim.trans = c(0, 1.5), prof=FALSE,
     cat('*** power parameters ', par,"***"," \n")
   } else
   {
-    fn <- function(p) AIC(lm(y~ptrans(x,p)), k=k)
-    par <- optimise(fn, lower=lim.trans[1], upper=lim.trans[2])$minimum
+      fn <- function(p) AIC(lm(y~ptrans(x,p)), k=k)
+     par <- optimise(fn, lower=lim.trans[1], upper=lim.trans[2])$minimum
     # cat('*** power parameters ', par,"***"," \n")
   }
   par
@@ -71,7 +71,7 @@ xy_power_trans <- function(x,y, data = NULL,  lim.trans = c(0, 1.5), prof=FALSE,
 ################################################################################
 ################################################################################
 # functions 5
-# it takes on x and find the power witch minimised its
+# it takes on x and find the power witch minimised its jarque.bera.test
 y_power_trans <- function(x, lim.trans = c(0, 1.5), prof=FALSE,
                           step=0.01,    bucket=FALSE)
 {
@@ -235,7 +235,6 @@ if (is(data, "table"))
   on.exit( pushViewport(viewport(layout=grid.layout(nrow=1,ncol=1))))
   invisible(PP)
 }
-
 
 ################################################################################
 ################################################################################

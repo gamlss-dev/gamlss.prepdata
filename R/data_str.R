@@ -183,7 +183,7 @@ invisible(data)
 ################################################################################
 ################################################################################
 # function 5
-data_few2fac <- function(data, min.levels=10, show.str=FALSE)
+data_few2fac <- function(data, max.levels=5, show.str=FALSE)
 {
 # what is the data
 if (is(data, "list"))
@@ -208,7 +208,7 @@ cat("**************************************************************",  "\n")
          ind <- 0
 for (i in 1:length(Names))
   {
-    if (dvdata[i] < min.levels)
+    if (dvdata[i] <= max.levels)
     {
   data[,Names[i]] <- factor(data[,Names[i]])
               ind <- ind + 1
@@ -222,10 +222,10 @@ cat("**************************************************************",  "\n")
 cat("**************************************************************",  "\n")
 if (ind==1)
 {
-cat(ind,"vector with fewer number of values than",  min.levels,"was transformed to factor", "\n")
+cat(ind,"vector with fewer number of values than",  max.levels,"was transformed to factor", "\n")
 } else
 {
-cat(ind,"vectors with fewer number of values than",  min.levels,"were transformed to factors", "\n")
+cat(ind,"vectors with fewer number of values than",  max.levels,"were transformed to factors", "\n")
 }
 cat("**************************************************************",  "\n")
 cat("**************************************************************",  "\n")

@@ -21,7 +21,7 @@ data_distinct(data, get.distinct = FALSE, print=TRUE)
 
 data_cha2fac(data, show.str = FALSE)
 
-data_few2fac(data, min.levels = 10, show.str = FALSE)
+data_few2fac(data, max.levels = 5, show.str = FALSE)
 
 data_int2num(data, min.values = 50, show.str = FALSE)
 
@@ -30,8 +30,9 @@ data_fac2num(data, vars)
 
 \arguments{
   \item{data}{a data frame}
-  \item{min.values}{the minimal value distinct values befor warning }
-  \item{min.levels}{the minimal value distinct levels befor warning}
+  \item{min.values}{the minimal value distinct values before warning }
+  \item{max.levels}{the maximum value for distinct values in the variable}
+   \item{min.levels}{the minimal value distinct levels befor warning}
   \item{var}{a vector}
   \item{vars}{a character vector with names from the data}
    \item{get.distinct}{TRUE if you need to save the values FALSE if not not}

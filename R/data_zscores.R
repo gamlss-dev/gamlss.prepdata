@@ -5,6 +5,7 @@
 # function 1
 y_zscores <- function(x, 
                     family = SHASHo, 
+                     value = 3,
                       plot = TRUE, 
                       hist = FALSE,...)
 {
@@ -27,7 +28,7 @@ if (plot)
    title <- paste0("z-scores of ",name)
   if (hist) print(gamlss.ggplots::y_hist(zscores)+
                   ggplot2::xlab(name))
-  else      print(gamlss.ggplots::y_dots(zscores)+
+  else      print(gamlss.ggplots::y_dots(zscores, value=value)+
                   ggplot2::xlab(name))
 }
 invisible(zscores)
@@ -111,7 +112,7 @@ for (i in 1:length(class_Vars))
 if (plot)
  {
   PP[[i]] <- if (hist)  y_hist(izsc,  title="") + ggplot2::xlab(Names[i]) 
-             else y_dots(izsc,  title="") + ggplot2::xlab(Names[i])
+             else y_dots(izsc, value=value,  title="") + ggplot2::xlab(Names[i])
  }
 } #end of loop
 if (plot)
