@@ -56,10 +56,8 @@ if (any(is.na(data)))
 if (is.null(dimD)) stop("only one variable in the data")
 if (dimD[1] < 20)   stop(cat("the size of the data set is too small", "\n",
                              "to detect non-linear correlations", "\n"))
-daTa <- data_only_continuous(data)
-# daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
-#                                     sapply(data,is.character)==TRUE, FALSE, TRUE))
-Dim <- dim(daTa)
+suppressWarnings(daTa <- data_only_continuous(data))
+     Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")
 diffDim  <- dimD[2]-Dim[2]
@@ -71,10 +69,10 @@ if (any(is.na(data)))
   warning(cat(l1-l2, "observations were omitted from the data", "\n"))
 }
 if (is.null(dimD)) stop("only one variable in the data")
-if (diffDim > 0)
-{
-  warning(cat(diffDim, 'factors have been omited from the data', "\n"))
-}
+# if (diffDim > 0)
+# {
+#   warning(cat(diffDim, 'factors have been omited from the data', "\n"))
+# }
           Y <- deparse(substitute(response))
 # if (any(!(Y %in%names(data)))) stop("the response should be in data")
 if (missing(weights)) weights <- rep(1, dim(data)[1])
@@ -105,7 +103,7 @@ colnames(f) <- c("observation", "quan_resid")
                  fontface = "italic", colour = annot.col, na.rm = TRUE)
 
      p <- gg +
-       ggplot2::geom_hline(yintercept=2*(r/N), col=annot.col)+
+            ggplot2::geom_hline(yintercept=2*(r/N), col=annot.col)+
        if (annotate) ggplot2::annotate("text", x = Inf, y = Inf, hjust = 1.5,
                                        vjust = d$value,
                   family = "serif", fontface = "italic", colour = annot.col,
