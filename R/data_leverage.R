@@ -2,7 +2,8 @@
 ################################################################################
 ################################################################################
 ################################################################################
-# function 3
+# function 
+################################################################################ 
 data_leverage <- function(data, response, weights,
                    quan.val = 0.99,
                    annotate = TRUE,
@@ -13,7 +14,7 @@ data_leverage <- function(data, response, weights,
                         title, percentage, seed=123,
                   ...)
 {
-########################################################################
+################################################################################
 # local functions
 gamlss_prep_data <- function (hat, weights, quan.val)
   {
@@ -29,7 +30,7 @@ out$fct_color <- ordered(factor(out$color), levels =
   out$value <- value
     return(out)
   }
-#####################################################################
+################################################################################
 nameData <- deparse(substitute(data))
 if (missing(data) || NROW(data) <= 1)
   stop("nothing to do for this data frame")
@@ -46,18 +47,18 @@ data <- if (missing(percentage))
 } else data_cut(data,percentage=percentage)
 if (any(is.na(data)))
 {
-  l1 <- dim(data)[1]
+    l1 <- dim(data)[1]
   data <- na.omit(data)
-  l2 <- dim(data)[1]
+    l2 <- dim(data)[1]
   warning(cat(l1-l2, "observations were omitted from the data", "\n"))
 }
-
 #  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data")
 if (dimD[1] < 20)   stop(cat("the size of the data set is too small", "\n",
                              "to detect non-linear correlations", "\n"))
-daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
-                                      sapply(data,is.character)==TRUE, FALSE, TRUE))
+daTa <- data_only_continuous(data)
+# daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
+#                                     sapply(data,is.character)==TRUE, FALSE, TRUE))
 Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")
@@ -74,31 +75,21 @@ if (diffDim > 0)
 {
   warning(cat(diffDim, 'factors have been omited from the data', "\n"))
 }
-
-# if (is(data, "list"))
-#     stop("the data is list  the function needs a data.frame")
-# if (is(data, "table"))
-#     stop("the data is a table the function needs a data.frame")
-# if (is(data, "matrix"))    data <- as.data.frame(data)
-# if (is(data[1],"mts"))     data <- as.data.frame(data)
-# if (is(data, "array"))
-#     stop("the data is an array the function needs a data.frame")
           Y <- deparse(substitute(response))
 # if (any(!(Y %in%names(data)))) stop("the response should be in data")
 if (missing(weights)) weights <- rep(1, dim(data)[1])
         pos <- match(Y, names(daTa))
       nameS <- names(data)[-pos] ## get out the response
          f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')),
-                    data=data,      envir=globalenv())#.GlobalEnv
+                    data=data,  envir=globalenv())#.GlobalEnv
          m1 <- lm(f1, weights=weights, data=data)
         lev <- hatvalues(m1)
           r <- m1$rank
           N <- dim(data)[1]
           d <- gamlss_prep_data(lev,weights=weights, quan.val=quan.val )
-     lev
-txt.title <- if (missing(title))  paste("Linear leverage of data",
-                                        deparse(substitute(data)))
-             else title
+  txt.title <- if (missing(title))  paste("Linear leverage of data",
+                                        nameData)
+              else title
         obs <-  value <- txt <-  NULL
           f <- d[d$color == "outlier", c("obs", "hat")]
 colnames(f) <- c("observation", "quan_resid")
@@ -123,7 +114,7 @@ colnames(f) <- c("observation", "quan_resid")
        suppressWarnings(return(p))
      }
      else {
-       return(list(leverage = d$hat, index=d$obs, threshold = d$value))
+      which(d$hat>d$value)
      }
 }
 ################################################################################
