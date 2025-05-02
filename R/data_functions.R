@@ -9,9 +9,9 @@
 ################################################################################
 #  NOT THIS ONE 1) data_check       : will be fixed in the end
 ################################################################################   :
-#  1) xy_power_trans   :
-#  2) y_power_trans    : takes x and y and find power transformation for x
-#  3) data_trans_plot
+#  1) xy_Ptrans   :
+#  2) x_Prans    : takes x and y and find power transformation for x
+#  3) data_Ptrans_plot
 #  4) datetime2datehour: from datetime to date and hour
 #  5) time2num 
 #
@@ -35,19 +35,22 @@
 ################################################################################
 ################################################################################
 # function 5
-xy_power_trans <- function(x, y, data = NULL,  lim.trans = c(0, 1.5), prof=FALSE,
+xy_Ptrans <- function(x, y, data = NULL,  lim.trans = c(0, 1.5), prof=FALSE,
                      k=2,  c.crit = 0.01, step=0.1)
 {
+#  daTa <- mgcv <- NULL  
+#requireNamespace(mgcv)  
 #  cat("*** Checking for t
 #  ransformation for x ***", "\n")
       cY <- class(y)
       cX <- class(x)
 if (any( inherits(c(cY, cX),"numeric"))) return(NA)
   ptrans <- function(x, p) if (abs(p)<=0.0001) log(x) else I(x^p)
-      fn <- function(p) AIC(lm(y~ptrans(x,p)), k=k)
+      fn <- function(p)  AIC(gam(y~s(I(ptrans(x,p)))), k=k)
+       
 if (prof) # profile dev
   {
-    pp <- seq(lim.trans[1],lim.trans[2], step)
+     pp <- seq(lim.trans[1],lim.trans[2], step)
     pdev <- rep(0, length(pp))
     for (i in 1:length(pp))
     {
@@ -57,13 +60,13 @@ if (prof) # profile dev
     plot(pdev~pp, type="l")
     points(pdev~pp,col="blue")
     par <- pp[which.min(pdev)]
-    cat('*** power parameters ', par,"***"," \n")
   } else
   {
-      fn <- function(p) AIC(lm(y~ptrans(x,p)), k=k)
+    #  fn <- function(p) AIC(gam(y~s(I(ptrans(x,p)))), k=k)
      par <- optimise(fn, lower=lim.trans[1], upper=lim.trans[2])$minimum
     # cat('*** power parameters ', par,"***"," \n")
   }
+    cat('*** power parameters ', par,"***"," \n")      
   par
 }
 ################################################################################
@@ -72,7 +75,7 @@ if (prof) # profile dev
 ################################################################################
 # functions 5
 # it takes on x and find the power witch minimised its jarque.bera.test
-y_power_trans <- function(x, lim.trans = c(0, 1.5), prof=FALSE,
+x_Ptrans <- function(x, lim.trans = c(0, 1.5), prof=FALSE,
                           step=0.01,    bucket=FALSE)
 {
 if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
@@ -116,8 +119,9 @@ if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
 ################################################################################
 ################################################################################
 ################################################################################
+################################################################################
 # function 3
-data_trans_plot <- function(data, response,
+data_Ptrans_plot <- function(data, response,
                              hist.col = "black",
                             hist.fill = "white",
                             dens.fill = "#FF6666",
@@ -128,6 +132,7 @@ data_trans_plot <- function(data, response,
                            one.by.one = FALSE,
                             title,...)
 {
+  daTa <- mgcv <- NULL
 if (is(data, "list"))
   stop("the data is list  the function needs a data.frame")
 if (is(data, "table"))
@@ -235,23 +240,51 @@ if (is(data, "table"))
   on.exit( pushViewport(viewport(layout=grid.layout(nrow=1,ncol=1))))
   invisible(PP)
 }
-
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# TIME functions
-################################################################################
-################################################################################
-# function 16 for time series
-y_dtime2dhour <- function(datetime, format=NULL)
+# function 3 #not finished yet
+data_Ptrans <- function(data, response,
+                    lim.trans = c(0, 1.5), 
+                         prof = FALSE,
+                            k = 2,
+                            ...)
 {
-            X <- t(as.data.frame(strsplit(datetime,' ')))
-  rownames(X) <- NULL
-  colnames(X) <- c("date", "time")
-         hour <- as.numeric(sub(":",".",X[,2]))
-         date <- as.Date(X[,1],format=format)
-  data.frame(date, hour)
+  daTa <- mgcv <- NULL  
+# what is the data
+if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
+if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+if (is(data, "matrix")) data <- as.data.frame(data)
+if (is(data[1],"mts"))  data <- as.data.frame(data)
+if (is(data, "array")) stop("the data is an array the function needs a
+                            data.frame")
+     dimD <- dim(data)
+# checking data  
+if (is.null(dimD)) stop("only one variable in the data") 
+if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
+                             "to detect non-linear correlations", "\n"))  
+     Y <-  deparse(substitute(response))
+if (any(!(Y %in%names(data)))) stop("the response should be in data")
+     dat <- data_only_continuous(data)   
+   #  da <- subset(dat, -Y)
+#   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
+# data_distinct(data, get.distinct=TRUE) < min.distinct|
+#     sapply(data, function(x) is(x, class2="Date"))
+#       daTa <- subset(data,  select=!sat.cont)  
+       Dim <- dim(dat)
+if (Dim[2]==0) stop("no variable is left after taking out the factors")         
+if (Dim[2]==1) stop("only one variable is left after taking out the factors")   
+   Names <- names(dat)
+class_Vars <- sapply(daTa,function(x) class(x)[1]) 
+        PP <- list()
+for (i in 1:length(class_Vars))
+  { 
+  
+    PP[[i]] <-  xy_Ptrans(daTa[,i],  lim.trans = c(0, 1.5), prof=F)
+  }
+  names(PP) <- Names       
+  PP 
 }
 ################################################################################
 ################################################################################

@@ -114,7 +114,7 @@ The function for graphics are show below
 | `data_outliers()`   | Univariate detection of outliers                     |
 | `data_leverage()`   | Detection of outliers in the x's  space              |
 | `data_scale()`      | Univariate scaling the x's                           |
-| `data_trans_plot()` | Checking for univivariate transformations in the x's |
+| `data_Ptrans_plot()` | Checking for univivariate transformations in the x's |
 
 
 ## Graphics

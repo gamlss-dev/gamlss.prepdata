@@ -15,7 +15,7 @@ y_outliers <- function(var, value=4, family=SHASH)
     tvar <- var 
   } else
   {
-    par  <- y_power_trans(var)
+    par  <- x_Ptrans(var)
     tvar <- if (abs(par) < 0.001) log(var) else var^par
   }  
   z.scores <- y_zscores(tvar, family=family, plot=FALSE)
