@@ -8,8 +8,7 @@ Those two function idententify outliers in variables in data
 }
 \usage{
 data_outliers(data, value = 4, min.distinct = 50, family = SHASHo)
-
-y_outliers(var, value = 4, family = SHASH)
+y_outliers(var, value = 4, family = SHASHo)
 }
 
 \arguments{
