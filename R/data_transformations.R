@@ -53,7 +53,7 @@ if (prof) # profile dev
   {
      par <- optimise(fn, lower=lim.trans[1], upper=lim.trans[2])$minimum
   }
-    cat('*** power parameters ', par,"***"," \n")      
+#    cat('*** power parameters ', par,"***"," \n")      
   invisible(par)
 }
 ################################################################################
@@ -185,11 +185,15 @@ if (is(data, "table"))
 ################################################################################
 ################################################################################
 # function 3 #not finished yet
-data_Ptrans <- function(data, response,
-                    lim.trans = c(0, 1.5), 
-                         prof = FALSE,
-                            k = 2,
-                            ...)
+data_Ptrans <- function(data = NULL, response, 
+                   lim.trans = c(0, 1.5), 
+                        prof = FALSE,
+                           k = 2,  
+                  max.levels = 10,
+                      c.crit = 0.01, 
+                        step = 0.1,
+                        seed = 123,
+                  percentage)
 {
   daTa <- mgcv <- NULL  
 # what is the data
@@ -199,15 +203,20 @@ if (is(data, "matrix")) data <- as.data.frame(data)
 if (is(data[1],"mts"))  data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a
                             data.frame")
-     dimD <- dim(data)
+        Y <- deparse(substitute(response))
+if (any(!(Y %in%names(data)))) stop("the response should be in data")
+       dv <- y_distinct(data[,Y])
+if (dv < max.levels) stop("the response do not seems to have many distinct values")
+        data <- if (missing(percentage))
+        {
+          data_cut(data,seed=seed)
+        } else data_cut(data,percentage=percentage)    
+       dimD <- dim(data)
 # checking data  
 if (is.null(dimD)) stop("only one variable in the data") 
 if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
                              "to detect non-linear correlations", "\n"))  
-     Y <-  deparse(substitute(response))
-if (any(!(Y %in%names(data)))) stop("the response should be in data")
-     browser()
-     dat <- data_only_continuous(data)   
+       dat <- data_only_continuous(data)   
    #  da <- subset(dat, -Y)
 #   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
 # data_distinct(data, get.distinct=TRUE) < min.distinct|
@@ -216,25 +225,40 @@ if (any(!(Y %in%names(data)))) stop("the response should be in data")
        Dim <- dim(dat)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")         
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")   
-   Names <- names(dat)
-class_Vars <- sapply(daTa,function(x) class(x)[1]) 
+        pos <- match(Y, names(dat))
+      nameS <- names(dat)[-pos]
+#class_Vars <- sapply(daTa,function(x) class(x)[1]) 
         PP <- list()
-for (i in 1:length(class_Vars))
-  { 
-  
-    PP[[i]] <-  xy_Ptrans(daTa[,i],  lim.trans = c(0, 1.5), prof=F)
-  }
-  names(PP) <- Names       
+for (i in 1:length(nameS))
+  { # dv <- y_distinct(data[,Y])
+    PP[[i]] <-  xy_Ptrans(dat[,nameS[i]], dat[,Y], lim.trans = lim.trans,
+                          prof=FALSE,
+                          k = k,  c.crit = c.crit, step = step )
+}
+  names(PP) <- nameS       
   PP 
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
+time_dt2dhour <- function(datetime, format=NULL) 
+{ 
+            X <- t(as.data.frame(strsplit(datetime,' '))) 
+  rownames(X) <- NULL 
+  colnames(X) <- c("date", "time") 
+         hour <- as.numeric(sub(":",".",X[,2])) 
+         date <- as.Date(X[,1],format=format) 
+  data.frame(date, hour) 
+} 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 # function 16 for time series
-y_time2num <- function(time, pattern=":")
+time_2num <- function(time, pattern=":")
 {
-t <-  gsub(pattern, ".", time)
+    t <-  gsub(pattern, ".", time)
 as.numeric(t)
 }
 ################################################################################
