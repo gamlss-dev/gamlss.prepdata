@@ -41,24 +41,24 @@ is_numeric <- function(x) { is.numeric(x) || is.integer(x) || is(x, "double")}
 ################################################################################
 ################################################################################
 ######## time series ###########################################################
-datetime2datehour <- function(datetime, format=NULL) 
-{ 
-  X <- t(as.data.frame(strsplit(datetime,' '))) 
-  rownames(X) <- NULL 
-  colnames(X) <- c("date", "time") 
-  hour <- as.numeric(sub(":",".",X[,2])) 
-  date <- as.Date(X[,1],format=format) 
-  data.frame(date, hour) 
-} 
+# datetime2datehour <- function(datetime, format=NULL) 
+# { 
+#   X <- t(as.data.frame(strsplit(datetime,' '))) 
+#   rownames(X) <- NULL 
+#   colnames(X) <- c("date", "time") 
+#   hour <- as.numeric(sub(":",".",X[,2])) 
+#   date <- as.Date(X[,1],format=format) 
+#   data.frame(date, hour) 
+# } 
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-time2num <- function(time, pattern=":") 
-{ 
-  t <- gsub(pattern, ".", time) 
-  as.numeric(t) 
-} 
+# time2num <- function(time, pattern=":") 
+# { 
+#   t <- gsub(pattern, ".", time) 
+#   as.numeric(t) 
+# } 
 ################################################################################
 ################################################################################
 ################################################################################
