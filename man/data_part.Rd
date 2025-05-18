@@ -55,7 +55,7 @@ data_Kfold_index()(data, K = 10, setseed = 123)
 
 data_Kfold_weights()(data, K = 10, setseed = 123)
 
-data_cut(data, percentage, seed = 123)
+data_cut(data, percentage, seed = 123, print.info = TRUE)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -68,6 +68,7 @@ data_cut(data, percentage, seed = 123)
   \item{setseed}{setting the sead so the proccess can be repeated}
     \item{percentage}{The percentage of data to keep. If set, i.e. \code{percentage=0.5} only 50\% are kept otherwise for large data set (more that 50.000) only percentage of data are kept. }
   \item{seed}{the \code{set.seed()} argument}
+  \item{print.info}{whether to print infomation when cutting the data usinf  \code{data_cut()}}
   \item{\dots}{extra arguments}
 }
 

@@ -25,6 +25,7 @@ The function \code{data_response()}  calculates and plots the z-scores (obtained
 }
 \usage{
 data_xyplot(data, response, point.size = 0.5, nrow = NULL,
+           print.info = TRUE,
            ncol = NULL, percentage, seed = 123,
            max.levels = 10, plots.per.page = 9, one.by.one = FALSE, title, ...)
 
@@ -74,6 +75,7 @@ data_response(data, response, plot = TRUE, percentage, seed = 123)
    \item{title}{title of the plot}
     \item{percentage}{if set, i.e. 0.50, plots a portotion of data  otherwise for big data sets greater than 50.000 observartions it plots a porpotion}
     \item{seed}{the \code{set.seed()} argument}
+    \item{print.info}{whether to print infomation when cutting the data usinf  \code{data_cut()}}
    \item{\dots}{other arguments}
 }
 \details{

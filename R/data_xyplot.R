@@ -6,6 +6,7 @@
 data_xyplot <- function(data, response,
                   point.size = 0.5,
                         nrow = NULL,
+                  print.info = TRUE,
                         ncol = NULL,
                   percentage, # for big data take % of data
                         seed = 123,
@@ -15,7 +16,7 @@ data_xyplot <- function(data, response,
                         title,...)
 {
 ################################################################################
-  y_distinct <- function(var)
+y_distinct <- function(var)
   {
     PP <- length(table(var))
     PP
@@ -30,30 +31,30 @@ if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data[1],"tible"))   data <- as.data.frame(data)
 if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
-      Y <- deparse(substitute(response))
+       Y <- deparse(substitute(response))
 if (any(!(Y %in%names(data)))) stop("the response should be in data")
-     dv <- y_distinct(data[,Y])
+      dv <- y_distinct(data[,Y])
 if (dv < max.levels) stop("the response do not seems to have many distinct values")
      data <- if (missing(percentage))
      {
-       data_cut(data,seed=seed)
+       data_cut(data,seed=seed, print.info=print.info)
      } else data_cut(data,percentage=percentage)
      class_Vars <- sapply(data,function(x) class(x)[1]) 
-  if (any(class_Vars=="character"))
+if (any(class_Vars=="character"))
   {
     chr.pos <- match("character",class_Vars)
-    data <- data[,-chr.pos]
+       data <- data[,-chr.pos]
   }
-  pos <- match(Y, names(data))
-  nameS <- names(data)[-pos]
-  PP <- list()
-  actY <- data[,Y]
-  cY <- class(actY)
-  I <- 0
-  for (i in nameS)
+        pos <- match(Y, names(data))
+      nameS <- names(data)[-pos]
+         PP <- list()
+       actY <- data[,Y]
+         cY <- class(actY)
+          I <- 0
+for (i in nameS)
   {
-    I <- I + 1
-    if (inherits(data[,i],"factor"))
+       I <- I + 1
+if (inherits(data[,i],"factor"))
     {
       PP[[I]] <- data|>ggplot2::ggplot(aes(x=.data[[i]],.data[[Y]]))+
         ggplot2::geom_boxplot()
@@ -64,10 +65,10 @@ if (dv < max.levels) stop("the response do not seems to have many distinct value
     }
   }
   n.plots <- length(PP)
-  if (one.by.one)
+if (one.by.one)
   {
     oask <- devAskNewPage(one.by.one)
-    on.exit(devAskNewPage(oask))
+  on.exit(devAskNewPage(oask))
     for (i in 1:n.plots) print(PP[[i]])
   }
   else
@@ -79,10 +80,10 @@ if (dv < max.levels) stop("the response do not seems to have many distinct value
     if (n.plots>plots.per.page)
     {
       pages <- ceiling(n.plots/plots.per.page)
-      page <- n.plots%/%plots.per.page
-      ppp <- rep(plots.per.page,page)
-      if (n.plots%%plots.per.page != 0) ppp <- c(ppp, n.plots%%plots.per.page)
-      if (plots.per.page==9)
+       page <- n.plots%/%plots.per.page
+       ppp <- rep(plots.per.page,page)
+if (n.plots%%plots.per.page != 0) ppp <- c(ppp, n.plots%%plots.per.page)
+if (plots.per.page==9)
       {
         nc <- 3
         nr <- 3
