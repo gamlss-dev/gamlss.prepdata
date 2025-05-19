@@ -11,7 +11,7 @@ data_leverage <- function(data, response, weights,
                   point.col = "steelblue4",
                   annot.col = "darkred",
                         plot = TRUE,
-                        title, percentage, seed=123,
+                        title, percentage, seed=123,  print.info = TRUE,
                   ...)
 {
 ################################################################################
@@ -43,8 +43,9 @@ if (is(data, "array")) stop("the data is an array the function needs a data.fram
 dimD <- dim(data)
 data <- if (missing(percentage))
 {
-  data_cut(data,seed=seed)
-} else data_cut(data,percentage=percentage)
+  data_cut(data,seed = seed, print.info = print.info)
+}      else data_cut(data, seed = seed, percentage=percentage, 
+                     print.info=print.info)
 if (any(is.na(data)))
 {
     l1 <- dim(data)[1]
@@ -52,6 +53,7 @@ if (any(is.na(data)))
     l2 <- dim(data)[1]
   warning(cat(l1-l2, "observations were omitted from the data", "\n"))
 }
+
 #  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data")
 if (dimD[1] < 20)   stop(cat("the size of the data set is too small", "\n",

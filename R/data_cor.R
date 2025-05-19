@@ -36,7 +36,8 @@ data_cor <- function(data,
                    lab_size = 3,
                 circle.size = 20,
                        seed = 123,
-              percentage)
+              percentage,
+              print.info = TRUE)
 {
 ################################################################################
 ################################################################################
@@ -66,9 +67,10 @@ if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")
       dimD <- dim(data)
       data <- if (missing(percentage))
-            {
-              data_cut(data,seed=seed)
-            } else data_cut(data,percentage=percentage)
+      {
+        data_cut(data,seed = seed, print.info = print.info)
+      }      else data_cut(data, seed = seed, percentage=percentage, 
+                           print.info=print.info)
 if (any(is.na(data)))
   {
     l1 <- dim(data)[1]

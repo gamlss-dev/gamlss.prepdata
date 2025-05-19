@@ -20,7 +20,7 @@ data_void(data, digits = 3, plot = TRUE, diag.off = TRUE,
          legend.title = "Void", title, ggtheme = ggplot2::theme_minimal(), 
          tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE, 
          lab_col = "black", lab_size = 3, circle.size = 20, seed = 123,
-         percentage)
+         percentage, print.info = TRUE)
 
 void(x, y, plot = TRUE, print = TRUE, table.length)
 
@@ -47,10 +47,11 @@ void(x, y, plot = TRUE, print = TRUE, table.length)
   \item{circle.size}{the size of the circles, increase (or decrease) if the defaul 20 is not appropriate}
   \item{seed}{the \code{set.seed()} value}
   \item{percentage}{the percentage of data to show if the observation number is too big}
+  \item{print.info}{whether to print infomation when cutting the data usinf  \code{data_cut()}}
   \item{x}{the first variable in \code{void()}}
   \item{y}{the second variable in \code{void()}}
-   \item{print}{whether to print the results }
-   \item{table.length}{the table length (if siging is calculated automatically)}
+  \item{print}{whether to print the results }
+  \item{table.length}{the table length (if siging is calculated automatically)}
 }
 
  

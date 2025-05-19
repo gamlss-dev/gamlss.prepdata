@@ -13,6 +13,7 @@ data_bucket <- function(data,
                       title,
                   percentage, 
                         seed = 123,
+                  print.info = TRUE,
                             ...)
 {
 if (is(data, "list"))  
@@ -36,11 +37,11 @@ if (any(is.na(data)))
 if (is.null(dimD)) stop("only one variable in the data") 
 if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
                              "for the bucket plot", "\n"))  
-data <- if (missing(percentage))
+      data <- if (missing(percentage))
       {
-        data_cut(data,seed=seed)
-      } else data_cut(data,percentage=)
-      
+        data_cut(data,seed = seed, print.info = print.info)
+      }      else data_cut(data, seed = seed, percentage=percentage, 
+                           print.info=print.info)
              sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
                          data_distinct(data, get.distinct=TRUE) < max.levels|
                          sapply(data, function(x) is(x, class2="Date"))

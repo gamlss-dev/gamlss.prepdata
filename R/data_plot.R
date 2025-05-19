@@ -8,6 +8,7 @@ data_plot <- function(data,
                        ncol = NULL,
                  percentage, # for big data take % of data
                  seed = 123,
+                 print.info = TRUE,
                   plot.hist = TRUE,
              plots.per.page = 9,
                  one.by.one = FALSE,
@@ -22,8 +23,8 @@ if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")
 data <- if (missing(percentage))
 {
-   data_cut(data,seed=seed)
-} else data_cut(data,percentage=)
+   data_cut(data,seed=seed, print.info=print.info )
+} else data_cut(data,percentage=percentage, print.info=print.info)
       data <- data_exclude_class(data, class.out="POSIXct")
 # checking data
 class_Vars <- sapply(data,function(x) class(x)[1]) 
@@ -130,7 +131,8 @@ data_response <- function(data,
                           response,
                           plot = TRUE,
                           percentage,
-                          seed = 123) # for big data take % of data)
+                          seed = 123,
+                    print.info = TRUE) # for big data take % of data)
 {
   #  what is the data
   if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
@@ -138,11 +140,10 @@ data_response <- function(data,
   if (is(data, "matrix"))    data <- as.data.frame(data)
   if (is(data[1],"mts"))     data <- as.data.frame(data)
   if (is(data, "array")) stop("the data is an array the function needs a data.frame")
-data <- if (missing(percentage))
+  data <- if (missing(percentage))
   {
-    data_cut(data,seed=seed)
-  } else data_cut(data,percentage=)
-  
+    data_cut(data,seed=seed, print.info=print.info )
+  } else data_cut(data,percentage=percentage, print.info=print.info)
   Y <-  deparse(substitute(response))
   if (any(!(Y %in%names(data)))) stop("the response should be in data")
   actY <-data[,Y]

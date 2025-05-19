@@ -26,19 +26,20 @@ The function \code{data_response()}  calculates and plots the z-scores (obtained
 \usage{
 data_xyplot(data, response, point.size = 0.5, nrow = NULL,
            print.info = TRUE,
-           ncol = NULL, percentage, seed = 123,
-           max.levels = 10, plots.per.page = 9, one.by.one = FALSE, title, ...)
+           ncol = NULL, percentage, seed = 123,  max.levels = 10,
+           plots.per.page = 9, one.by.one = FALSE, title, ...)
 
 data_plot(data, value = 3, hist.col = "black", hist.fill = "white",
            dens.fill = "#FF6666", nrow = NULL, ncol = NULL,
-           percentage, seed = 123,
+           percentage, seed = 123, print.info = TRUE,
            plot.hist = TRUE, plots.per.page = 9,
            one.by.one = FALSE,
            title, ...)
            
 data_bucket(data, value = 3, max.levels = 20,
            nrow = NULL, ncol = NULL, plots.per.page = 9,
-           one.by.one = FALSE, title, percentage, seed = 123,
+           one.by.one = FALSE, title, percentage, seed = 123, 
+           print.info = TRUE,
            ...)
 
 y_zscores(x, family = SHASHo, value  = 3, plot = TRUE, hist = FALSE, ...)
@@ -49,7 +50,8 @@ data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
           plots.per.page = 9, one.by.one = FALSE, title, percentage,
           seed = 123,...)
 
-data_response(data, response, plot = TRUE, percentage, seed = 123)
+data_response(data, response, plot = TRUE, 
+             percentage, seed = 123, print.info = TRUE)
 
 }
 

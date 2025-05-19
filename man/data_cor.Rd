@@ -25,7 +25,7 @@ data_cor(data,  digits = 3, plot = TRUE, diag.off = TRUE,
         legend.title = "Corr", title, ggtheme = theme_minimal(),
         tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE,
         lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, 
-        percentage)
+        percentage,  print.info=TRUE)
 
 data_pcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
         lower.tri.off = FALSE, method = c("square", "circle"),
@@ -33,14 +33,15 @@ data_pcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
         legend.title = "Corr", title, ggtheme = theme_minimal(),
         tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE,
         lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, 
-        percentage)
+        percentage, print.info=TRUE)
 
 data_association(data, digits = 3, plot = TRUE, diag.off = TRUE, 
         lower.tri.off = FALSE, method = c("square", "circle"), 
         outline.color = "gray", colors = c("blue", "white", "red"), 
         legend.title = "Assoc", title, ggtheme = ggplot2::theme_minimal(), 
         tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE, 
-        lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, percentage)
+        lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, 
+        percentage, print.info=TRUE )
 
 high_val(table, val = 0.90, digits = 3, plot = FALSE, igraph = TRUE)
 
@@ -70,6 +71,7 @@ low_val(table, val = 0.05, digits = 3, plot = FALSE, igraph = TRUE)
   \item{circle.size}{the size of the circles, increase (or decrease) if the defaul 20 is not appropriate}
    \item{percentage}{this is for big data sets. if more tha a milion ony 10\% is plotted, if from 100.00 to a milion, 20\%, if 50.000 to 100.000, 50\% otherwise 100\% of the data.}
   \item{seed}{Setting a seed value for selection of the percantage of data (for big data sets)}
+   \item{print.info}{whether to print infomation when cutting the data usinf  \code{data_cut()}}
    \item{val}{the theshold value so if tha actul value is  greater than \code{val} it will be reported in \code{high_val()}}
    \item{igraph}{if in \code{high_val()}, the option \code{plot=TRUE} is set, then there are two options for plotting; i)  \code{igraph::graph_from_data_frame()} with \code{igraph=TRUE} or ii) \code{networkD3::simpleNetwork()} with \code{igraph=FALSE} }
 }

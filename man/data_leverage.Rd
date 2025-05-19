@@ -11,7 +11,7 @@ The function \code{data_leverage()} is designed to identify observations in the 
 data_leverage(data, response, weights, quan.val = 0.99, annotate = TRUE, 
             line.col = "steelblue4", point.col = "steelblue4", 
             annot.col = "darkred", plot = TRUE, title, percentage, 
-            seed = 123, ...)
+            seed = 123, print.info=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,6 +29,7 @@ The \code{data.frame}
   \item{title}{what title to put}
   \item{percentage}{what percentage of data to use in the plot}
   \item{seed}{The seed use to calculete the percentage}
+  \item{print.info}{whether to print infomation when cutting the data usinf  \code{data_cut()}}
   \item{\dots}{other arguments}
 }
 \details{

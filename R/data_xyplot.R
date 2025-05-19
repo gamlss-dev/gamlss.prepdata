@@ -13,7 +13,7 @@ data_xyplot <- function(data, response,
                   max.levels = 10,
               plots.per.page = 9,
                   one.by.one = FALSE,
-                        title,...)
+                        title, ...)
 {
 ################################################################################
 y_distinct <- function(var)
@@ -61,7 +61,8 @@ if (inherits(data[,i],"factor"))
     } else
     {
       PP[[I]] <- data|> ggplot2::ggplot(aes(x = .data[[i]], .data[[Y]]))+
-        ggplot2::geom_point(size=point.size)+ggplot2::geom_smooth()
+        ggplot2::geom_point(size=point.size)+ggplot2::geom_smooth() #+
+  #     theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1))
     }
   }
   n.plots <- length(PP)
@@ -73,10 +74,10 @@ if (one.by.one)
   }
   else
   { # multiple plots
-    #################################################################
+################################################################################
     define_region <- function(row, col){
       viewport(layout.pos.row=row, layout.pos.col=col) }
-    #################################################################
+################################################################################
     if (n.plots>plots.per.page)
     {
       pages <- ceiling(n.plots/plots.per.page)
@@ -126,7 +127,7 @@ if (plots.per.page==9)
       pushViewport(viewport(layout=grid.layout(nrow=nr,ncol=nc)))
       for (p  in 1:n.plots)
       {
-        print(PP[[p]], vp=define_region(IJ$i[p],IJ$j[p]))
+     #   print(PP[[p]], vp=define_region(IJ$i[p],IJ$j[p]))
       }
     }
   }

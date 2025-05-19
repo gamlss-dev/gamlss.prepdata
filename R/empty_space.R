@@ -160,8 +160,9 @@ data_void <- function(data,
                    lab_col = "black", 
                   lab_size = 3,
                circle.size = 20,
-             seed = 123, 
-             percentage
+                      seed = 123, 
+                percentage,
+                print.info = TRUE
              ) # c(1,15) maybe will do
 {
 ################################################################################
@@ -199,8 +200,9 @@ if (is(data, "array")) stop("the data is an array the function needs a data.fram
      dimD <- dim(data)
      data <- if (missing(percentage))
      {
-       data_cut(data,seed=seed)
-     } else data_cut(data,percentage=percentage)     
+       data_cut(data,seed = seed, print.info = print.info)
+     }      else data_cut(data, seed = seed, percentage=percentage, 
+                          print.info=print.info)   
 if (any(is.na(data)))
   {
        l1 <- dim(data)[1]
