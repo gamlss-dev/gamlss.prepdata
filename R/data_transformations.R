@@ -71,6 +71,9 @@ data_Ptrans_plot <- function(data, response,
                                  ncol = NULL,
                        plots.per.page = 9,
                            one.by.one = FALSE,
+                          percentage, 
+                                 seed = 123, 
+                           print.info = TRUE, 
                             title,...)
 {
   daTa <- mgcv <- NULL
@@ -78,14 +81,18 @@ if (is(data, "list"))
   stop("the data is list  the function needs a data.frame")
 if (is(data, "table"))
   stop("the data is a table the function needs a data.frame")
-  if (is(data, "matrix"))    data <- as.data.frame(data)
-  if (is(data[1],"mts"))     data <- as.data.frame(data)
-  if (is(data, "array")) stop("the data is an array the function needs a data.frame")
-      Y <-  deparse(substitute(response))
-  if (any(!(Y %in%names(data)))) stop("the response should be in data")
-  Names <- names(data)
-  pos <- match(Y, Names)
-  daTa <- data[,-pos] # data without response
+if (is(data, "matrix"))    data <- as.data.frame(data)
+if (is(data[1],"mts"))     data <- as.data.frame(data)
+if (is(data, "array")) stop("the data is an array the function needs a data.frame")
+        Y <- deparse(substitute(response))
+if (any(!(Y %in%names(data)))) stop("the response should be in data")
+    Names <- names(data)
+      pos <- match(Y, Names)
+     daTa <- data[,-pos] # data without response
+     daTa <- if (missing(percentage))
+     {
+            data_cut(daTa, seed=seed, print.info=print.info )
+     } else data_cut(daTa,percentage=percentage, print.info=print.info)  
   class_Vars <- sapply(data,function(x) class(x)[1]) 
   daTa <- data_only_continuous(daTa) 
   #daTA <- daTa[,(inherits(class_Vars,"numeric")|inherits(class_Vars,"integer"))]
