@@ -27,7 +27,7 @@ The function \code{data_response()}  calculates and plots the z-scores (obtained
 data_xyplot(data, response, point.size = 0.5, nrow = NULL,
            print.info = TRUE,
            ncol = NULL, percentage, seed = 123,  max.levels = 10,
-           plots.per.page = 9, one.by.one = FALSE, title, ...)
+           plots.per.page = 9, one.by.one = FALSE, title, text.x.angle = 0, ...)
 
 data_plot(data, value = 3, hist.col = "black", hist.fill = "white",
            dens.fill = "#FF6666", nrow = NULL, ncol = NULL,
@@ -78,6 +78,8 @@ data_response(data, response, plot = TRUE,
     \item{percentage}{if set, i.e. 0.50, plots a portotion of data  otherwise for big data sets greater than 50.000 observartions it plots a porpotion}
     \item{seed}{the \code{set.seed()} argument}
     \item{print.info}{whether to print infomation when cutting the data usinf  \code{data_cut()}}
+    \item{ text.x.angle}{how the text in the x-axis is printed (helping if say factors have a lot of levels). It can be a signle number of a vector. In both cases it will expand as a vector with length the number of explanatory variables.  Therefore for full control a vector of the same length as the number of x-variables should be given.) }
+    
    \item{\dots}{other arguments}
 }
 \details{

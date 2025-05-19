@@ -13,7 +13,9 @@ data_xyplot <- function(data, response,
                   max.levels = 10,
               plots.per.page = 9,
                   one.by.one = FALSE,
-                        title, ...)
+                        title, 
+                text.x.angle = 0, 
+                ...)
 {
 ################################################################################
 y_distinct <- function(var)
@@ -51,26 +53,28 @@ if (any(class_Vars=="character"))
        actY <- data[,Y]
          cY <- class(actY)
           I <- 0
+text.x.angle <- rep( text.x.angle, length.out=length(nameS))
 for (i in nameS)
   {
        I <- I + 1
 if (inherits(data[,i],"factor"))
     {
       PP[[I]] <- data|>ggplot2::ggplot(aes(x=.data[[i]],.data[[Y]]))+
-        ggplot2::geom_boxplot()
+        ggplot2::geom_boxplot()+
+        ggplot2::theme(axis.text.x = element_text(angle = text.x.angle[I], vjust = 1, hjust=1))
     } else
     {
       PP[[I]] <- data|> ggplot2::ggplot(aes(x = .data[[i]], .data[[Y]]))+
-        ggplot2::geom_point(size=point.size)+ggplot2::geom_smooth() #+
-  #     theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1))
+        ggplot2::geom_point(size=point.size)+ggplot2::geom_smooth() +
+        ggplot2::theme(axis.text.x = element_text(angle = text.x.angle[I], vjust = 1, hjust=1))
     }
   }
   n.plots <- length(PP)
 if (one.by.one)
   {
     oask <- devAskNewPage(one.by.one)
-  on.exit(devAskNewPage(oask))
-    for (i in 1:n.plots) print(PP[[i]])
+    on.exit(devAskNewPage(oask))
+  for (i in 1:n.plots) print(PP[[i]])
   }
   else
   { # multiple plots
@@ -82,7 +86,7 @@ if (one.by.one)
     {
       pages <- ceiling(n.plots/plots.per.page)
        page <- n.plots%/%plots.per.page
-       ppp <- rep(plots.per.page,page)
+        ppp <- rep(plots.per.page,page)
 if (n.plots%%plots.per.page != 0) ppp <- c(ppp, n.plots%%plots.per.page)
 if (plots.per.page==9)
       {
@@ -127,7 +131,7 @@ if (plots.per.page==9)
       pushViewport(viewport(layout=grid.layout(nrow=nr,ncol=nc)))
       for (p  in 1:n.plots)
       {
-     #   print(PP[[p]], vp=define_region(IJ$i[p],IJ$j[p]))
+        print(PP[[p]], vp=define_region(IJ$i[p],IJ$j[p]))
       }
     }
   }
