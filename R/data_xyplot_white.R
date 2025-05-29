@@ -3,7 +3,7 @@
 ################################################################################
 ################################################################################
 # function 3
-data_xyplot <- function(data, response,
+data_xyplot_white <- function(data, response,
                   point.size = 0.5,
                         nrow = NULL,
                   print.info = TRUE,
