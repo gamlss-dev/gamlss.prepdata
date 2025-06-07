@@ -9,12 +9,12 @@
 ################################################################################
 #  NOT THIS ONE 1) data_check       : will be fixed in the end
 ################################################################################   :
-#  1) xy_Ptrans  :  takes x and y and find power best labmda in power 
+#  1) xy_Ptrans  :  takes x and y and find power best lambda in power 
 #                 transformation
-#  2) data_Ptrans_plot;
+#  2) data_Ptrans_plot; 
 #  3) data_Ptrans : 
-#  4) time_dt2dhour
-#  5) time_2num
+#  4) time_dt2dhour: take date-hours and create data and hours variables  
+#  5) time_2num: takes time  and create a numeric 
 #
 ################################################################################
 ################################################################################
@@ -98,29 +98,29 @@ if (any(!(Y %in%names(data)))) stop("the response should be in data")
   #daTA <- daTa[,(inherits(class_Vars,"numeric")|inherits(class_Vars,"integer"))]
   # only numeric
   Namesnum <- names(daTa)
-  daTa <- data[, c(Namesnum, Y) ]# new data with numeric + response
-  PP <- list()
-  I <- 1
-  for (i in Namesnum)
+      daTa <- data[, c(Namesnum, Y) ]# new data with numeric + response
+        PP <- list()
+         I <- 1
+for (i in Namesnum)
   {
-    GG1 <-  daTa |> ggplot(aes(x = .data[[i]], .data[[Y]]))+geom_point()+
-      ggtitle("no trans")
+        GG1 <-  daTa |> ggplot(aes(x = .data[[i]], .data[[Y]]))+geom_point()+
+                ggtitle("no trans")
     PP[[I]] <- GG1
     I <- I + 1
     #  cat(I,"\n")
-    GG2 <-  daTa |> ggplot(aes(x = sqrt(.data[[i]]), .data[[Y]]))+
-      geom_point()+ggtitle("sqrt")
-    PP[[I]] <- GG2
-    I <- I + 1
-    #         cat(I,"\n")
-    GG3 <-  daTa |> ggplot(aes(x = log(.data[[i]]), .data[[Y]]))+
-      geom_point()+ggtitle("log")
-    PP[[I]] <- GG3
-    I <- I + 1
+      GG2 <-  daTa |> ggplot(aes(x = sqrt(.data[[i]]), .data[[Y]]))+
+               geom_point()+ggtitle("sqrt")
+  PP[[I]] <- GG2
+       I <- I + 1
+#         cat(I,"\n")
+     GG3 <-  daTa |> ggplot(aes(x = log(.data[[i]]), .data[[Y]]))+
+               geom_point()+ggtitle("log")
+PP[[I]] <- GG3
+      I <- I + 1
     #           cat(I,"\n")
   }
   n.plots <- length(PP)
-  if (one.by.one)
+if (one.by.one)
   {
     oask <- devAskNewPage(one.by.one)
     on.exit(devAskNewPage(oask))
@@ -246,6 +246,52 @@ for (i in 1:length(nameS))
   names(PP) <- nameS       
   PP 
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 
+# it takes a factor and use the levels with lower (or higher) numbar 
+# of observations as reference 
+y_factor <- function(x, how = c("lower", "higher"))
+{
+how <- match.arg(how)  
+if   (!is.factor(x)) stop("x is not a factor")
+f <- if (how=="lower")  stats::relevel(x,ref=levels(x)[which.min(table(x))])
+     else  relevel(x,ref=levels(x)[which.max(table(x))])
+f
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 
+# It take a data frame and readjust the reference level of all 
+#  factors in the data.frame to the level with "lower" or "higher" 
+#  number of observations 
+data_factor <- function(data, how = c("lower", "higher") )
+{
+ is_nominal <- function(x) class(x) %in% c("factor", "character")  
+  how <- match.arg(how)    
+  # what is the data
+if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
+if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+if (is(data, "matrix")) data <- as.data.frame(data)
+if (is(data[1],"mts"))  data <- as.data.frame(data)
+if (is(data, "array")) stop("the data is an array the function needs a
+                            data.frame")
+  ind <- sapply(data, is_nominal)
+  nam.fac <-  names(data)[ind]
+for (i in nam.fac)
+  {
+  data[,i]  <-  y_factor(data[,i], how=how)  
+  }
+data
+}  
 ################################################################################
 ################################################################################
 ################################################################################
