@@ -6,10 +6,16 @@
 ################################################################################
 ################################################################################ 
 # function 1
-y_outliers <- function(var, value=4, family=SHASHo)
+y_outliers <- function(var, 
+                      value = 4L, 
+                     family = SHASHo, 
+                       type = c("zscores","quantile"))
+{
+  type <- match.arg(type)
+if (type=="zscores")  
 {
   if (!is(var,"numeric")) stop("the variable should be numeric")
-  # the problem is integer is numeric so do not stop them
+# the problem is integer is numeric so do not stop them
   if (any(var<0)) # if has negative values 
   {
     tvar <- var # do not look for power transformation 
@@ -19,11 +25,29 @@ y_outliers <- function(var, value=4, family=SHASHo)
     tvar <- if (abs(par) < 0.001) log(var) else var^par
   }  
   z.scores <- y_zscores(tvar, family=family, plot=FALSE)
-      ival <- var[which(abs(z.scores)>value)]
       iind <- which(abs(z.scores)>value)
-  names(ival) <- iind
-  ival
-}
+  return(iind)
+ } else 
+ {
+   out <-  gamlss.ggplots::y_dots(var, value=value, plot=FALSE) 
+   return(out)
+ }
+} 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 
+y_both_outliers <- function(var, 
+                           value = 4L, 
+                          family = SHASHo, 
+                            type = c("zscores","quantile"))
+{
+  out1 <-  gamlss.ggplots::y_dots(var, value=value, plot=FALSE) 
+  out2 <- y_outliers(var, value=value, family=family)  
+  out <- intersect(out1, out2)
+  out 
+}  
 ################################################################################
 ################################################################################
 ################################################################################
@@ -31,10 +55,12 @@ y_outliers <- function(var, value=4, family=SHASHo)
 # function 2
 data_outliers <- function(data, 
                           value = 4,
-                          min.distinct = 50, 
-                          family = SHASHo
+                   min.distinct = 50, 
+                         family = SHASHo, 
+                           type = c("zscores","quantile", "both")
                           )
 {
+  type <- match.arg(type)
   # what is the data
   if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
   if (is(data, "table")) stop("the data is a table the function needs a data.frame")
@@ -59,10 +85,21 @@ data_outliers <- function(data,
   Names <- names(daTa)
   class_Vars <- sapply(daTa,function(x) class(x)[1]) 
   PP <- list()
+if (type=="zscores")  
   for (i in 1:length(class_Vars))
   { 
     PP[[i]] <-  y_outliers(daTa[,i], value=value, family=family)
   }
+if (type=="quantiles")  
+    for (i in 1:length(class_Vars))
+    { 
+      PP[[i]] <- gamlss.ggplots::y_dots(var, value=value, plot=FALSE) 
+    }
+if (type=="both")  
+    for (i in 1:length(class_Vars))
+    { 
+      PP[[i]] <- y_outliers(daTa[,i], value=value, family=family, type="both")
+    }  
   names(PP) <- Names       
    PP 
 }

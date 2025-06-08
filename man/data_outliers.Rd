@@ -1,14 +1,23 @@
 \name{data_outliers}
 \alias{data_outliers}
 \alias{y_outliers}
+\alias{y_both_outliers}
 
 \title{Outlier identification}
 \description{
-Those two function idententify outliers in variables in data
+Those  functions idententify outliers in variables in the data.
+The functions \code{} and \code{}
+
+
 }
 \usage{
-data_outliers(data, value = 4, min.distinct = 50, family = SHASHo)
-y_outliers(var, value = 4, family = SHASHo)
+data_outliers(data, value = 4, min.distinct = 50, family = SHASHo, 
+         type = c("zscores","quantile", "both") )
+
+y_outliers(var, value = 4, family = SHASHo,  type = c("zscores","quantile"))
+
+y_both_outliers(var, value = 4L, family = SHASHo, 
+        type = c("zscores", "quantile"))
 }
 
 \arguments{
@@ -17,6 +26,7 @@ y_outliers(var, value = 4, family = SHASHo)
   \item{value}{max value from which the absolute value of the z-scores should be  greater to identify outliers}
   \item{min.distinct}{if a variable has less distinct values than \code{min.distinct} is excluded}
   \item{family}{the distribution family used for standardization}
+  \item{type}{the type of outlier detection \code{zscotes} or \code{quantile}}
 }
 \details{the continuous variables are power transforemed and then standartised}
 \value{
