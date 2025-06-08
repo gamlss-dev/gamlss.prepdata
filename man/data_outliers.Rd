@@ -11,10 +11,10 @@ The functions \code{} and \code{}
 
 }
 \usage{
-data_outliers(data, value = 4, min.distinct = 50, family = SHASHo, 
+data_outliers(data, value = 4L, min.distinct = 50, family = SHASHo, 
          type = c("zscores","quantile", "both") )
 
-y_outliers(var, value = 4, family = SHASHo,  type = c("zscores","quantile"))
+y_outliers(var, value = 4L, family = SHASHo,  type = c("zscores","quantile"))
 
 y_both_outliers(var, value = 4L, family = SHASHo, 
         type = c("zscores", "quantile"))

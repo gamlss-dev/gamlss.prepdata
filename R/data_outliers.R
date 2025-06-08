@@ -54,7 +54,7 @@ y_both_outliers <- function(var,
 ################################################################################
 # function 2
 data_outliers <- function(data, 
-                          value = 4,
+                          value = 4L,
                    min.distinct = 50, 
                          family = SHASHo, 
                            type = c("zscores","quantile", "both")
