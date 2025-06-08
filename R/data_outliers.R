@@ -57,7 +57,7 @@ data_outliers <- function(data,
                           value = 4L,
                    min.distinct = 50, 
                          family = SHASHo, 
-                           type = c("zscores","quantile", "both")
+                           type = c("zscores", "quantile", "both")
                           )
 {
   type <- match.arg(type)
@@ -98,7 +98,7 @@ if (type=="quantiles")
 if (type=="both")  
     for (i in 1:length(class_Vars))
     { 
-      PP[[i]] <- y_outliers(daTa[,i], value=value, family=family, type="both")
+      PP[[i]] <- y_both_outliers(daTa[,i], value=value, family=family)
     }  
   names(PP) <- Names       
    PP 
