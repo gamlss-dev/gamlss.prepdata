@@ -65,16 +65,12 @@ if (Dim[2]==1) stop("only one variable is left after taking out the factors")
 diffDim  <- dimD[2]-Dim[2]
 if (any(is.na(data)))
 {
-  l1 <- dim(data)[1]
+    l1 <- dim(data)[1]
   data <- na.omit(data)
-  l2 <- dim(data)[1]
+    l2 <- dim(data)[1]
   warning(cat(l1-l2, "observations were omitted from the data", "\n"))
 }
 if (is.null(dimD)) stop("only one variable in the data")
-# if (diffDim > 0)
-# {
-#   warning(cat(diffDim, 'factors have been omited from the data', "\n"))
-# }
           Y <- deparse(substitute(response))
 # if (any(!(Y %in%names(data)))) stop("the response should be in data")
 if (missing(weights)) weights <- rep(1, dim(data)[1])
@@ -86,7 +82,7 @@ if (missing(weights)) weights <- rep(1, dim(data)[1])
         lev <- hatvalues(m1)
           r <- m1$rank
           N <- dim(data)[1]
-          d <- gamlss_prep_data(lev,weights=weights, quan.val=quan.val )
+          d <- gamlss_prep_data(lev, weights=weights, quan.val=quan.val )
   txt.title <- if (missing(title))  paste("Linear leverage of data",
                                         nameData)
               else title
