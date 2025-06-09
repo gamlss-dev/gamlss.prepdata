@@ -8,7 +8,7 @@ Getting the Leverage of All explanatory variables
 The function \code{data_leverage()} is designed to identify observations in the explanatory variable space with high leverage values and, therefore, potential outliers. 
 }
 \usage{
-data_leverage(data, response, weights, quan.val = 0.99, annotate = TRUE, 
+data_leverage(data, response, weights, quantile.value = 0.99, annotate = TRUE, 
             line.col = "steelblue4", point.col = "steelblue4", 
             annot.col = "darkred", plot = TRUE, title, percentage, 
             seed = 123, print.info=TRUE, ...)
@@ -20,7 +20,7 @@ The \code{data.frame}
 }
   \item{response}{The response variable (to be excuded)}
   \item{weights}{Prior weights if needed}
-  \item{quan.val}{The quantile values for the identification of high leverage. The default is \code{quan.val=0.99} so only the 1 percent of the high leverage ate identify as outliers}
+  \item{quantile.value}{The quantile values for the identification of high leverage. The default is \code{quantile.value=0.99} so only the 1 percent of the high leverage are identifyied as outliers. This should be increase for large data}
   \item{annotate}{whether to annotete the the outliers}
   \item{line.col}{The color of the line}
   \item{point.col}{The colout of the plotting points]}

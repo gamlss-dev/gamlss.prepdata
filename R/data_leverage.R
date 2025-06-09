@@ -5,7 +5,7 @@
 # function 
 ################################################################################ 
 data_leverage <- function(data, response, weights,
-                   quan.val = 0.99,
+             quantile.value = 0.99,
                    annotate = TRUE,
                    line.col = "steelblue4",
                   point.col = "steelblue4",
@@ -16,9 +16,9 @@ data_leverage <- function(data, response, weights,
 {
 ################################################################################
 # local functions
-gamlss_prep_data <- function (hat, weights, quan.val)
+gamlss_prep_data <- function (hat, weights, quantile.value)
   {
-    value <-  quantile(hat, quan.val)
+    value <-  quantile(hat, quantile.value)
       obs <- seq_len(length(hat))
       hat <- hat[weights!=0]
       out <- data.frame(obs = obs, hat = hat)
@@ -82,7 +82,7 @@ if (missing(weights)) weights <- rep(1, dim(data)[1])
         lev <- hatvalues(m1)
           r <- m1$rank
           N <- dim(data)[1]
-          d <- gamlss_prep_data(lev, weights=weights, quan.val=quan.val )
+          d <- gamlss_prep_data(lev, weights=weights, quantile.value=quantile.value )
   txt.title <- if (missing(title))  paste("Linear leverage of data",
                                         nameData)
               else title
