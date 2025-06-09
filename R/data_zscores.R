@@ -89,7 +89,7 @@ if (percentage)
          data <- data[ind,]
        }       
   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
-    data_distinct(data, get.distinct=TRUE, print=FALSE) < max.levels|
+ #   data_distinct(data, get.distinct=TRUE, print=FALSE) < max.levels|
               sapply(data, function(x) is(x, class2="Date"))
       daTa <- subset(data,  select=!sat.cont)  
        Dim <- dim(daTa)
