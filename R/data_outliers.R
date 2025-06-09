@@ -74,7 +74,7 @@ data_outliers <- function(data,
   if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
                              "to detect non-linear correlations", "\n"))  
   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
-    data_distinct(data, get.distinct=TRUE) < min.distinct|
+   # data_distinct(data, get.distinct=TRUE) < min.distinct|
     sapply(data, function(x) is(x, class2="Date"))
   daTa <- subset(data,  select=!sat.cont)  
   #daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
