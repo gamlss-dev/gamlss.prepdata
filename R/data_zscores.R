@@ -26,9 +26,9 @@ attr(zscores, "parameter") <-   switch(lparam, c("mu"),
 if (plot) 
 {
    title <- paste0("z-scores of ",name)
-  if (hist) print(gamlss.ggplots::y_hist(zscores)+
+  if (hist) print(gamlss.ggplots::y_hist(zscores,...)+
                   ggplot2::xlab(name))
-  else      print(gamlss.ggplots::y_dots(zscores, value=value)+
+  else      print(gamlss.ggplots::y_dots(zscores, value=value,...)+
                   ggplot2::xlab(name))
 }
 invisible(zscores)

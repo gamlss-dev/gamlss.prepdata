@@ -30,3 +30,8 @@
 * Replacement of the use of `class()==` with `inherits()`.
 
 * Bug fix in the function `data_re1val()` when the variable was a factor.
+
+# gamlss.prepdata 0.1-8
+
+
+* the package vignette can be found in <https://mstasinopoulos.github.io/Functions-from-packages/.>    
