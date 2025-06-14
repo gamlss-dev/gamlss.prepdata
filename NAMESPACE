@@ -112,5 +112,6 @@ importFrom("foreach", "%dopar%", "foreach", "%do%")
 ################################################################################
 importFrom("graphics", "axis", "contour", "image", "rect")
 importFrom("stats", "cmdscale", "ecdf", "family", "lm.wfit")
-importFrom("yaImpute", "ann")
- importFrom("stats", "var")
+importFrom("yaImpute", "ann") 
+importFrom("stats", "var")
+importFrom("stats", "complete.cases")

@@ -4,9 +4,14 @@
 # correlations coefficients from  a data.frame
 # it check whether they are factor and only show the
 # correlation for continuous variables
-# i) data_cor()
-# ii) which_data_cor() is equivalent to which.Data.Corr() from
-#     gamlss.foreach
+# i) data_cor(): produce the correlation of all continuous variable in the data 
+# ii) data_hight_corr; It takes a data frame and identify all pairs with hight
+#     Pearson's correlation 
+# iii) high_cor(): it takes a correlation matrix and identify the hight values
+# iv) lower_cor(): it takes a correlation matrix and identify the lower values
+#  v)  cor_vars(): it takes  a correlation matrix it performs the algorithm from 
+#      the `caret` package to identify which variables could be excluded.
+       
 #
 ################################################################################
 ################################################################################
@@ -16,6 +21,8 @@
 ################################################################################
 ################################################################################
 ################################################################################
+################################################################################
+# function 1
 data_cor <- function(data,
                      digits = 3,
                        plot = TRUE,
@@ -39,19 +46,6 @@ data_cor <- function(data,
               percentage,
               print.info = TRUE)
 {
-################################################################################
-################################################################################
-# local function
-  # mat2df <- function(mat)
-  # {
-  #    rna <- rownames(mat)
-  #   lrna <- length(rna)
-  #  value <- as.vector(mat)
-  #   Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
-  #   Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
-  #    daf <-  na.omit(data.frame(Var1, Var2, value=value))
-  #   daf
-  # }
 ################################################################################
 ################################################################################
   type <- match.arg(type)
@@ -157,6 +151,7 @@ else if (method == "circle") {
 ################################################################################
 ################################################################################
 #-------------------------------------------------------------
+# function 2
 data_high_cor <- function(data, r=.90, digits=3, plot=FALSE, igraph=TRUE)
 {
 if (abs(r)>=1||abs(r)<=0) stop("r should be greater than  0 and lass than 1")
@@ -205,8 +200,6 @@ if (plot)
 high_val <- function(table, val=.90, digits=3, plot=FALSE, igraph=TRUE)
 {
   if (abs(val)>=1||abs(val)<=0) stop("val should be greater than  0 and lass than 1")
-  
-  
   mm <- which(abs(table)>val, arr.ind=T)
   nn <- mm[mm[,1]< mm[,2],]
   if (is.vector(nn))
@@ -245,8 +238,6 @@ high_val <- function(table, val=.90, digits=3, plot=FALSE, igraph=TRUE)
 low_val <- function(table, val=.05, digits=3, plot=FALSE, igraph=TRUE)
 {
   if (abs(val)>=1||abs(val)<=0) stop("val should be greater than  0 and lass than 1")
-  
-  
   mm <- which(abs(table)< val, arr.ind=T)
   nn <- mm[mm[,1]< mm[,2],]
   if (is.vector(nn))
@@ -263,12 +254,6 @@ low_val <- function(table, val=.05, digits=3, plot=FALSE, igraph=TRUE)
   M <-  cbind(name1, name2, value=corrs)
   if (plot)
   {
-    # dd <- which.Data.Corr(InfMort, r=0.5)[,c(1,2)]
-    #  network <- graph_from_data_frame(d=dd, directed=F)
-    # plot it
-    #  plot(network)
-    #  InfMort |> which.Data.Corr( r=0.5) |>  as.data.frame() |>
-    #    simpleNetwork(CC, height="100px", width="100px")
     dd <- as.data.frame(M)
     if (igraph) plot(igraph::graph_from_data_frame(d=dd, directed=F))
     else{
@@ -277,6 +262,62 @@ low_val <- function(table, val=.05, digits=3, plot=FALSE, igraph=TRUE)
     }
   } else
     return(M)
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 5 (identical to `carer` function findCorrelation())
+cor_vars <- function (x, cutoff = 0.9, verbose = FALSE) 
+{
+# identical to `caret` function `findCorrelation()`   
+if (any(!complete.cases(x))) 
+        stop("The correlation matrix has some missing values.")
+     averageCorr <- colMeans(abs(x))
+     averageCorr <- as.numeric(as.factor(averageCorr))
+x[lower.tri(x, diag = TRUE)] <- NA
+combsAboveCutoff <- which(abs(x) > cutoff)
+     colsToCheck <- ceiling(combsAboveCutoff/nrow(x))
+     rowsToCheck <- combsAboveCutoff%%nrow(x)
+   colsToDiscard <- averageCorr[colsToCheck] > averageCorr[rowsToCheck]
+  rowsToDiscard <- !colsToDiscard
+  if (verbose) {
+    colsFlagged <- pmin(ifelse(colsToDiscard, colsToCheck, 
+                               NA), ifelse(rowsToDiscard, rowsToCheck, NA), na.rm = TRUE)
+    values <- round(x[combsAboveCutoff], 3)
+    cat("\n", paste("Combination row", rowsToCheck, "and column", 
+                    colsToCheck, "is above the cut-off, value =", values, 
+                    "\n \t Flagging column", colsFlagged, "\n"))
+  }
+  deletecol <- c(colsToCheck[colsToDiscard], rowsToCheck[rowsToDiscard])
+  deletecol <- unique(deletecol)
+  deletecol
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_index_cor <- function (data, response, cutoff = 0.9,  
+                            type = c("pearson", "kendall", "spearman"),
+                            percentage = 1, print.info=FALSE)
+{
+ type <- match.arg(type)
+  CC <- data_cor(data, type=type, plot=FALSE, percentage=percentage,  print.info = print.info) 
+  #CC <- cor(daTa, method=type)
+  index <- cor_vars(CC, cutoff=cutoff)
+  return(index)
+}
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_index_association <- function (data, response, cutoff = 0.9,  
+                                 percentage = percentage , print.info=FALSE )
+{
+  CC <- data_association(data, plot=FALSE, percentage=percentage,  print.info = print.info) 
+  index <- cor_vars(CC, cutoff=cutoff)
+  return(index)
 }
 ################################################################################
 ################################################################################
