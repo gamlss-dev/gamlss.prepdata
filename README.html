@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>readme</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="README_files/libs/clipboard/clipboard.min.js"></script>
+<script src="README_files/libs/quarto-html/quarto.js"></script>
+<script src="README_files/libs/quarto-html/popper.min.js"></script>
+<script src="README_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="README_files/libs/quarto-html/anchor.min.js"></script>
+<link href="README_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="README_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="README_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="README_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="README_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<!-- README.md is generated from README.qmd via: quarto render README.qmd --to gfm -->
+<section id="gamlss.prepdata-preparing-data-for-distributional-regression" class="level1">
+<h1>gamlss.prepdata: Preparing Data for Distributional Regression</h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>The purpose of this package is to streamline the data preparation process for distributional regression models, particularly for use with <a href="https://cran.R-project.org/package=gamlss"><code>gamlss</code></a> and <a href="https://github.com/gamlss-dev/gamlss2"><code>gamlss2</code></a> packages.</p>
+<p>Here’s a summary of what can be gained during this early analysis and how it contributes to effective modelling:</p>
+<ol type="1">
+<li><p>Understanding the Variables in the Dataset: One of the first steps is to understand the variables in your data. This includes summarizing the data, checking distributions, and identifying the type of each variable (e.g., categorical, continuous).</p></li>
+<li><p>Missing Values; Knowing which variables have missing observations and how many observations are missing is important at this stage for decisions have to made on how to deal with the problem and whether we require data multiple imputations.</p></li>
+<li><p>Outlier Detection: Outliers can distort the results of a model, so it’s important to detect them early. Outliers might require special attention, either by excluding them or by applying robust methods that minimize their impact.</p></li>
+<li><p>Examining Associations between the x’s: Associations between variables can be explored using correlation (association) analysis and it important to ease model fitting and also for interpretation of the results.</p></li>
+<li><p>Exploring Relationships; How the explanatory variables affect the response i.e.&nbsp;linearly or not is one aspect of this part of the analysis. The other is the present of interaction. Pairwise interactions can be easilly checked at this stage.</p></li>
+<li><p>Variable Transformations; Variable transformations often has to do with how even the sample points on the variable are distributed over the range. Transformation could improve modelling.</p></li>
+<li><p>Partitioning the Data for Statistical Inference: The dataset can be split into different sets (e.g., training, validation, test) to assess how well a model generalizes and to prevent overfitting.</p></li>
+<li><p>Preliminary Decisions to Modelling Process: The insights gained from a preliminary analysis could be importany in the selection of an appropriate statistical or machine learning model.</p></li>
+</ol>
+<p>Conclusion:</p>
+<p>The key goal of this pre-modelling analysis of a distributional regression model is to prepare the data in the best possible way so that when you apply modelling techniques like <code>gamlss</code> or other regression methods, the process is smooth and the results are reliable. The insights gained in this stage will ensure that the models you fit will be both interpretable and generalizable, giving you the best chance for valid conclusions.</p>
+<!-- There is a lot of information which can be gain using a preliminary data -->
+<!-- analysis. One could seeking information about the _variables_ in the data set -->
+<!-- themselves, on _outliers_, on _associations_  between variables, what  _type_ of -->
+<!-- relationships  exist between the response and the explanatory variables (linear -->
+<!-- or not linear) and  possible _interactions_ between the explanatory variables.  -->
+<!-- In addition, one, at this stage, could  decide  appropriate  _partitions_ of to -->
+<!-- maximize statistical inference. While answers to those questions are not -->
+<!-- necessarily final, at this pre-modeling stage, they could help at the next -->
+<!-- stage of the fitting  process. All functions in the package can be used before -->
+<!-- the functions  \texttt{gamlss()} or \texttt{gamlss2()} are used for modeling.  -->
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>The package is not yet on CRAN but can be installed from <a href="https://gamlss-dev.R-universe.dev/">R-universe</a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"gamlss.prepdata"</span>, <span class="at">repos =</span> <span class="st">"https://gamlss-dev.R-universe.dev"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For examples using the functions of the package see <a href="https://mstasinopoulos.github.io/Functions-from-packages/"><code>information</code></a></p>
+</section>
+<section id="functions" class="level2">
+<h2 class="anchored" data-anchor-id="functions">Functions</h2>
+<p>The functions for manipulation of variables are shown below</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Functions</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>data_dim()</code></td>
+<td style="text-align: left;">Dimensions &amp; % of omitted observations</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_names()</code></td>
+<td style="text-align: left;">Names of the data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_distinct()</code></td>
+<td style="text-align: left;">Distinct values in variables</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_which(()</code></td>
+<td style="text-align: left;">NA’s in variables</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_str()</code>.</td>
+<td style="text-align: left;">The class of variables etc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_omit()</code></td>
+<td style="text-align: left;">Omit all the <code>NA</code>s</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_char2fac()</code></td>
+<td style="text-align: left;">From characters to factors</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_few2fac()</code></td>
+<td style="text-align: left;">From few distinct obs. to factors</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_int2num()</code></td>
+<td style="text-align: left;">From integers to numeric</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data _rm()</code></td>
+<td style="text-align: left;">Remove variables</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data _rm1val()</code></td>
+<td style="text-align: left;">Remove factors with one level</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data _rename()</code></td>
+<td style="text-align: left;">Rename variables</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data _remove()</code></td>
+<td style="text-align: left;">Remove variables</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data _select()</code></td>
+<td style="text-align: left;">Select variables</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data _exclude_class()</code></td>
+<td style="text-align: left;">Exclude a specified class</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data _only_continous()</code></td>
+<td style="text-align: left;">Includes only continuous</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_rmNAvars()</code></td>
+<td style="text-align: left;">Remove variables with NA values</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_fac2num()</code></td>
+<td style="text-align: left;">Make factors to numerics</td>
+</tr>
+</tbody>
+</table>
+<p>The function for graphics are show below</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Functions</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>data_plot()</code></td>
+<td style="text-align: left;">Univariate plots of all variables</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_xyplot()</code></td>
+<td style="text-align: left;">Pairwise plots of the response against all others</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_bucket()</code></td>
+<td style="text-align: left;">Bucket plots of all variables</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_cor(()</code></td>
+<td style="text-align: left;">Pairwise correlations</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_pcor(()</code></td>
+<td style="text-align: left;">Pairwise partial correlations</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_void()</code></td>
+<td style="text-align: left;">Pairwise % of empty spaces</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_inter()</code></td>
+<td style="text-align: left;">Pairwise interactions</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_response()</code></td>
+<td style="text-align: left;">Response variable plots</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_zscores()</code></td>
+<td style="text-align: left;">Univariate plots using z-scores</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_outliers()</code></td>
+<td style="text-align: left;">Univariate detection of outliers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_leverage()</code></td>
+<td style="text-align: left;">Detection of outliers in the x’s space</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_scale()</code></td>
+<td style="text-align: left;">Univariate scaling the x’s</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_Ptrans_plot()</code></td>
+<td style="text-align: left;">Checking for univivariate transformations in the x’s</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphics" class="level2">
+<h2 class="anchored" data-anchor-id="graphics">Graphics</h2>
+<p>Here some of the graphical functions examples</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gamlss"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gamlss2"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gamlss.ggplots"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gamlss.prepdata"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"dplyr"</span>) </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"gamlss.prepdata"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] '0.1.9'</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>da <span class="ot">&lt;-</span> <span class="fu">data_rm</span>(rent99, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">9</span>)) </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(rent99)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3082    9</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(da)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3082    7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="sec-data_plot" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data_plot"><code>data_plot()</code></h2>
+<p>The function <code>data_plot</code> plots all the variable of the data individually. It plots;</p>
+<ul>
+<li><p>the continuous variable as <em>histograms</em> with a density plots superimposed, (see the plots for <code>rent</code> and <code>yearc</code> below). Alternatively a <em>dot plots</em> can be requested, (see the example in <a href="#sec-data_xyplot" class="quarto-xref">Section&nbsp;1.6</a>).</p></li>
+<li><p>the integers as <em>needle</em> plots, (see the plot for <code>area</code> below).</p></li>
+<li><p>the categorical variables, as <em>bar</em> plots, (see the plots for <code>location</code>, <code>bath</code> <code>kitchen</code> and <code>cheating</code> below).</p></li>
+</ul>
+<p>The message <code>100 % of data are saved</code> below is the result of the function <code>data_cut()</code> which is use before any <code>ggplot2</code> plot.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>da <span class="sc">|&gt;</span> <span class="fu">data_plot</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  100 % of data are saved, </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## that is, 3082 observations.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="man/figures/README-data_plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The function could saves the <code>ggplot2</code> figures.</p>
+</section>
+<section id="sec-data_xyplot" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data_xyplot"><code>data_xyplot()</code></h2>
+<p>The functions <code>data_xyplot()</code> plots the response variable against each of the independent explanatory variables. It plots the continuous against continuous as <em>scatter</em> plots and continuous variables against categorical as <em>box</em> plot.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the moment there is no provision for categorical response variables.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>da <span class="sc">|&gt;</span> <span class="fu">data_xyplot</span>(<span class="at">response=</span>rent )</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  100 % of data are saved, </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## that is, 3082 observations.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="man/figures/README-data_xyplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The output of the function saves the <code>ggplot2</code> figures.</p>
+</section>
+<section id="sec-data_bucket" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data_bucket"><code>data_bucket()</code></h2>
+<p>The function <code>data_bucket</code> can be used to identifies hight skewness and kurtosis on continuous variables in the data. Note that if the continuous variable is normaly distribueterd looking should be in the center of the figure.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data_bucket</span>(da, <span class="at">response=</span>rent )</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  100 % of data are saved, </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## that is, 3082 observations. </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">##     rent     area    yearc location     bath  kitchen cheating </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">##     2723      132       68        3        2        2        2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="man/figures/README-data_bucket-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
