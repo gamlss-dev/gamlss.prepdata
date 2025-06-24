@@ -11,6 +11,7 @@ y_outliers <- function(var,
                      family = SHASHo, 
                        type = c("zscores","quantile"))
 {
+if (is(var, "POSIXct")) var <- as.numeric(var)  
   type <- match.arg(type)
 if (type=="zscores")  
 {
