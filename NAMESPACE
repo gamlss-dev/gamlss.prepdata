@@ -46,7 +46,9 @@ export( data_cor,
         high_val,
         low_val,
         data_rmNAvars,
-        data_fac2num
+        data_fac2num,
+        data_factor,
+        y_factor
 )
 ################################################################################
 # ACE object

@@ -11,7 +11,8 @@
 #  4) data_cha2fac     : transform character to factors (if levels are small)
 #  5) data_few2fac     : takes any variable with few disctict values and make
 #                        into a factor
-#. 6) data_int2num.    : take integer 
+#. 6) data_int2num     : take all integers with greater than 50 distinct values 
+#. 7) data_fac2num     : the variable are specifies using vars
 ################################################################################
 ################################################################################
 ################################################################################
@@ -284,6 +285,7 @@ invisible(data)
 ################################################################################
 ################################################################################
 ################################################################################
+# function 7
 data_fac2num <- function(data, vars) # or as character or numbers
 {
 if (is(data, "list"))
