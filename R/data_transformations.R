@@ -12,10 +12,13 @@
 #  1) xy_Ptrans  :  takes x and y and find power best lambda in power 
 #                 transformation
 #  2) data_Ptrans_plot; 
-#  3) data_Ptrans : 
-#  4) time_dt2dhour: take date-hours and create data and hours variables  
-#  5) time_2num: takes time  and create a numeric 
-#
+#  3) data_Ptrans : it uses xy_Ptrans to fu=nd the best power transormation for 
+#                   all continuous variables
+#  4) y_factor; a factor to changed its reference level  
+#  5) data_factor: all factors in data  changed reference level
+#  6) time_dt2dhour: take date-hours and create data and hours variables  
+#  6) time_2num: takes time  and create a numeric 
+#. 
 ################################################################################
 ################################################################################
 ################################################################################
@@ -62,6 +65,8 @@ if (prof) # profile dev
 ################################################################################
 ################################################################################
 # function 2
+# it tries 3 power transformations for all continuous variables
+# non log  and sqrt  
 data_Ptrans_plot <- function(data, response,
                              hist.col = "black",
                             hist.fill = "white",
@@ -250,7 +255,7 @@ for (i in 1:length(nameS))
 ################################################################################
 ################################################################################
 ################################################################################
-# function 
+# function  4
 # it takes a factor and use the levels with lower (or higher) numbar 
 # of observations as reference 
 y_factor <- function(x, how = c("lower", "higher"))
@@ -269,7 +274,7 @@ f
 ################################################################################
 ################################################################################
 ################################################################################
-# function 
+# function 5
 # It take a data frame and readjust the reference level of all 
 #  factors in the data.frame to the level with "lower" or "higher" 
 #  number of observations 
@@ -296,7 +301,7 @@ data
 ################################################################################
 ################################################################################
 ################################################################################
-# function 4
+# function 6
 time_dt2dhour <- function(datetime, format=NULL) 
 { 
             X <- t(as.data.frame(strsplit(datetime,' '))) 
@@ -310,7 +315,7 @@ time_dt2dhour <- function(datetime, format=NULL)
 ################################################################################
 ################################################################################
 ################################################################################
-# function 5 for time series
+# function 7 for time series
 time_2num <- function(time, pattern=":")
 {
     t <-  gsub(pattern, ".", time)
