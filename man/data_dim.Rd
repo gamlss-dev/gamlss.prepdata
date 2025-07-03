@@ -1,6 +1,7 @@
 \name{data_dim}
 \alias{data_dim}
 \alias{data_na_vars}
+\alias{data_na_obs}
 \alias{data_names}
 \alias{data_shorter_names}
 \alias{data_rename}
@@ -14,6 +15,8 @@ This is a set of function are designed to help the user to deal with new data se
 \code{data_dim()}: the class, the  dimension and the \% NA's in the data  
 
 \code{data_na_vars()}: which variables have NA's and how many
+
+\code{data_na_obs()}: which observations have NA's 
 
 \code{data_omit()}: omit the NA's from the data.
 
@@ -31,6 +34,8 @@ This is a set of function are designed to help the user to deal with new data se
 data_dim(data)
 
 data_na_vars(data)
+
+data_na_obs(data)
 
 data_omit(data)
 
@@ -98,6 +103,7 @@ Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani
 \examples{
 data_dim(rent)
 data_na_vars(rent)
+data_na_obs(rent)
 data_omit(rent)
 data_names(rent)
 data_shorter_names(rent)

@@ -207,6 +207,29 @@ Names[pos] <- newnames
 names(data) <- Names
 invisible(data)
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 
+data_na_obs <- function(data) 
+{
+  # what is the data
+  if (is(data, "list"))  stop("the data is list  the function needs a data.frame") 
+  if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+  if (is(data, "matrix"))    data <- as.data.frame(data)
+  if (is(data[1],"mts"))     data <- as.data.frame(data)
+  if (is(data[1],"tible"))  data <- as.data.frame(data)
+  if (is(data, "array")) stop("the data is an array the function needs a data.frame")  
+  Names <- names(data)
+  PP <- list()
+  for (i in 1:length(Names))
+  {
+    PP[[i]] <- which(is.na(data[,Names[i]]))
+  }
+  print(PP)
+  invisible(data) 
+}
 # END of DIM, NAMES functions 
 ################################################################################
 ################################################################################
