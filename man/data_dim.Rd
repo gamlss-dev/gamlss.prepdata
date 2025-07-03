@@ -1,6 +1,6 @@
 \name{data_dim}
 \alias{data_dim}
-\alias{data_which_na}
+\alias{data_na_vars}
 \alias{data_names}
 \alias{data_shorter_names}
 \alias{data_rename}
@@ -13,7 +13,7 @@ This is a set of function are designed to help the user to deal with new data se
 
 \code{data_dim()}: the class, the  dimension and the \% NA's in the data  
 
-\code{data_which_na()}: which variables have NA's and how many
+\code{data_na_vars()}: which variables have NA's and how many
 
 \code{data_omit()}: omit the NA's from the data.
 
@@ -30,7 +30,7 @@ This is a set of function are designed to help the user to deal with new data se
 
 data_dim(data)
 
-data_which_na(data)
+data_na_vars(data)
 
 data_omit(data)
 
@@ -50,7 +50,7 @@ data_rename(data, oldnames, newnames)
 \details{
 The function \code{data_dim()} gives the the class, the dimension and the \% NA's in the data.
 
-The function \code{data_which_na()} gives the number of missing observation for each variable in the data.
+The function \code{data_na_vars()} gives the number of missing observation for each variable in the data.
 
 
 The function \code{data_omit()}: omits the NA's from the data.
@@ -65,7 +65,7 @@ The function \code{data_rename()} renames variable from the \code{data}.
 
 The function \code{data_dim()} after printing gives the originasl data set. 
 
-The function \code{data_which_na()} prints the number of missing observation for each variable in the data and passes the original data set. 
+The function \code{data_na_vars()} prints the number of missing observation for each variable in the data and passes the original data set. 
 
 The function \code{data_omit()}: omits the NA's from the data and passes the new data set.
 
@@ -97,7 +97,7 @@ Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani
 \seealso{\code{\link{data_cor}}}
 \examples{
 data_dim(rent)
-data_which_na(rent)
+data_na_vars(rent)
 data_omit(rent)
 data_names(rent)
 data_shorter_names(rent)

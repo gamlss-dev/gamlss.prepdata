@@ -6,7 +6,7 @@
 # functions 
 # 1)  data_dim()   ->    old data
 # 2)  data_omit()  ->   new data 
-# 3)  data_which_na() ->  old data 
+# 3)  data_na_vars() ->  old data 
 # 4)  data_names()    ->  old data
 # 5)  data_shorter_names() -> new data
 # 6)  data_rename()   -> new data
@@ -79,7 +79,7 @@ data_omit <- function(data)
 ################################################################################
 ################################################################################
 # function 3
-data_which_na <- function(data) 
+data_na_vars <- function(data) 
 {
   # what is the data
   if (is(data, "list"))  stop("the data is list  the function needs a data.frame") 
