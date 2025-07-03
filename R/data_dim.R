@@ -227,6 +227,7 @@ data_na_obs <- function(data)
   {
     PP[[i]] <- which(is.na(data[,Names[i]]))
   }
+  names(PP) <- Names  
   print(PP)
   invisible(data) 
 }
