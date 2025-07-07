@@ -158,17 +158,17 @@ par
 ################################################################################
 ################################################################################
 y_outliers_by <- function(var, 
-                       fact,# a factor whicxh partition the data
+                       by,# a factor whicxh partition the data
                        family = SHASHo, 
                        type = c("zscores","quantile"))
 {
-if(!is(fact, "factor")) stop("the secong argument should br a factor")
+if(!is(by, "factor")) stop("the secong argument should br a factor")
        ly <- length(var)
-       lx <- length(fact)
+       lx <- length(by)
      type <- match.arg(type)
 if (ly!=lx) stop("the y and factor should have the some length")
-if (missing(fact)) stop("the factor should be set") 
-  llev <- as.numeric(tapply(fact, fact, length))
+if (missing(by)) stop("the factor should be set") 
+  llev <- as.numeric(tapply(by, by, length))
  value <-abs(qnorm(1/(10*llev)))
 if (is(var, "POSIXct")) var <- as.numeric(var)  
 if (!is_numeric(var)) stop("the variable should be numeric")
@@ -180,8 +180,8 @@ if (!is_numeric(var)) stop("the variable should be numeric")
 # }
  # quantile(xvar, probs=seq(0,1, 0.25))
  # fxvar <- cut(xvar, breaks=breaks, include.lowest=FALSE) 
-        ll <- levels(fact)
-        nl <- nlevels(fact)
+        ll <- levels(by)
+        nl <- nlevels(by)
         ix <- seq(1,lx)
       iind <- list()  
   z.scores <- rep(0, lx)
@@ -196,15 +196,15 @@ if (any(var<0)) # if has negative values
  z <- list()  
 for (i in 1:nl)
 {
-  z[[i]] <- y_outliers(var[fact==ll[i]], family=family, value=value[i], type=type) 
+  z[[i]] <- y_outliers(var[by==ll[i]], family=family, value=value[i], type=type) 
 }
  # z <- tapply(var, fact, FUN=y_zscores, family=family, plot=FALSE, value=value, type=type)
   Z <- unlist(z)
-  X <- abs(Z)>value
+  #X <- abs(Z)>value
 #pp <- tapply(X, fact, FUN=\(x){ix[x]})
-  p <- ix[X]
-  names(p) <-fact[X]
-return(p)
+#  p <- ix[X]
+  names(z) <- levels(by)
+return(z)
 } 
 ################################################################################
 ################################################################################

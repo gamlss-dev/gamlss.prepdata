@@ -2,6 +2,7 @@
 \alias{data_outliers}
 \alias{y_outliers}
 \alias{y_outliers_both}
+\alias{y_outliers_by}
 
 \title{Outlier identification}
 \description{
@@ -18,11 +19,15 @@ y_outliers(var, value, family = SHASHo,  type = c("zscores","quantile"))
 
 y_outliers_both(var, value, family = SHASHo, 
         method =c("intersect", "union"))
+
+y_outliers_by(var, by, family = SHASHo, type = c("zscores", "quantile"))        
+        
 }
 
 \arguments{
   \item{data}{a data frame}
   \item{var}{a continues variable}
+   \item{by}{a factor partioning the data}
   \item{value}{max value from which the absolute value of the z-scores should be  greater to identify outliers}
   \item{min.distinct}{if a variable has less distinct values than \code{min.distinct} is excluded}
   \item{family}{the distribution family used for standardization}
