@@ -17,7 +17,7 @@ data_outliers(data, value, min.distinct = 50, family = SHASHo,
 y_outliers(var, value, family = SHASHo,  type = c("zscores","quantile"))
 
 y_outliers_both(var, value, family = SHASHo, 
-        type =c("intersect", "union"))
+        method =c("intersect", "union"))
 }
 
 \arguments{
@@ -26,7 +26,9 @@ y_outliers_both(var, value, family = SHASHo,
   \item{value}{max value from which the absolute value of the z-scores should be  greater to identify outliers}
   \item{min.distinct}{if a variable has less distinct values than \code{min.distinct} is excluded}
   \item{family}{the distribution family used for standardization}
-  \item{type}{for \code{y_outliers()} and \code{data_outliers()} the type of outlier detection \code{"zscores"} or \code{"quantile"} for  \code{y_outliers_both()} whether the \code{"intersect"} (default) or the \code{"union"} of the two sets will be used}
+  \item{type}{for \code{y_outliers()} and \code{data_outliers()} the type of outlier detection \code{"zscores"} or \code{"quantile"}}
+  \item{method}{for \code{y_outliers()} and \code{data_outliers()} the type of outlier detection \code{"zscores"} or \code{"quantile"}}
+  for  \code{y_outliers_both()} whether the \code{"intersect"} (default) or the \code{"union"} of the two sets will be used
 }
 \details{the continuous variables are power transforemed and then standartised}
 \value{

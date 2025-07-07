@@ -21,7 +21,7 @@ if (any(var<0)) # if has negative values
     tvar <- var # do not look for power transformation 
   } else  # if only positive values look for transformation  
   {
-    par  <- x_Ptrans(var)
+    par  <- y_Ptrans(var)
     tvar <- if (abs(par) < 0.001) log(var) else var^par
   }  
 if (type=="zscores")  
@@ -43,14 +43,14 @@ if (type=="zscores")
 y_outliers_both <- function(var, 
                            value, 
                           family = SHASHo, 
-                            type = c("intersect","union"))
+                            method= c("intersect","union"))
 {
-  type <- match.arg(type)
+  method<- match.arg(method)
     ly <- length(var)
 if (missing(value)) value <- abs(qnorm(1/(10*ly)))  
   out1 <- y_outliers(var, value=value, type="quantile") 
   out2 <- y_outliers(var, value=value, family=family)  
-out <- if (type=="intersect") intersect(out1, out2) else  union(out1, out2) 
+   out <- if (method=="intersect") intersect(out1, out2) else  union(out1, out2) 
   out 
 }  
 ################################################################################
@@ -67,16 +67,16 @@ data_outliers <- function(data,
 {
   type <- match.arg(type)
   # what is the data
-  if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
-  if (is(data, "table")) stop("the data is a table the function needs a data.frame")
-  if (is(data, "matrix")) data <- as.data.frame(data)
-  if (is(data[1],"mts"))  data <- as.data.frame(data)
-  if (is(data, "array")) stop("the data is an array the function needs a
+if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
+if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+if (is(data, "matrix")) data <- as.data.frame(data)
+if (is(data[1],"mts"))  data <- as.data.frame(data)
+if (is(data, "array")) stop("the data is an array the function needs a
                             data.frame")
   dimD <- dim(data)
   # checking data  
-  if (is.null(dimD)) stop("only one variable in the data") 
-  if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
+if (is.null(dimD)) stop("only one variable in the data") 
+if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
                              "to detect non-linear correlations", "\n"))  
   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
    # data_distinct(data, get.distinct=TRUE) < min.distinct|
@@ -90,20 +90,12 @@ data_outliers <- function(data,
   Names <- names(daTa)
   class_Vars <- sapply(daTa,function(x) class(x)[1]) 
   PP <- list()
-if (type=="zscores")  
-  for (i in 1:length(class_Vars))
+for (i in 1:length(class_Vars))
   { 
     ly <- length(daTa[,i])
 if (missing(value)) value <- abs(qnorm(1/(10*ly)))  
-    PP[[i]] <-  y_outliers(daTa[,i], value=value, family=family)
+    PP[[i]] <-  y_outliers(daTa[,i], value=value, family=family, type=type)
   }
-if (type=="quantiles")  
-    for (i in 1:length(class_Vars))
-    { 
-      ly <- length(daTa[,i])
-  if (missing(value)) value <- abs(qnorm(1/(10*ly)))    
-      PP[[i]] <- gamlss.ggplots::y_dots(var, value=value, plot=FALSE) 
-    }
 if (!length(PP)==0)  names(PP) <- Names       
    PP 
 }
@@ -119,7 +111,7 @@ if (!length(PP)==0)  names(PP) <- Names
 # I think the idea here is that if the variable is positive it is transformed 
 # to be make to have a less skew-kurtotic distribution 
 # then it fits the SHASH (It was suggested by  Bob)
-x_Ptrans <- function(x, lim.trans = c(0, 1.5))
+y_Ptrans <- function(x, lim.trans = c(0, 1.5))
 {
 if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
   #  cat("*** Checking for transformation for x ***", "\n")
@@ -165,32 +157,31 @@ par
 ################################################################################
 ################################################################################
 ################################################################################
-yx_outliers <- function(var, 
-                       xvar,
-                       breaks=5,
-                       value, 
+y_outliers_by <- function(var, 
+                       fact,# a factor whicxh partition the data
                        family = SHASHo, 
                        type = c("zscores","quantile"))
 {
+if(!is(fact, "factor")) stop("the secong argument should br a factor")
        ly <- length(var)
-       lx <- length(xvar)
-       lb <- length(breaks)
+       lx <- length(fact)
      type <- match.arg(type)
-if (ly!=lx) stop("the y and x should have the some length")
-if (missing(xvar)) stop("the xvar should be set") 
-if (missing(value)) value <- abs(qnorm(1/(10*ly)))
+if (ly!=lx) stop("the y and factor should have the some length")
+if (missing(fact)) stop("the factor should be set") 
+  llev <- as.numeric(tapply(fact, fact, length))
+ value <-abs(qnorm(1/(10*llev)))
 if (is(var, "POSIXct")) var <- as.numeric(var)  
 if (!is_numeric(var)) stop("the variable should be numeric")
 # the problem is integer is numeric so do not stop them
-if (lb==1) fxvar <- cut_number(xvar, n = breaks) else
-  { 
-if (min(xvar) < breaks[1]||max(xvar) > breaks[lb]) stop("The end intervals are not correct")
-  fxvar <- cut(xvar, breaks=breaks)
-}
+# if (lb==1) fxvar <- cut_number(xvar, n = breaks) else
+#   { 
+# if (min(xvar) < breaks[1]||max(xvar) > breaks[lb]) stop("The end intervals are not correct")
+#   fxvar <- cut(xvar, breaks=breaks)
+# }
  # quantile(xvar, probs=seq(0,1, 0.25))
  # fxvar <- cut(xvar, breaks=breaks, include.lowest=FALSE) 
-        ll <- levels(fxvar)
-        nl <- nlevels(fxvar)
+        ll <- levels(fact)
+        nl <- nlevels(fact)
         ix <- seq(1,lx)
       iind <- list()  
   z.scores <- rep(0, lx)
@@ -199,15 +190,20 @@ if (any(var<0)) # if has negative values
     tvar <- var # do not look for power transformation 
   } else  # if only positive values look for transformation  
   {
-    par  <- x_Ptrans(var)
+    par  <- y_Ptrans(var)
     tvar <- if (abs(par) < 0.001) log(var) else var^par
   } 
-  z <- tapply(var, fxvar, FUN=y_zscores, family=family, plot=FALSE, value=value)
+ z <- list()  
+for (i in 1:nl)
+{
+  z[[i]] <- y_outliers(var[fact==ll[i]], family=family, value=value[i], type=type) 
+}
+ # z <- tapply(var, fact, FUN=y_zscores, family=family, plot=FALSE, value=value, type=type)
   Z <- unlist(z)
   X <- abs(Z)>value
-#pp <- tapply(X, fxvar, FUN=\(x){ix[x]})
+#pp <- tapply(X, fact, FUN=\(x){ix[x]})
   p <- ix[X]
-  names(p) <-fxvar[X]
+  names(p) <-fact[X]
 return(p)
 } 
 ################################################################################
