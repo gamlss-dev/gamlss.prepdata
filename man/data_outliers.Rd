@@ -1,7 +1,7 @@
 \name{data_outliers}
 \alias{data_outliers}
 \alias{y_outliers}
-\alias{y_both_outliers}
+\alias{y_outliers_both}
 
 \title{Outlier identification}
 \description{
@@ -11,13 +11,13 @@ The functions \code{} and \code{}
 
 }
 \usage{
-data_outliers(data, value = 4L, min.distinct = 50, family = SHASHo, 
-         type = c("zscores","quantile", "both") )
+data_outliers(data, value, min.distinct = 50, family = SHASHo, 
+         type = c("zscores","quantile") )
 
-y_outliers(var, value = 4L, family = SHASHo,  type = c("zscores","quantile"))
+y_outliers(var, value, family = SHASHo,  type = c("zscores","quantile"))
 
-y_both_outliers(var, value = 4L, family = SHASHo, 
-        type = c("zscores", "quantile"))
+y_outliers_both(var, value, family = SHASHo, 
+        type =c("intersect", "union"))
 }
 
 \arguments{
@@ -26,7 +26,7 @@ y_both_outliers(var, value = 4L, family = SHASHo,
   \item{value}{max value from which the absolute value of the z-scores should be  greater to identify outliers}
   \item{min.distinct}{if a variable has less distinct values than \code{min.distinct} is excluded}
   \item{family}{the distribution family used for standardization}
-  \item{type}{the type of outlier detection \code{zscotes} or \code{quantile}}
+  \item{type}{for \code{y_outliers()} and \code{data_outliers()} the type of outlier detection \code{"zscores"} or \code{"quantile"} for  \code{y_outliers_both()} whether the \code{"intersect"} (default) or the \code{"union"} of the two sets will be used}
 }
 \details{the continuous variables are power transforemed and then standartised}
 \value{

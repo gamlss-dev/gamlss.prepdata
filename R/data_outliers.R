@@ -7,30 +7,31 @@
 ################################################################################ 
 # function 1
 y_outliers <- function(var, 
-                      value = 4L, 
+                      value, 
                      family = SHASHo, 
                        type = c("zscores","quantile"))
 {
-if (is(var, "POSIXct")) var <- as.numeric(var)  
+    ly <- length(var)
+if (missing(value)) value <- abs(qnorm(1/(10*ly)))
+if (is(var, "POSIXct")) var <- as.numeric(var) 
   type <- match.arg(type)
-if (type=="zscores")  
-{
-  if (!is(var,"numeric")) stop("the variable should be numeric")
-# the problem is integer is numeric so do not stop them
-  if (any(var<0)) # if has negative values 
+if (!is_numeric(var)) stop("the variable should be numeric")
+if (any(var<0)) # if has negative values 
   {
     tvar <- var # do not look for power transformation 
-  } else  # if only positive values look for tran=foarmation  
+  } else  # if only positive values look for transformation  
   {
     par  <- x_Ptrans(var)
     tvar <- if (abs(par) < 0.001) log(var) else var^par
   }  
+if (type=="zscores")  
+{
   z.scores <- y_zscores(tvar, family=family, plot=FALSE)
       iind <- which(abs(z.scores)>value)
   return(iind)
  } else 
  {
-   out <-  gamlss.ggplots::y_dots(var, value=value, plot=FALSE) 
+   out <-  gamlss.ggplots::y_dots(tvar, value=value, plot=FALSE) 
    return(out)
  }
 } 
@@ -39,14 +40,17 @@ if (type=="zscores")
 ################################################################################
 ################################################################################
 # function 
-y_both_outliers <- function(var, 
-                           value = 4L, 
+y_outliers_both <- function(var, 
+                           value, 
                           family = SHASHo, 
-                            type = c("zscores","quantile"))
+                            type = c("intersect","union"))
 {
-  out1 <-  gamlss.ggplots::y_dots(var, value=value, plot=FALSE) 
+  type <- match.arg(type)
+    ly <- length(var)
+if (missing(value)) value <- abs(qnorm(1/(10*ly)))  
+  out1 <- y_outliers(var, value=value, type="quantile") 
   out2 <- y_outliers(var, value=value, family=family)  
-  out <- intersect(out1, out2)
+out <- if (type=="intersect") intersect(out1, out2) else  union(out1, out2) 
   out 
 }  
 ################################################################################
@@ -55,10 +59,10 @@ y_both_outliers <- function(var,
 ################################################################################
 # function 2
 data_outliers <- function(data, 
-                          value = 4L,
+                          value,
                    min.distinct = 50, 
                          family = SHASHo, 
-                           type = c("zscores", "quantile", "both")
+                           type = c("zscores", "quantile")
                           )
 {
   type <- match.arg(type)
@@ -77,7 +81,7 @@ data_outliers <- function(data,
   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
    # data_distinct(data, get.distinct=TRUE) < min.distinct|
     sapply(data, function(x) is(x, class2="Date"))
-  daTa <- subset(data,  select=!sat.cont)  
+   daTa <- subset(data,  select=!sat.cont)  
   #daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|
   #            sapply(data,is.character)==TRUE, FALSE, TRUE))
   Dim <- dim(daTa)
@@ -89,19 +93,18 @@ data_outliers <- function(data,
 if (type=="zscores")  
   for (i in 1:length(class_Vars))
   { 
+    ly <- length(daTa[,i])
+if (missing(value)) value <- abs(qnorm(1/(10*ly)))  
     PP[[i]] <-  y_outliers(daTa[,i], value=value, family=family)
   }
 if (type=="quantiles")  
     for (i in 1:length(class_Vars))
     { 
+      ly <- length(daTa[,i])
+  if (missing(value)) value <- abs(qnorm(1/(10*ly)))    
       PP[[i]] <- gamlss.ggplots::y_dots(var, value=value, plot=FALSE) 
     }
-if (type=="both")  
-    for (i in 1:length(class_Vars))
-    { 
-      PP[[i]] <- y_both_outliers(daTa[,i], value=value, family=family)
-    }  
-  names(PP) <- Names       
+if (!length(PP)==0)  names(PP) <- Names       
    PP 
 }
 ################################################################################
@@ -115,11 +118,8 @@ if (type=="both")
 # If it is far from zero, it signals the data do not have a normal distribution.
 # I think the idea here is that if the variable is positive it is transformed 
 # to be make to have a less skew-kurtotic distribution 
-# then it fits the SHASH (It wa suggested by  Bob)
-# This prevent very highly observations in the right tail to be   
-# 
-x_Ptrans <- function(x, lim.trans = c(0, 1.5),  prof=FALSE,
-                     step=0.01,    bucket=FALSE)
+# then it fits the SHASH (It was suggested by  Bob)
+x_Ptrans <- function(x, lim.trans = c(0, 1.5))
 {
 if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
   #  cat("*** Checking for transformation for x ***", "\n")
@@ -150,8 +150,8 @@ if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
     par <- optimise(fn, lower=lim.trans[1], upper=lim.trans[2])$minimum
     # cat('*** power parameters ', par,"***"," \n")
   # }
-  PP <-  moment_bucket(ptrans(x,par),x, text_to_show=c("+","*"))
-  if (bucket) print(PP)
+  # PP <-  moment_bucket(ptrans(x,par),x, text_to_show=c("+","*"))
+  # if (bucket) print(PP)
   # 1-pchisq(momentSK(ptrans(x,par))$jarque.bera.test, 2)
   # 
   # 1-pchisq(momentSK(ptrans(x,1))$jarque.bera.test, 2)
@@ -159,17 +159,58 @@ if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
   #  hist(ptrans(x,1))
   #  momentSK(ptrans(x,1))$jarque.bera.test
 #  cat('*** power parameters ', par,"***"," \n")
-  invisible(par)
-  
+par
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# get_numbers(ll)
-# {
-# if (!is(ll, "list")) stop("not a list")
-# for (i in 1:length(list))
-#   
-#   
-# }
+yx_outliers <- function(var, 
+                       xvar,
+                       breaks=5,
+                       value, 
+                       family = SHASHo, 
+                       type = c("zscores","quantile"))
+{
+       ly <- length(var)
+       lx <- length(xvar)
+       lb <- length(breaks)
+     type <- match.arg(type)
+if (ly!=lx) stop("the y and x should have the some length")
+if (missing(xvar)) stop("the xvar should be set") 
+if (missing(value)) value <- abs(qnorm(1/(10*ly)))
+if (is(var, "POSIXct")) var <- as.numeric(var)  
+if (!is_numeric(var)) stop("the variable should be numeric")
+# the problem is integer is numeric so do not stop them
+if (lb==1) fxvar <- cut_number(xvar, n = breaks) else
+  { 
+if (min(xvar) < breaks[1]||max(xvar) > breaks[lb]) stop("The end intervals are not correct")
+  fxvar <- cut(xvar, breaks=breaks)
+}
+ # quantile(xvar, probs=seq(0,1, 0.25))
+ # fxvar <- cut(xvar, breaks=breaks, include.lowest=FALSE) 
+        ll <- levels(fxvar)
+        nl <- nlevels(fxvar)
+        ix <- seq(1,lx)
+      iind <- list()  
+  z.scores <- rep(0, lx)
+if (any(var<0)) # if has negative values 
+  {
+    tvar <- var # do not look for power transformation 
+  } else  # if only positive values look for transformation  
+  {
+    par  <- x_Ptrans(var)
+    tvar <- if (abs(par) < 0.001) log(var) else var^par
+  } 
+  z <- tapply(var, fxvar, FUN=y_zscores, family=family, plot=FALSE, value=value)
+  Z <- unlist(z)
+  X <- abs(Z)>value
+#pp <- tapply(X, fxvar, FUN=\(x){ix[x]})
+  p <- ix[X]
+  names(p) <-fxvar[X]
+return(p)
+} 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
