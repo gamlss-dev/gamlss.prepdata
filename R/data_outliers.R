@@ -6,32 +6,38 @@
 ################################################################################
 ################################################################################ 
 # function 1
-y_outliers <- function(var, 
+y_outliers <- function(x, 
                       value, 
                      family = SHASHo, 
-                       type = c("zscores","quantile"))
+                       type = c("zscores","quantile"),
+                     transform=TRUE)
 {
-    ly <- length(var)
-if (missing(value)) value <- abs(qnorm(1/(10*ly)))
-if (is(var, "POSIXct")) var <- as.numeric(var) 
+    ly <- length(x)
   type <- match.arg(type)
-if (!is_numeric(var)) stop("the variable should be numeric")
-if (any(var<0)) # if has negative values 
+if (missing(value)) value <- abs(qnorm(1/(10*ly)))
+if (is(x, "POSIXct")) x <- as.numeric(x) 
+if (!is_numeric(x)) stop("the x variable should be numeric")
+if (transform)
+{
+  if (any(x<0)) # if has negative values 
   {
-    tvar <- var # do not look for power transformation 
+    x <- x # do not look for power transformation 
   } else  # if only positive values look for transformation  
   {
-    par  <- y_Ptrans(var)
-    tvar <- if (abs(par) < 0.001) log(var) else var^par
-  }  
+    par  <- y_Ptrans(x)
+    x <- if (abs(par) < 0.001) log(x) else x^par
+    cat("the x was tansformed using the power", par, "\n") 
+  }    
+}
+  names(x) <- 1:ly  
 if (type=="zscores")  
 {
-  z.scores <- y_zscores(tvar, family=family, plot=FALSE)
+  z.scores <- y_zscores(x, family=family, plot=FALSE)
       iind <- which(abs(z.scores)>value)
   return(iind)
  } else 
  {
-   out <-  gamlss.ggplots::y_dots(tvar, value=value, plot=FALSE) 
+   out <-  gamlss.ggplots::y_dots(x, value=value, plot=FALSE) 
    return(out)
  }
 } 
@@ -111,7 +117,8 @@ if (!length(PP)==0)  names(PP) <- Names
 # I think the idea here is that if the variable is positive it is transformed 
 # to be make to have a less skew-kurtotic distribution 
 # then it fits the SHASH (It was suggested by  Bob)
-y_Ptrans <- function(x, lim.trans = c(0, 1.5))
+y_Ptrans <- function(x, lim.trans = c(0, 1.5
+                                      ))
 {
 if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
   #  cat("*** Checking for transformation for x ***", "\n")
@@ -157,21 +164,21 @@ par
 ################################################################################
 ################################################################################
 ################################################################################
-y_outliers_by <- function(var, 
+y_outliers_by <- function(x, 
                        by,# a factor whicxh partition the data
                        family = SHASHo, 
                        type = c("zscores","quantile"))
 {
 if(!is(by, "factor")) stop("the secong argument should br a factor")
-       ly <- length(var)
+       ly <- length(x)
        lx <- length(by)
      type <- match.arg(type)
 if (ly!=lx) stop("the y and factor should have the some length")
 if (missing(by)) stop("the factor should be set") 
   llev <- as.numeric(tapply(by, by, length))
- value <-abs(qnorm(1/(10*llev)))
-if (is(var, "POSIXct")) var <- as.numeric(var)  
-if (!is_numeric(var)) stop("the variable should be numeric")
+ value <- abs(qnorm(1/(10*llev)))
+if (is(x, "POSIXct")) x <- as.numeric(x)  
+if (!is_numeric(x)) stop("the variable should be numeric")
 # the problem is integer is numeric so do not stop them
 # if (lb==1) fxvar <- cut_number(xvar, n = breaks) else
 #   { 
@@ -182,21 +189,23 @@ if (!is_numeric(var)) stop("the variable should be numeric")
  # fxvar <- cut(xvar, breaks=breaks, include.lowest=FALSE) 
         ll <- levels(by)
         nl <- nlevels(by)
-        ix <- seq(1,lx)
+        ix <- seq_len(lx)
       iind <- list()  
   z.scores <- rep(0, lx)
-if (any(var<0)) # if has negative values 
+if (any(x<0)) # if has negative values 
   {
-    tvar <- var # do not look for power transformation 
+    tvar <- x # do not look for power transformation 
   } else  # if only positive values look for transformation  
   {
-    par  <- y_Ptrans(var)
-    tvar <- if (abs(par) < 0.001) log(var) else var^par
+    par  <- y_Ptrans(x)
+    tvar <- if (abs(par) < 0.001) log(x) else x^par
   } 
  z <- list()  
+ names(x)<- seq_len(lx)
 for (i in 1:nl)
 {
-  z[[i]] <- y_outliers(var[by==ll[i]], family=family, value=value[i], type=type) 
+  z[[i]] <- y_outliers(x[by==ll[i]], family=family, value=value[i], type=type, transform=FALSE) 
+  z[[i]] <- as.numeric(names(z[[i]]))
 }
  # z <- tapply(var, fact, FUN=y_zscores, family=family, plot=FALSE, value=value, type=type)
   Z <- unlist(z)
@@ -205,6 +214,60 @@ for (i in 1:nl)
 #  p <- ix[X]
   names(z) <- levels(by)
 return(z)
+} 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+y_outliers_loop <- function(x, 
+                       value, 
+                       family = SHASHo, 
+                       type = c("zscores","quantile"),
+                       transform=TRUE)
+{
+      ly <- length(x)
+    type <- match.arg(type)
+if (missing(value)) value <- abs(qnorm(1/(10*ly)))
+if (is(var, "POSIXct")) var <- as.numeric(var) 
+if (!is_numeric(x)) stop("the x variable should be numeric")
+if (transform)
+  {
+        if (any(x<0)) # if has negative values 
+        {
+          x <- x # do not look for power transformation 
+        } else  # if only positive values look for transformation  
+        {
+          par  <- y_Ptrans(x)
+          x <- if (abs(par) < 0.001) log(x) else x^par
+          cat("the x was tansformed using the power", par, "\n") 
+        }    
+  }
+      names(x) <- seq_len(ly)  
+if (type=="zscores")  
+  {
+     index_ <- 1
+    w_index <- rep(1, length(x))
+    l_index <- 0
+while (index_)
+    {
+    z.scores <- y_zscores(x,weights=w_index, family=family, plot=FALSE)
+     i_index <- as.numeric(names(which(abs(z.scores)>value))) 
+     cat("i=", i_index,"\n")
+w_index[i_index] <- 0
+      index_ <- length(i_index)
+    # l_index <- length(i_index)
+      cat("i=",index_,"\n")
+    }  
+    return(which(w_index==0))
+  } else 
+  {
+    out <-  gamlss.ggplots::y_dots(tvar, value=value, plot=FALSE) 
+    return(out)
+  }
 } 
 ################################################################################
 ################################################################################

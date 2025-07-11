@@ -4,14 +4,26 @@
 ################################################################################
 # function 1
 y_zscores <- function(x, 
-                    family = SHASHo, 
-                     value = 3,
-                      plot = TRUE, 
-                      hist = FALSE,...)
+                weights,
+                  family = SHASHo, 
+                   value = 3,
+                    plot = TRUE, 
+                    hist = FALSE,
+               transform = FALSE,
+                        ...)
 {
 ################################################################################  
+  if (missing(weights)) weights <- rep(1,length(x))
      name <- deparse(substitute(x))
-     m1 <- gamlssML(x, family=family)
+     names(x) < 1:length(x)
+if (transform)
+{
+   par  <- y_Ptrans(x)
+      x <- if (abs(par) < 0.001) log(x) else x^par
+cat("the x was tansformed using the power", par, "\n")      
+}
+  
+     m1 <- gamlssML(x, family=family, weights=weights)
 zscores <- resid(m1)
   param <- names(as.gamlss.family(family)$par)
  lparam <- length(param)
