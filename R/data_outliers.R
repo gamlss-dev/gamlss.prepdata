@@ -46,16 +46,16 @@ if (type=="zscores")
 ################################################################################
 ################################################################################
 # function 
-y_outliers_both <- function(var, 
+y_outliers_both <- function(x, 
                            value, 
                           family = SHASHo, 
                             method= c("intersect","union"))
 {
   method<- match.arg(method)
-    ly <- length(var)
+    ly <- length(x)
 if (missing(value)) value <- abs(qnorm(1/(10*ly)))  
-  out1 <- y_outliers(var, value=value, type="quantile") 
-  out2 <- y_outliers(var, value=value, family=family)  
+  out1 <- y_outliers(x, value=value, type="quantile") 
+  out2 <- y_outliers(x, value=value, family=family)  
    out <- if (method=="intersect") intersect(out1, out2) else  union(out1, out2) 
   out 
 }  
@@ -117,8 +117,7 @@ if (!length(PP)==0)  names(PP) <- Names
 # I think the idea here is that if the variable is positive it is transformed 
 # to be make to have a less skew-kurtotic distribution 
 # then it fits the SHASH (It was suggested by  Bob)
-y_Ptrans <- function(x, lim.trans = c(0, 1.5
-                                      ))
+y_Ptrans <- function(x, lim.trans = c(0, 1.5))
 {
 if (length(lim.trans)!=2) stop(" the limits of  p are not set properly")
   #  cat("*** Checking for transformation for x ***", "\n")
@@ -165,7 +164,7 @@ par
 ################################################################################
 ################################################################################
 y_outliers_by <- function(x, 
-                       by,# a factor whicxh partition the data
+                       by,# a factor which partition the data
                        family = SHASHo, 
                        type = c("zscores","quantile"))
 {
@@ -219,10 +218,6 @@ return(z)
 ################################################################################
 ################################################################################
 ################################################################################
-################################################################################
-################################################################################
-################################################################################
-################################################################################
 y_outliers_loop <- function(x, 
                        value, 
                        family = SHASHo, 
@@ -256,19 +251,121 @@ while (index_)
     {
     z.scores <- y_zscores(x,weights=w_index, family=family, plot=FALSE)
      i_index <- as.numeric(names(which(abs(z.scores)>value))) 
-     cat("i=", i_index,"\n")
+  #   cat("i=", i_index,"\n")
 w_index[i_index] <- 0
       index_ <- length(i_index)
     # l_index <- length(i_index)
-      cat("i=",index_,"\n")
+   #   cat("i=",index_,"\n")
     }  
     return(which(w_index==0))
   } else 
   {
-    out <-  gamlss.ggplots::y_dots(tvar, value=value, plot=FALSE) 
-    return(out)
+    out <-  gamlss.ggplots::y_dots(x, value=value, plot=FALSE) 
+    out
   }
 } 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+y_outliers_z <- function(x,
+                         by, # a factor which portioned the data 
+                         value, 
+                       family = SHASHo, 
+                    transform = TRUE, 
+                         loop = FALSE)
+{
+################################################################################  
+       ly <- length(x)
+if (!missing(by)&&!is(by, "factor")) stop("the by argument should br a factor")
+if (is(x, "POSIXct")) x <- as.numeric(x) 
+if (!is_numeric(x)) stop("the x variable should be numeric")
+################################################################################
+if (transform)
+ {
+    if (any(x<0)) # if has negative values 
+    {
+      x <- x # do not look for power transformation 
+    } else  # if only positive values look for transformation  
+    {
+      par  <- y_Ptrans(x)                              # get parameter 
+         x <- if (abs(par) < 0.001) log(x) else x^par  # get transormed x
+  cat("the x was tansformed using the power", par, "\n") 
+    }    
+}
+##################### NO LOOP ##################################################
+if (missing(by))
+{
+  if (missing(value)) value <- abs(qnorm(1/(10*ly)))  
+if (loop==FALSE)
+ {
+  names(x) <- seq_len(ly)  
+  z.scores <- y_zscores(x, family=family, plot=FALSE)
+  iind <- which(abs(z.scores)>value)
+  return(iind) #######END NO LOOP ##############################################
+ }  else 
+ { ####################  START LOOP ############################################
+   index_ <- 1
+  w_index <- rep(1, length(x))
+  l_index <- 0
+while (index_)
+  {
+    z.scores <- y_zscores(x,weights=w_index, family=family, plot=FALSE)
+     i_index <- as.numeric(names(which(abs(z.scores)>value))) 
+   #   cat("i=", i_index,"\n")
+w_index[i_index] <- 0
+     index_ <- length(i_index)
+  #  cat("i=",index_,"\n")
+  }  
+  return(which(w_index==0))  
+ }############################# END LOOP #######################################
+} else ######################## END BY MISSING #################################
+{############################## START BY #######################################
+        lx <- length(by)
+if (ly!=lx) stop("the y and factor should have the some length")
+      llev <- as.numeric(tapply(by, by, length))
+     value <- abs(qnorm(1/(10*llev)))
+if (loop==FALSE)
+{############################## NO LOOP ######################################## 
+      ll <- levels(by)
+      nl <- nlevels(by)
+      ix <- seq_len(lx)
+       z <- list()  
+names(x) <- seq_len(lx)
+   Names <- tapply(x,by,names)
+for (i in 1:nl)
+{
+       y <- x[by==ll[i]] 
+names(y) <- Names[[i]]
+  z[[i]] <- y_outliers(y, family=family, value=value[i], 
+                                    transform=FALSE) 
+  z[[i]] <-  as.integer( names(y)[z[[i]]])
+}
+names(z) <- levels(by)
+return(z)
+}############################## END NO LOOP ####################################
+{############################## begging LOOP ###################################
+  ll <- levels(by)
+  nl <- nlevels(by)
+  z.scores <- rep(0, lx)
+  names(x) <- seq_len(lx)
+  Names <- tapply(x,by,names)
+  
+  z <- list()
+  for (i in 1:nl)
+  {
+    y <- x[by==ll[i]] 
+    names(y) <- Names[[i]]
+    z[[i]] <- y_outliers_loop(y, family=family, value=value[i], 
+                         transform=FALSE) 
+    z[[i]] <- as.integer( names(y)[z[[i]]])
+  }
+  names(z) <- levels(by)
+  return(z)  
+}############################## END LOOP #######################################
+}############################## END BY #########################################  
+
+}######################### END OF FUNCTION ##################################### 
 ################################################################################
 ################################################################################
 ################################################################################

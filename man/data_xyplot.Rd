@@ -42,7 +42,8 @@ data_bucket(data, value = 3, max.levels = 20,
            print.info = TRUE,
            ...)
 
-y_zscores(x, family = SHASHo, value  = 3, plot = TRUE, hist = FALSE, ...)
+y_zscores(x, weights, family = SHASHo, value  = 3, plot = TRUE, 
+            hist = FALSE,  transform = FALSE, ...)
 
 data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
           max.levels = 10, hist.col = "black", hist.fill = "white",
@@ -58,6 +59,8 @@ data_response(data, response, plot = TRUE,
 \arguments{
   \item{data}{a data frame}
   \item{x}{a single variable}
+  \item{weights}{prior weights}
+  \item{transform}{ehether to use a power transformation ot not}
   \item{family}{a gamlss distribution family (continuous)}
   \item{response}{the respose variable should be in the data}
   \item{point.size}{the size of points in scatter plots}

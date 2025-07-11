@@ -80,8 +80,6 @@ if (missing(weights)) weights <- rep(1, dim(data)[1])
                     data=data,  envir=globalenv())#.GlobalEnv
          m1 <- lm(f1, weights=weights, data=data)
         lev <- hatvalues(m1)
-  # the idea here to fit  a log SHASH   to the levarege
-  #  browser()
           r <- m1$rank
           N <- dim(data)[1]
           d <- gamlss_prep_data(lev, weights=weights, quantile.value=quantile.value )

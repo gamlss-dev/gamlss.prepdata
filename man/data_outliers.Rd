@@ -3,31 +3,54 @@
 \alias{y_outliers}
 \alias{y_outliers_both}
 \alias{y_outliers_by}
+\alias{y_outliers_z}
+\alias{y_outliers_loop}
+
+
 
 \title{Outlier identification}
 \description{
 Those  functions idententify outliers in variables in the data.
-The functions \code{} and \code{}
+The functions;
 
+\code{data_outliers()}: It takes \code{data.frame} and applies the  \code{y_outliers()} function on all its coninuous variables. 
+
+\code{y_outliers()}; It takes one continuous variable and identify which observations could be classified as outliers.  It does this for both z-scores (fitting a distribution and then taking the residuals) or quantile measures  go (K times \code{MAD}) way from the median.
+
+\code{y_outliers_both()}: It takes one continuous variable and identify outliers using both the z-scores ot the quantile methods. It prints or the \code{union} or the \code{intersect} of the two resuls. 
+
+\code{y_outliers_by()}:  It takes one continuous variable and a factor and indentify outliers within each level of the factor. 
+
+\code{y_outliers_loop()}:  It takes one continuous variable and identify outliers by going through a loop by weighing out obsrvarions and refitting the model
+
+\code{y_outliers_z()} It takes one continuous variable and possible a factor and identify outliers or by  a single fit or by repeated fits were outliers observation from previous fits are removed (equivalent to \code{y_outliers_loop()})
 
 }
 \usage{
 data_outliers(data, value, min.distinct = 50, family = SHASHo, 
          type = c("zscores","quantile") )
 
-y_outliers(var, value, family = SHASHo,  type = c("zscores","quantile"))
+y_outliers(x, value, family = SHASHo,  type = c("zscores","quantile"),
+          transform = TRUE)
 
-y_outliers_both(var, value, family = SHASHo, 
+y_outliers_both(x, value, family = SHASHo, 
         method =c("intersect", "union"))
 
-y_outliers_by(var, by, family = SHASHo, type = c("zscores", "quantile"))        
-        
+y_outliers_by(x, by, family = SHASHo, type = c("zscores", "quantile"))        
+       
+y_outliers_z(x, by, value, family = SHASHo, transform = TRUE, loop = FALSE)  
+
+y_outliers_loop(x, value, family = SHASHo, type = c("zscores", "quantile"),
+             transform = TRUE)
+
 }
 
 \arguments{
   \item{data}{a data frame}
-  \item{var}{a continues variable}
+  \item{x}{a continues variable}
    \item{by}{a factor partioning the data}
+    \item{loop}{whether to lop for identify more ouliers}
+   \item{transform}{whether to transfomed using a power transformation}
   \item{value}{max value from which the absolute value of the z-scores should be  greater to identify outliers}
   \item{min.distinct}{if a variable has less distinct values than \code{min.distinct} is excluded}
   \item{family}{the distribution family used for standardization}
