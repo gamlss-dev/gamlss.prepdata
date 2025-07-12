@@ -16,8 +16,8 @@
 #                   all continuous variables
 #  4) y_factor; a factor to changed its reference level  
 #  5) data_factor: all factors in data  changed reference level
-#  6) time_dt2dhour: take date-hours and create data and hours variables  
-#  6) time_2num: takes time  and create a numeric 
+#  6) time_dt2dh: take date-hours and create data and hours variables  
+#  6) time_hour2num: takes time  and create a numeric 
 #. 
 ################################################################################
 ################################################################################
@@ -302,7 +302,7 @@ data
 ################################################################################
 ################################################################################
 # function 6
-time_dt2dhour <- function(datetime, format=NULL) 
+time_dt2dh <- function(datetime, format=NULL) 
 { 
             X <- t(as.data.frame(strsplit(datetime,' '))) 
   rownames(X) <- NULL 
@@ -316,7 +316,7 @@ time_dt2dhour <- function(datetime, format=NULL)
 ################################################################################
 ################################################################################
 # function 7 for time series
-time_2num <- function(time, pattern=":")
+time_hour2num <- function(time, pattern=":")
 {
     t <-  gsub(pattern, ".", time)
 as.numeric(t)
