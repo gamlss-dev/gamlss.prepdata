@@ -260,7 +260,30 @@ data_formulae <- function(data, response)
   if (is(data[1],"mts"))     data <- as.data.frame(data)
   if (is(data, "array")) 
     stop("the data is an array the function needs a data.frame")
-  Y <- deparse(substitute(response))
+  if (missing(response)) stop("the response should be set")
+  # The response can be given both as R or "R"   
+Y <- try(eval(response), silent=TRUE)
+if (any(class(Y)%in%"try-error"))
+{ 
+ Y <- deparse(substitute(response))   
+}
+
+#   aa<- tryCatch(eval(response), error = function(e) e), warning = w.handler)
+# warning = W)
+
+# Y <- tryCatch({
+#   Y <- eval(response)
+# },warning = function(w) 
+# {
+#   warning(as.character(w)) 
+# },error = function(e)
+# {
+#   warning(" \n")	
+#  Y <- deparce(substitute(response))
+#   return(Y)
+# })  
+# 
+#   is(quote(response), "character")
   if (any(!(Y %in%names(data)))) stop("the response should be in data") 
   #.   Names <- names(data)
   pos <- match(Y, names(data))
@@ -269,7 +292,6 @@ data_formulae <- function(data, response)
   actY <- data[,Y]
   cY <- class(actY) 
   I <- 0
-  
   f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')), 
                 data=data, envir=globalenv())#.GlobalEnv
   f2 <- formula( paste0(paste0(Y,"~"), 
