@@ -250,7 +250,7 @@ data_form2df <- function(data, response,
 ################################################################################
 ################################################################################
 # from data to formula
-data_formula <- function(data, response)
+data_formulae <- function(data, response)
 {
   if (is(data, "list"))  
     stop("the data is list  the function needs a data.frame") 
@@ -271,16 +271,16 @@ data_formula <- function(data, response)
   I <- 0
   
   f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')), 
-                data=data,      envir=globalenv())#.GlobalEnv
+                data=data, envir=globalenv())#.GlobalEnv
   f2 <- formula( paste0(paste0(Y,"~"), 
                         paste0("(",paste0(nameS, collapse='+'),")^2")), 
-                 data=data,      envir=globalenv())#.GlobalEnv
+                 data=data, envir=globalenv())#.GlobalEnv
   f3 <- formula(paste("~",paste0(nameS, collapse='+')), 
                 data=data,      envir=globalenv())#.GlobalEnv
   f4 <- formula( paste0(paste0("~"), 
                         paste0("(",paste0(nameS, collapse='+'),")^2")), 
                  data=data,      envir=globalenv())#.GlobalEnv
-  invisible(list(rme=f1,rint=f2, me=f3, int=f4))         
+  return(list(main=f1, inter=f2, no_res_main=f3, no_res_inter=f4))         
 }
 
 ################################################################################
