@@ -309,7 +309,7 @@ if (missing(data)) stop("the data frame is missing")
 #  type <- match.arg(type) 
 if (missing(formula))  
 {
-  response_t <- deparse(substitute(response)) 
+  response_t <- if (is(response, "character")) response else  deparse(substitute(response)) 
      pos_res <- match(response_t, names(data))
     if (pos_res!=1) stop("if no formula is given the response should be first in data")  
      formula <- stats::formula(data) 
