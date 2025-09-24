@@ -293,15 +293,15 @@ if (any(class(Y)%in%"try-error"))
   cY <- class(actY) 
   I <- 0
   f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')), 
-                data=data, envir=globalenv())#.GlobalEnv
+                data=data, env=.GlobalEnv)#.GlobalEnv
   f2 <- formula( paste0(paste0(Y,"~"), 
                         paste0("(",paste0(nameS, collapse='+'),")^2")), 
-                 data=data, envir=globalenv())#.GlobalEnv
+                 data=data, env=.GlobalEnv)#.GlobalEnv
   f3 <- formula(paste("~",paste0(nameS, collapse='+')), 
-                data=data,      envir=globalenv())#.GlobalEnv
+                data=data,      env=.GlobalEnv)#.GlobalEnv
   f4 <- formula( paste0(paste0("~"), 
                         paste0("(",paste0(nameS, collapse='+'),")^2")), 
-                 data=data,      envir=globalenv())#.GlobalEnv
+                 data=data,      env=.GlobalEnv)#.GlobalEnv
   return(list(main=f1, inter=f2, no_res_main=f3, no_res_inter=f4))         
 }
 
