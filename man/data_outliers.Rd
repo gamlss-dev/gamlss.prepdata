@@ -11,19 +11,19 @@
 \title{Outlier identification}
 \description{
 Those  functions idententify outliers in variables in the data.
-The functions;
 
-\code{data_outliers()}: It takes \code{data.frame} and applies the  \code{y_outliers()} function on all its coninuous variables. 
 
-\code{y_outliers()}; It takes one continuous variable and identify which observations could be classified as outliers.  It does this for both z-scores (fitting a distribution and then taking the residuals) or quantile measures  go (K times \code{MAD}) way from the median.
+The function \code{data_outliers()} takes a \code{data.frame} and applies the  \code{y_outliers()} function on all its continuous variables. 
 
-\code{y_outliers_both()}: It takes one continuous variable and identify outliers using both the z-scores ot the quantile methods. It prints or the \code{union} or the \code{intersect} of the two resuls. 
+The function \code{y_outliers()} takes one continuous variable and identify which observations could be classified as outliers.  It does this for both z-scores (fitting a distribution and then taking the residuals) or quantile measures  for example K times \code{MAD}) way from the median.
 
-\code{y_outliers_by()}:  It takes one continuous variable and a factor and indentify outliers within each level of the factor. 
+Te function \code{y_outliers_both()} takes one continuous variable and identify outliers using both the z-scores and the quantile method. It prints or the \code{union} or the \code{intersect} of the two resuls. 
 
-\code{y_outliers_loop()}:  It takes one continuous variable and identify outliers by going through a loop by weighing out obsrvarions and refitting the model
+The function \code{y_outliers_by()} takes one continuous variable and a factor and indentify outliers within each level of the factor. 
 
-\code{y_outliers_z()} It takes one continuous variable and possible a factor and identify outliers or by  a single fit or by repeated fits were outliers observation from previous fits are removed (equivalent to \code{y_outliers_loop()})
+The function \code{y_outliers_loop()} takes one continuous variable and identify outliers by going through a loop first by weighing out obsrvarions and then refitting the model.
+
+The function \code{y_outliers_z()} takes one continuous variable and possible a factor and identify outliers or by  a single fit or by repeated fits were outliers observation from previous fits are removed (equivalent to \code{y_outliers_loop()})
 
 }
 \usage{

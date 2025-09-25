@@ -51,7 +51,10 @@ export( data_cor,
         data_rmNAvars,
         data_fac2num,
         data_factor,
-        y_factor
+        y_factor,
+        data_vars2data,
+        data_formulae,
+        data_form2X
 )
 ################################################################################
 # ACE object

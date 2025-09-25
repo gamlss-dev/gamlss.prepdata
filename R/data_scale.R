@@ -2,7 +2,7 @@
 # 25-09-2025
 # functions 
 # i) data_scale  
-# 
+# ii) data_vars2data
 ################################################################################
 ################################################################################
 ################################################################################
@@ -131,9 +131,10 @@ if (scale.to  =="0to1")                              # if 0 to 1
 ################################################################################
 ################################################################################
 ################################################################################          
-# this function creates a data frame where the continuous are remain the same 
-# but the factors becomes dummies   
-data_factor2dummy <- function(data, response, 
+#  FUNCTION 2
+# this function creates a new dataframe where the continuous variables are remain 
+# the same or became polynomial ans the factors becomes dummy variables    
+data_vars2data <- function(data, response, 
                          exclude = NULL,
                             type = c("main.effect", "first.order"),
                          weights = NULL,
@@ -172,13 +173,14 @@ data_factor2dummy <- function(data, response,
   {
     if (nonlinear)
     {
-      daC <- data[,-c(pp, pos_res)]#       take out factors and response  
-      ndc <- names(daC)#                   names of continuous  
-      aa <- deparse(substitute(arg))#.    get the argument  on nonlinear
-      newn <- paste0(basis, "(", ndc, ",", aa, ")") # get the right function for nn 
-      lndc <- length(ndc) #                 how many continuous vars exist  
-      mindex <- match(ndc,x_Names)#           their index in the data
-      qq <- character(length=lndc)#.      creating a character vector  
+      daC <- data[,-c(pp, pos_res)]#      take out factors and response  
+      ndc <- names(daC)#                  names of the continuous vars 
+      aa <- deparse(substitute(arg))#.    get the argument for nonlinear
+      newn <- paste0(basis, "(", ndc, ",", aa, ")") # get the right function of
+                                                    # non linear 
+      lndc <- length(ndc) #                how many continuous vars exist  
+      mindex <- match(ndc,x_Names)#        their index in the data
+      qq <- character(length=lndc)#.       creating a character vector  
       for (i in 1:lndc) qq[i] <- gsub(ndc[i], newn[i], x_Names[mindex[i]])
       x_Names[mindex] <- qq
       formula <- as.formula(paste(paste0(response_t,"~"), 
@@ -323,7 +325,6 @@ if (any(class(Y)%in%"try-error"))
 # get data and a formula 
 ################################################################################ 
 data_form2X <- function(data, formula, response, 
-                    standardise = TRUE,
                           scale.to = c("no", "z-scores", "0to1"),  
                          family = NO) 
 {
