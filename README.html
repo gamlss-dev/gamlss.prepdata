@@ -88,14 +88,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The purpose of this package is to streamline the data preparation process for distributional regression models, particularly for use with <a href="https://cran.R-project.org/package=gamlss"><code>gamlss</code></a> and <a href="https://github.com/gamlss-dev/gamlss2"><code>gamlss2</code></a> packages.</p>
 <p>Here’s a summary of what can be gained during this early analysis and how it contributes to effective modelling:</p>
 <ol type="1">
-<li><p>Understanding the Variables in the Dataset: One of the first steps is to understand the variables in your data. This includes summarizing the data, checking distributions, and identifying the type of each variable (e.g., categorical, continuous).</p></li>
-<li><p>Missing Values; Knowing which variables have missing observations and how many observations are missing is important at this stage for decisions have to made on how to deal with the problem and whether we require data multiple imputations.</p></li>
-<li><p>Outlier Detection: Outliers can distort the results of a model, so it’s important to detect them early. Outliers might require special attention, either by excluding them or by applying robust methods that minimize their impact.</p></li>
-<li><p>Examining Associations between the x’s: Associations between variables can be explored using correlation (association) analysis and it important to ease model fitting and also for interpretation of the results.</p></li>
-<li><p>Exploring Relationships; How the explanatory variables affect the response i.e.&nbsp;linearly or not is one aspect of this part of the analysis. The other is the present of interaction. Pairwise interactions can be easilly checked at this stage.</p></li>
-<li><p>Variable Transformations; Variable transformations often has to do with how even the sample points on the variable are distributed over the range. Transformation could improve modelling.</p></li>
-<li><p>Partitioning the Data for Statistical Inference: The dataset can be split into different sets (e.g., training, validation, test) to assess how well a model generalizes and to prevent overfitting.</p></li>
-<li><p>Preliminary Decisions to Modelling Process: The insights gained from a preliminary analysis could be importany in the selection of an appropriate statistical or machine learning model.</p></li>
+<li><p>Understanding the <strong>Variables</strong> in the Dataset: One of the first steps is to understand the variables in your data. This includes summarizing the variables in the data, checking their distributions, and identifying the type of each variable (e.g., categorical, continuous).</p></li>
+<li><p><strong>Missing</strong> Values; Knowing which variables have missing observations and how many observations are missing is important at this stage for decisions have to made on how to deal with the problem and whether we require multiple imputations.</p></li>
+<li><p><strong>Outlier</strong> Detection: Outliers can distort the results of a model, so it’s important to detect them early. Outliers might require special attention, either by excluding them or by applying robust methods that minimize their impact.</p></li>
+<li><p>Examining <strong>Associations</strong> between the x’s: Associations between variables can be explored using correlation (association) analysis and it important to ease model fitting and also for interpretation of the results.</p></li>
+<li><p>Exploring <strong>Relationships</strong>; How the explanatory variables affect the response i.e.&nbsp;linearly or not is one aspect of this part of the analysis. The other is the present of interaction. Pairwise interactions can be easilly checked at this stage.</p></li>
+<li><p>Variable <strong>Transformations</strong>; Variable transformations often has to do with how even the sample points on the variable are distributed over the range. Transformation could improve modelling.</p></li>
+<li><p><strong>Partitioning</strong> the Data for Statistical Inference: The dataset can be split into different sets (e.g., training, validation, test) to assess how well a model generalizes and to prevent overfitting.</p></li>
+<li><p>Preliminary Decisions to <strong>Modelling</strong> Process: The insights gained from a preliminary analysis could be importany in the selection of an appropriate statistical or machine learning model.</p></li>
 </ol>
 <p>Conclusion:</p>
 <p>The key goal of this pre-modelling analysis of a distributional regression model is to prepare the data in the best possible way so that when you apply modelling techniques like <code>gamlss</code> or other regression methods, the process is smooth and the results are reliable. The insights gained in this stage will ensure that the models you fit will be both interpretable and generalizable, giving you the best chance for valid conclusions.</p>
@@ -116,11 +116,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"gamlss.prepdata"</span>, <span class="at">repos =</span> <span class="st">"https://gamlss-dev.R-universe.dev"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>For examples using the functions of the package see <a href="https://mstasinopoulos.github.io/Functions-from-packages/"><code>information</code></a></p>
+<p>For examples using the functions of the package see <a href="https://mstasinopoulos.github.io/Functions-from-packages/"><code>information</code></a> about the package.</p>
 </section>
 <section id="functions" class="level2">
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
-<p>The functions for manipulation of variables are shown below</p>
+<p>Some of the functions for manipulation of variables are;</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -142,44 +142,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">Distinct values in variables</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><code>data_which(()</code></td>
-<td style="text-align: left;">NA’s in variables</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;"><code>data_str()</code>.</td>
 <td style="text-align: left;">The class of variables etc.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>data_omit()</code></td>
 <td style="text-align: left;">Omit all the <code>NA</code>s</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>data_char2fac()</code></td>
 <td style="text-align: left;">From characters to factors</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>data_few2fac()</code></td>
 <td style="text-align: left;">From few distinct obs. to factors</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>data_int2num()</code></td>
 <td style="text-align: left;">From integers to numeric</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>data _rm()</code></td>
 <td style="text-align: left;">Remove variables</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>data _rm1val()</code></td>
 <td style="text-align: left;">Remove factors with one level</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>data _rename()</code></td>
 <td style="text-align: left;">Rename variables</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>data _remove()</code></td>
-<td style="text-align: left;">Remove variables</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>data _select()</code></td>
@@ -201,9 +193,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;"><code>data_fac2num()</code></td>
 <td style="text-align: left;">Make factors to numerics</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data_na_obs()</code></td>
+<td style="text-align: left;">which observations have NA’s</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data_navars()</code></td>
+<td style="text-align: left;">Make variables have NA’s to numerics</td>
+</tr>
 </tbody>
 </table>
-<p>The function for graphics are show below</p>
+<p>Some of the function for graphics are;</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 28%">
@@ -265,8 +265,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">Univariate scaling the x’s</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><code>data_Ptrans_plot()</code></td>
-<td style="text-align: left;">Checking for univivariate transformations in the x’s</td>
+<td style="text-align: left;"><code>data_association()</code></td>
+<td style="text-align: left;">measures of association between variables.</td>
 </tr>
 </tbody>
 </table>
@@ -282,7 +282,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gamlss.prepdata"</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"dplyr"</span>) </span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"gamlss.prepdata"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] '0.1.9'</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] '0.1.14'</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>da <span class="ot">&lt;-</span> <span class="fu">data_rm</span>(rent99, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">9</span>)) </span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(rent99)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3082    9</span></span>
