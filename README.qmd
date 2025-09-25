@@ -26,24 +26,24 @@ The purpose of this package is to streamline the data preparation process for di
 
 Here’s a summary of what can be gained during this early analysis and how it contributes to effective modelling:
 
-1. Understanding the Variables in the Dataset: One of the first steps is to understand the variables in your data. This includes summarizing the data, checking distributions, and identifying the type of each variable (e.g., categorical, continuous).
+1. Understanding the **Variables** in the Dataset: One of the first steps is to understand the variables in your data. This includes summarizing the variables in the data, checking their distributions, and identifying the type of each variable (e.g., categorical, continuous).
 	
-2. Missing Values; Knowing which variables have missing observations and how many observations are missing is important at this stage for decisions have to made on how to deal with the problem and whether we require  data multiple imputations.  
+2. **Missing** Values; Knowing which variables have missing observations and how many observations are missing is important at this stage for decisions have to made on how to deal with the problem and whether we require  multiple imputations.  
 
-3. Outlier Detection: Outliers can distort the results of a model, so it’s important to detect them early.  Outliers might require special attention, either by excluding them or by applying robust methods that minimize their impact.
+3. **Outlier** Detection: Outliers can distort the results of a model, so it’s important to detect them early.  Outliers might require special attention, either by excluding them or by applying robust methods that minimize their impact.
 
-4. Examining Associations between the x's:  Associations between variables can be explored using correlation (association) analysis and it important to ease  model fitting and also for interpretation of the results. 
+4. Examining **Associations** between the x's:  Associations between variables can be explored using correlation (association) analysis and it important to ease  model fitting and also for interpretation of the results. 
 
 
-5. Exploring Relationships; How the explanatory variables affect the response i.e.  linearly or not is one aspect of this part of the analysis. The other is the present of interaction. Pairwise interactions can be easilly checked at this stage.     
+5. Exploring **Relationships**; How the explanatory variables affect the response i.e.  linearly or not is one aspect of this part of the analysis. The other is the present of interaction. Pairwise interactions can be easilly checked at this stage.     
 
 	
 	
-6. Variable Transformations;  Variable transformations often has to do with how even the sample points on the variable  are distributed over the range.  Transformation  could improve modelling.
+6. Variable **Transformations**;  Variable transformations often has to do with how even the sample points on the variable  are distributed over the range.  Transformation  could improve modelling.
 
-7. Partitioning the Data for Statistical Inference: The dataset can be split into different sets (e.g., training, validation, test) to assess how well a model generalizes and to prevent overfitting.
+7. **Partitioning** the Data for Statistical Inference: The dataset can be split into different sets (e.g., training, validation, test) to assess how well a model generalizes and to prevent overfitting.
 
-8. Preliminary Decisions to Modelling Process: The insights gained from a preliminary analysis  could be importany in the  selection of an appropriate statistical or machine learning model.
+8. Preliminary Decisions to **Modelling** Process: The insights gained from a preliminary analysis  could be importany in the  selection of an appropriate statistical or machine learning model.
 
 
 
@@ -72,18 +72,17 @@ The package is not yet on CRAN but can be installed from
 #| eval: false
 install.packages("gamlss.prepdata", repos = "https://gamlss-dev.R-universe.dev")
 ```
-For examples using the functions of the package see [`information`](https://mstasinopoulos.github.io/Functions-from-packages/)
+For examples using the functions of the package see [`information`](https://mstasinopoulos.github.io/Functions-from-packages/) about the package.
 
 ## Functions
 
-The functions for manipulation of variables are shown below
+Some of the functions for manipulation of variables are;
 
 | Functions                | Usage                                  |
 |:-------------------------|:---------------------------------------|
 | `data_dim()`             | Dimensions & % of omitted observations |
 | `data_names()`           | Names of the data                      |
 | `data_distinct()`        | Distinct values in variables           |
-| `data_which(()`          | NA's in variables                      |
 | `data_str()`.            | The class of  variables etc.           |
 | `data_omit()`            | Omit all the `NA`s                     |
 | `data_char2fac()`        | From characters to factors             |
@@ -92,14 +91,15 @@ The functions for manipulation of variables are shown below
 | `data _rm()`             | Remove variables                       |
 | `data _rm1val()`         | Remove factors with one level          |
 | `data _rename()`         | Rename variables                       |
-| `data _remove()`         | Remove variables                       |
 | `data _select()`         | Select variables                       |
 | `data _exclude_class()`  | Exclude a specified class              |
 | `data _only_continous()` | Includes only continuous               |
 | `data_rmNAvars()`        | Remove variables with NA values        |
 | `data_fac2num()`         | Make factors to numerics               |
+| `data_na_obs()`          | which observations have NA's           |
+| `data_navars()`          | Make variables have NA's  to numerics  |
 
-The function for graphics are show below
+Some of the function for graphics are;
 
 | Functions           | Usage                                                |
 |:--------------------|:-----------------------------------------------------|
@@ -115,7 +115,7 @@ The function for graphics are show below
 | `data_outliers()`   | Univariate detection of outliers                     |
 | `data_leverage()`   | Detection of outliers in the x's  space              |
 | `data_scale()`      | Univariate scaling the x's                           |
-| `data_Ptrans_plot()` | Checking for univivariate transformations in the x's |
+| `data_association()`| measures of association between variables.           |
 
 
 ## Graphics

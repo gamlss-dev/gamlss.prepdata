@@ -1,5 +1,8 @@
 # MIKIS STASINOPOULOS
-# 20-10-2022
+# 25-09-2025
+# functions 
+# i) data_scale  
+# 
 ################################################################################
 ################################################################################
 ################################################################################
@@ -36,7 +39,6 @@ data_scale <- function(data, response,
                   )
 {
 # all the variable in data are used to create the data.frame
-# unless the 'exclude' is used
 # the argument `data' is compulsory 
 # the argument `response' is compulsory  
 # scale.to  :  the type of scale  
@@ -71,15 +73,19 @@ scale0to1 <- function(x)
 ################################################################################
 if (missing(data)) stop("the data frame is missing")  
 if (missing(response)&&is.null(position.response)) stop("response (or its position) should be given")
-          scale.to <- match.arg(scale.to)   
+# The response can be given both as R or "R"   
+      response_t <- try(eval(response), silent=TRUE)
+  if (any(class(response_t)%in%"try-error"))
+  { 
+    response_t <- deparse(substitute(response))   
+  }
+      scale.to <- match.arg(scale.to)   
 if (is.null(position.response))
 {
-  response_t <- deparse(substitute(response))   # response
      pos_res <- match(response_t, names(data))  # position  
 } else 
 {
      pos_res <-  position.response
-  response_t <- deparse(substitute(data[,pos_res]))   # response
 }  
         x_Names <- names(data)[-pos_res]           # the x names
             daT <- data[,x_Names]                  # only the data x's in data
@@ -127,13 +133,13 @@ if (scale.to  =="0to1")                              # if 0 to 1
 ################################################################################          
 # this function creates a data frame where the continuous are remain the same 
 # but the factors becomes dummies   
-data_form2df <- function(data, response, 
+data_factor2dummy <- function(data, response, 
                          exclude = NULL,
-                         type = c("main.effect", "first.order"),
+                            type = c("main.effect", "first.order"),
                          weights = NULL,
-                         nonlinear = FALSE, #for "main.effect" 
-                         basis = "poly",
-                         arg = 2 
+                      nonlinear = FALSE, #for "main.effect" 
+                          basis = "poly",
+                            arg = 2 
 )
 {
 ################################################################################  
@@ -144,13 +150,17 @@ data_form2df <- function(data, response,
 ################################################################################   
   if (missing(data)) stop("the data frame is missing")  
   if (missing(response)) stop("response should be given")
-  if (!is.null(exclude))  data <- data[, setdiff(names(data),exclude)]    
-  type <- match.arg(type)  
-  response_t <- deparse(substitute(response)) 
+ response_t <- try(eval(response), silent=TRUE)
+  if (any(class(response_t)%in%"try-error"))
+   { 
+    response_t <- deparse(substitute(response))   
+   }  
+   if (!is.null(exclude))  data <- data[, setdiff(names(data),exclude)]    
+        type <- match.arg(type)  
   pos_res <- match(response_t, names(data))
   x_Names <- names(data)[-pos_res]  
   daT <- data[,x_Names]
-  whetherFactor <- sapply(daT, is.factor)|         # checking for factors
+  whetherFactor <- sapply(daT, is.factor)|   # checking for factors
     sapply(daT, is.character)|
     sapply(daT, is.logical)|
     data_distinct(data[,-pos_res],get.distinct=TRUE) <10|
@@ -267,7 +277,7 @@ if (any(class(Y)%in%"try-error"))
 { 
  Y <- deparse(substitute(response))   
 }
-
+#response_t <- if (is(response, "character")) response else  deparse(substitute(response)) 
 #   aa<- tryCatch(eval(response), error = function(e) e), warning = w.handler)
 # warning = W)
 
@@ -284,7 +294,7 @@ if (any(class(Y)%in%"try-error"))
 # })  
 # 
 #   is(quote(response), "character")
-  if (any(!(Y %in%names(data)))) stop("the response should be in data") 
+#  if (any(!(Y %in%names(data)))) stop("the response should be in data") 
   #.   Names <- names(data)
   pos <- match(Y, names(data))
   nameS <- names(data)[-pos]
@@ -312,9 +322,9 @@ if (any(class(Y)%in%"try-error"))
 # from  formula to the X matrix
 # get data and a formula 
 ################################################################################ 
-formula2X <- function(formula, response, data, 
+data_form2X <- function(data, formula, response, 
                     standardise = TRUE,
-                          scale.to = c("z-scores", "0to1"),  
+                          scale.to = c("no", "z-scores", "0to1"),  
                          family = NO) 
 {
 ################################################################################  
@@ -323,26 +333,35 @@ formula2X <- function(formula, response, data,
 # model.matrix(formula, data) 
 # the argument `data' is compulsory 
 # the argument `formula' is compulsory
-################################################################################   
+################################################################################  
 if (missing(data)) stop("the data frame is missing")  
     scale.to <- match.arg(scale.to)   
 #if (missing(formula)&missing(response)) stop("response or formula should be given")
 #  if (!is.null(exclude))  data <- data[, setdiff(names(data),exclude)]    
 #  type <- match.arg(type) 
+    if (missing(response)) stop("the response should be set")
+    Y <- try(eval(response), silent=TRUE)
+    if (any(class(Y)%in%"try-error"))
+    { 
+      Y <- deparse(substitute(response))   
+    }
 if (missing(formula))  
 {
-  response_t <- if (is(response, "character")) response else  deparse(substitute(response)) 
-     pos_res <- match(response_t, names(data))
+     pos_res <- match(Y, names(data))
     if (pos_res!=1) stop("if no formula is given the response should be first in data")  
      formula <- stats::formula(data) 
 } else
 {
     response <- formula[[2]]
-  response_t <- deparse(substitute(response)) 
-     pos_res <- match(response_t, names(data))
+          Y  <- deparse(substitute(response)) 
+     pos_res <- match(Y, names(data))
 }  
-        data <- data_scale(data, position.response= pos_res, family=family,
-                           scale.to=scale.to)
+    if (scale.to!="no")
+    {
+      data <- data_scale(data, position.response= pos_res, family=family,
+                         scale.to=scale.to)
+    }
+        
           MF <- model.frame(formula, data)
           X  <- model.matrix(formula, MF)
           X  <- X[,-1]
@@ -352,4 +371,34 @@ if (missing(formula))
 ################################################################################
 ################################################################################
 ################################################################################
-
+################################################################################
+y_scale0to1 <- function(x)
+{
+      x <- as.matrix(x)
+    nc <- ncol(x)
+  minX <- apply(x, 2L, min, na.rm=TRUE )
+  maxX <- apply(x, 2L, max, na.rm=TRUE )
+      Y <- sweep(x, 2L, minX, check.margin = FALSE)
+      Y <- sweep(Y, 2L, maxX-minX, FUN="/",  check.margin = FALSE)
+attr(Y, "min") <- minX
+attr(Y, "max") <- maxX
+  Y
+} 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+y_unscale0to1 <- function(x) 
+{
+  minX <- attributes(x)$min
+  maxX <- attributes(x)$max
+     Y <- sweep(x, 2L, (maxX-minX), FUN="*", check.margin = FALSE)
+     Y <- sweep(Y, 2L, minX, FUN="+", check.margin = FALSE)
+attr(Y, "min") <- NULL
+attr(Y, "max") <- NULL
+  Y
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
