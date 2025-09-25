@@ -251,57 +251,11 @@ for (i in 1:length(nameS))
   names(PP) <- nameS       
   PP 
 }
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function  4
-# it takes a factor and use the levels with lower (or higher) numbar 
-# of observations as reference 
-y_factor <- function(x, how = c("lower", "higher"))
-{
-how <- match.arg(how)  
-if   (!is.factor(x)) stop("x is not a factor")
-f <- if (how=="lower")  stats::relevel(x,ref=levels(x)[which.min(table(x))])
-     else  relevel(x,ref=levels(x)[which.max(table(x))])
-f
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-################################################################################
+
 ################################################################################
 ################################################################################
 ################################################################################
 # function 5
-# It take a data frame and readjust the reference level of all 
-#  factors in the data.frame to the level with "lower" or "higher" 
-#  number of observations 
-data_factor <- function(data, how = c("lower", "higher") )
-{
- is_nominal <- function(x) class(x) %in% c("factor", "character")  
-  how <- match.arg(how)    
-  # what is the data
-if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
-if (is(data, "table")) stop("the data is a table the function needs a data.frame")
-if (is(data, "matrix")) data <- as.data.frame(data)
-if (is(data[1],"mts"))  data <- as.data.frame(data)
-if (is(data, "array")) stop("the data is an array the function needs a
-                            data.frame")
-  ind <- sapply(data, is_nominal)
-  nam.fac <-  names(data)[ind]
-for (i in nam.fac)
-  {
-  data[,i]  <-  y_factor(data[,i], how=how)  
-  }
-data
-}  
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 6
 time_dt2dh <- function(datetime, format=NULL) 
 { 
             X <- t(as.data.frame(strsplit(datetime,' '))) 
@@ -315,7 +269,7 @@ time_dt2dh <- function(datetime, format=NULL)
 ################################################################################
 ################################################################################
 ################################################################################
-# function 7 for time series
+# function 6 for time series
 time_hour2num <- function(time, pattern=":")
 {
     t <-  gsub(pattern, ".", time)

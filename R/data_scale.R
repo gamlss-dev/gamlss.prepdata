@@ -1,8 +1,14 @@
 # MIKIS STASINOPOULOS
 # 25-09-2025
 # functions 
-# i) data_scale  
-# ii) data_vars2data
+# 1) data_scale  
+# 2) data_vars2data
+# 3) data_formulae 
+# 4) data_form2X
+# 5) y_scale0to1 (not exported)
+# 6) y_unscale0to1 (not exported)
+# 7) y_factor  
+# 8) data_factor
 ################################################################################
 ################################################################################
 ################################################################################
@@ -31,6 +37,7 @@
 ################################################################################
 ################################################################################
 ################################################################################
+# function 1
 data_scale <- function(data, response, 
         position.response = NULL,
                  scale.to = c("z-scores", "0to1"),  
@@ -261,57 +268,39 @@ data_vars2data <- function(data, response,
 ################################################################################
 ################################################################################
 ################################################################################
+# function 3
 # from data to formula
 data_formulae <- function(data, response)
 {
-  if (is(data, "list"))  
+if (is(data, "list"))  
     stop("the data is list  the function needs a data.frame") 
-  if (is(data, "table")) 
+if (is(data, "table")) 
     stop("the data is a table the function needs a data.frame")
-  if (is(data, "matrix"))    data <- as.data.frame(data)
-  if (is(data[1],"mts"))     data <- as.data.frame(data)
-  if (is(data, "array")) 
+if (is(data, "matrix"))    data <- as.data.frame(data)
+if (is(data[1],"mts"))     data <- as.data.frame(data)
+if (is(data, "array")) 
     stop("the data is an array the function needs a data.frame")
-  if (missing(response)) stop("the response should be set")
+if (missing(response)) stop("the response should be set")
   # The response can be given both as R or "R"   
-Y <- try(eval(response), silent=TRUE)
+      Y <- try(eval(response), silent=TRUE)
 if (any(class(Y)%in%"try-error"))
 { 
- Y <- deparse(substitute(response))   
+      Y <- deparse(substitute(response))   
 }
-#response_t <- if (is(response, "character")) response else  deparse(substitute(response)) 
-#   aa<- tryCatch(eval(response), error = function(e) e), warning = w.handler)
-# warning = W)
-
-# Y <- tryCatch({
-#   Y <- eval(response)
-# },warning = function(w) 
-# {
-#   warning(as.character(w)) 
-# },error = function(e)
-# {
-#   warning(" \n")	
-#  Y <- deparce(substitute(response))
-#   return(Y)
-# })  
-# 
-#   is(quote(response), "character")
-#  if (any(!(Y %in%names(data)))) stop("the response should be in data") 
-  #.   Names <- names(data)
-  pos <- match(Y, names(data))
+    pos <- match(Y, names(data))
   nameS <- names(data)[-pos]
-  PP <- list() 
-  actY <- data[,Y]
-  cY <- class(actY) 
-  I <- 0
-  f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')), 
+     PP <- list() 
+   actY <- data[,Y]
+     cY <- class(actY) 
+      I <- 0
+     f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')), 
                 data=data, env=.GlobalEnv)#.GlobalEnv
-  f2 <- formula( paste0(paste0(Y,"~"), 
+     f2 <- formula( paste0(paste0(Y,"~"), 
                         paste0("(",paste0(nameS, collapse='+'),")^2")), 
                  data=data, env=.GlobalEnv)#.GlobalEnv
-  f3 <- formula(paste("~",paste0(nameS, collapse='+')), 
+     f3 <- formula(paste("~",paste0(nameS, collapse='+')), 
                 data=data,      env=.GlobalEnv)#.GlobalEnv
-  f4 <- formula( paste0(paste0("~"), 
+     f4 <- formula( paste0(paste0("~"), 
                         paste0("(",paste0(nameS, collapse='+'),")^2")), 
                  data=data,      env=.GlobalEnv)#.GlobalEnv
   return(list(main=f1, inter=f2, no_res_main=f3, no_res_inter=f4))         
@@ -324,6 +313,7 @@ if (any(class(Y)%in%"try-error"))
 # from  formula to the X matrix
 # get data and a formula 
 ################################################################################ 
+# function 4
 data_form2X <- function(data, formula, response, 
                           scale.to = c("no", "z-scores", "0to1"),  
                          family = NO) 
@@ -373,6 +363,7 @@ if (missing(formula))
 ################################################################################
 ################################################################################
 ################################################################################
+# function 5
 y_scale0to1 <- function(x)
 {
       x <- as.matrix(x)
@@ -389,6 +380,7 @@ attr(Y, "max") <- maxX
 ################################################################################
 ################################################################################
 ################################################################################
+# function 6
 y_unscale0to1 <- function(x) 
 {
   minX <- attributes(x)$min
@@ -399,6 +391,49 @@ attr(Y, "min") <- NULL
 attr(Y, "max") <- NULL
   Y
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function  7
+# it takes a factor and use the levels with lower (or higher) numbar 
+# of observations as reference 
+y_factor <- function(x, how = c("lower", "higher"))
+{
+  how <- match.arg(how)  
+  if   (!is.factor(x)) stop("x is not a factor")
+  f <- if (how=="lower")  stats::relevel(x,ref=levels(x)[which.min(table(x))])
+  else  relevel(x,ref=levels(x)[which.max(table(x))])
+  f
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 8
+# It take a data frame and readjust the reference level of all 
+#  factors in the data.frame to the level with "lower" or "higher" 
+#  number of observations 
+data_factor <- function(data, how = c("lower", "higher") )
+{
+  is_nominal <- function(x) class(x) %in% c("factor", "character")  
+  how <- match.arg(how)    
+  # what is the data
+  if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
+  if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+  if (is(data, "matrix")) data <- as.data.frame(data)
+  if (is(data[1],"mts"))  data <- as.data.frame(data)
+  if (is(data, "array")) stop("the data is an array the function needs a
+                            data.frame")
+  ind <- sapply(data, is_nominal)
+  nam.fac <-  names(data)[ind]
+  for (i in nam.fac)
+  {
+    data[,i]  <-  y_factor(data[,i], how=how)  
+  }
+  data
+}  
 ################################################################################
 ################################################################################
 ################################################################################
