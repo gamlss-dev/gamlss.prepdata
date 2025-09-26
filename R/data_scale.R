@@ -147,7 +147,7 @@ data_vars2data <- function(data, response,
                          weights = NULL,
                       nonlinear = FALSE, #for "main.effect" 
                           basis = "poly",
-                            arg = 2 
+                            arg = 2 # "2, raw=T" (will do) 
 )
 {
 ################################################################################  
@@ -182,7 +182,15 @@ data_vars2data <- function(data, response,
     {
       daC <- data[,-c(pp, pos_res)]#      take out factors and response  
       ndc <- names(daC)#                  names of the continuous vars 
-      aa <- deparse(substitute(arg))#.    get the argument for nonlinear
+      aa <- try(eval(arg), silent=TRUE)
+      if (any(class(aa)%in%"try-error"))
+      { 
+        aa <- deparse(substitute(arg))   
+      }
+     # aa <- deparse(substitute(arg))#.    get the argument for nonlinear
+     
+     aaa <- regmatches(aa, regexpr("\\d+", aa))
+     naa <-  which(match(as.character(1:20), aaa)==1)
       newn <- paste0(basis, "(", ndc, ",", aa, ")") # get the right function of
                                                     # non linear 
       lndc <- length(ndc) #                how many continuous vars exist  
@@ -193,7 +201,9 @@ data_vars2data <- function(data, response,
       formula <- as.formula(paste(paste0(response_t,"~"), 
                                   paste(x_Names, collapse='+'))) 
       XX <- model.matrix(formula, weights=weights, data=data)[,-1]
-      for (i in 1:lndc) colnames(XX)[grep(ndc[i], colnames(XX))] <- paste0(ndc[i], 1:aa)
+      for (i in 1:lndc) 
+      {
+        colnames(XX)[grep(ndc[i], colnames(XX))] <- paste0(ndc[i], c("",2:naa))}
       dXX <- data.frame(data[, response_t], as.data.frame(XX))# the data frame
       names(dXX)[1] <- response_t
       #dXX[, response_t] <- data[, response_t]#.         add the response  
@@ -202,9 +212,9 @@ data_vars2data <- function(data, response,
     { # only linear terms for everything here 
       formula <- as.formula(paste(paste0(response_t,"~"), 
                                   paste(x_Names, collapse='+'))) 
-      XX <- model.matrix(formula, weights=weights, data=data)[,-1]
-      dXX <- data.frame(data[, response_t], as.data.frame(XX))# 
-      names(dXX)[1] <- response_t
+           XX <- model.matrix(formula, weights=weights, data=data)[,-1]
+          dXX <- data.frame(data[, response_t], as.data.frame(XX))# 
+names(dXX)[1] <- response_t
       #dXX[, response_t] <- data[, response_t]# add the response
       return(dXX)   
     }
@@ -396,14 +406,14 @@ attr(Y, "max") <- NULL
 ################################################################################
 ################################################################################
 # function  7
-# it takes a factor and use the levels with lower (or higher) numbar 
-# of observations as reference 
+# it takes a factor and use the levels with lower (or higher) number 
+# of observations as a reference level 
 y_factor <- function(x, how = c("lower", "higher"))
 {
   how <- match.arg(how)  
   if   (!is.factor(x)) stop("x is not a factor")
   f <- if (how=="lower")  stats::relevel(x,ref=levels(x)[which.min(table(x))])
-  else  relevel(x,ref=levels(x)[which.max(table(x))])
+       else  relevel(x,ref=levels(x)[which.max(table(x))])
   f
 }
 ################################################################################
@@ -430,8 +440,14 @@ data_factor <- function(data, how = c("lower", "higher") )
   nam.fac <-  names(data)[ind]
   for (i in nam.fac)
   {
+   if (nlevels(data[,i])==2)
+   {
+    data[,i]  <-  y_factor(data[,i], how="higher")  
+   } else
+   {
     data[,i]  <-  y_factor(data[,i], how=how)  
-  }
+   }
+  }  
   data
 }  
 ################################################################################
