@@ -48,8 +48,8 @@ y_zscores(x, weights, family = SHASHo, value  = 3, plot = TRUE,
 data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
           max.levels = 10, hist.col = "black", hist.fill = "white",
           dens.fill = "#FF6666", nrow = NULL, ncol = NULL,
-          plots.per.page = 9, one.by.one = FALSE, title, percentage,
-          seed = 123,...)
+          plots.per.page = 9, one.by.one = FALSE, title, print.info = TRUE,
+          percentage, seed = 123,...)
 
 data_response(data, response, plot = TRUE, 
              percentage, seed = 123, print.info = TRUE)

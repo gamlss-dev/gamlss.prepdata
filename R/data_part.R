@@ -260,7 +260,7 @@ data <- if (percentage==1)
         else
        {
       set.seed(seed)
-      ind <- sample(nobs, per*nobs)
+      ind <- sample(nobs, percentage*nobs)
       data[ind,]
     }  
 if (print.info)

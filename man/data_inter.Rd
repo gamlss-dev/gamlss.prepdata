@@ -14,8 +14,8 @@ data_inter(data, response, weights, digits = 3, plot = TRUE,
         outline.color = "gray", colors = c("blue", "white", "red"), 
         legend.title = "Inter", title, ggtheme = theme_minimal(), 
         tl.cex = 12, tl.col = "black", tl.srt = 45, lab = TRUE, 
-        lab_col = "black", lab_size = 3, circle.size = 20, seed = 123, 
-        percentage) 
+        lab_col = "black", lab_size = 3, circle.size = 20,  
+        percentage, seed = 123, print.info = TRUE) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,6 +39,7 @@ data_inter(data, response, weights, digits = 3, plot = TRUE,
   \item{lab_col}{the colour of the lettering of the correlation coefficients}
   \item{lab_size}{the size of the lettering of the correlation coefficients, increase (or decrease) if the defaul 3 is not appropriate}
   \item{circle.size}{the size of the circles, increase (or decrease) if the defaul 20 is not appropriate}
+  \item{print.info}{whether to print infomation when cutting the data usinf  \code{data_cut()}}
   \item{percentage}{the percentage of data to show if the observation number is too big}
   \item{seed}{Setting a seed value for selection of the percantage of data (for big data sets)}
 }
