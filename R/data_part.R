@@ -245,7 +245,7 @@ for (i in 1:B)
 ################################################################################
 data_cut <- function(data,percentage, seed=123, print.info=TRUE)
 {
-  dm <- dim(data)
+    dm <- dim(data)
   nobs <- dm[1]
   if (missing(percentage)) 
   {
@@ -255,9 +255,14 @@ data_cut <- function(data,percentage, seed=123, print.info=TRUE)
                                        ifelse(nobs>1000000,.1))))  # 10% of data
     
   }
-  set.seed(seed)
-  ind <- sample(nobs, floor(percentage*nobs))
-  data <- data[ind,]
+data <- if (percentage==1) 
+          data
+        else
+       {
+      set.seed(seed)
+      ind <- sample(nobs, per*nobs)
+      data[ind,]
+    }  
 if (print.info)
 {
   cat("",  percentage*100,"% of data are saved,", "\n")

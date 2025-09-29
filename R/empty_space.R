@@ -198,10 +198,9 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")    
      dimD <- dim(data)
-     data <- if (missing(percentage))
-     {
-       data_cut(data,seed = seed, print.info = print.info)
-     }      else data_cut(data, seed = seed, percentage=percentage, 
+data <- if (missing(percentage))
+     {data_cut(data,seed = seed, print.info = print.info)
+     }  else data_cut(data, seed = seed, percentage=percentage, 
                           print.info=print.info)   
 if (any(is.na(data)))
   {

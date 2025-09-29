@@ -13,9 +13,9 @@ y_zscores <- function(x,
                         ...)
 {
 ################################################################################  
-  if (missing(weights)) weights <- rep(1,length(x))
-     name <- deparse(substitute(x))
-     names(x) < 1:length(x)
+if (missing(weights)) weights <- rep(1,length(x))
+      name <- deparse(substitute(x))
+  names(x) < 1:length(x)
 if (transform)
 {
    par  <- y_Ptrans(x)
@@ -64,13 +64,15 @@ data_zscores <- function(data,
                 plots.per.page = 9,
                     one.by.one = FALSE,
                          title,
-                    percentage = TRUE, # for big data take % of data
-                          seed = 123,
+                   print.info = TRUE,
+                   percentage, # for big data take % of data
+                         seed = 123,
                         ...)
 {
-# data   
+# data 
+#  if is a list or table 
 if (is(data, "list"))  
-  stop("the data is list  the function needs a data.frame") 
+  stop("the data is a list the function needs a data.frame") 
 if (is(data, "table")) 
   stop("the data is a table the function needs a data.frame")
 if (is(data, "matrix"))    data <- as.data.frame(data)
@@ -86,22 +88,12 @@ if (any(is.na(data)))
        l2 <- dim(data)[1]
 warning(cat(l1-l2, "observations were omitted from the data", "\n"))
   }
-#  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data") 
-if (percentage)
-       {
-         # check the size of the data 
-         nobs <- dim(data)[1] 
-         per <- ifelse(nobs<50000,1,         # all data 
-                       ifelse(nobs<100000,.5,# 50% of data 
-                              ifelse(nobs<1000000,.2, # 20% of data 
-                                     ifelse(nobs>1000000,1))))  # 10% of data  
-         set.seed(seed)
-         ind <- sample(nobs, per*nobs)
-         data <- data[ind,]
-       }       
+  data <- if (missing(percentage))
+       {data_cut(data,seed=seed, print.info=print.info)
+       } else data_cut(data,percentage=percentage, print.info=print.info)
+# get rod the factors       
   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
- #   data_distinct(data, get.distinct=TRUE, print=FALSE) < max.levels|
               sapply(data, function(x) is(x, class2="Date"))
       daTa <- subset(data,  select=!sat.cont)  
        Dim <- dim(daTa)
@@ -118,7 +110,7 @@ for (i in 1:length(class_Vars))
   {
         II <- which(!(is.finite(izsc)))
       izsc <-  izsc[which(is.finite(izsc))]
-      warning("observations ", II, " taken out in ", Names[i],"\n" )
+  warning("observations ", II, " taken out in ", Names[i],"\n" )
   }
       zlist[[i]] <- izsc
 if (plot)
@@ -126,7 +118,8 @@ if (plot)
   PP[[i]] <- if (hist)  y_hist(izsc,  title="") + ggplot2::xlab(Names[i]) 
              else y_dots(izsc, value=value,  title="") + ggplot2::xlab(Names[i])
  }
-} #end of loop
+} #end of the loop
+# having PP how to plot it
 if (plot)
 {
   n.plots <- length(PP)       
@@ -199,7 +192,7 @@ define_region <- function(row, col){
                                    grid::grid.layout(nrow=1,ncol=1))))        
   return(invisible(PP))   
 }  
-               mm <- matrix(unlist(zlist), ncol=length(zlist))   
+               mm <- matrix(unlist(zlist), nrow=length(zlist[[1]]))   
                MM <- as.data.frame(mm)
         names(MM) <- Names
 return(MM)

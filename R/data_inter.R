@@ -33,8 +33,9 @@ data_inter <- function(data,
                     lab_col = "black", 
                    lab_size = 3,
                 circle.size = 20,
-                       seed = 123,
-                      percentage)
+                 percentage, 
+                       seed = 123, 
+                 print.info = TRUE)
     # c(1,15) maybe will do
 {
 ################################################################################
@@ -100,10 +101,11 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) 
   stop("the data is an array the function needs a data.frame")  
-   data <- if (missing(percentage))
-      {
-        data_cut(data,seed=seed)
-      } else data_cut(data,percentage=percentage)
+data <- if (missing(percentage))
+       {
+         data_cut(data, seed = seed, print.info = print.info)
+       }  else 
+  data_cut(data, seed = seed, percentage=percentage, print.info=print.info)
      Y <- deparse(substitute(response))
 # what type is the response?
 #is_numeric(data[,Y]) 
