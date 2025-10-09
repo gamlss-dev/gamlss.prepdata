@@ -78,7 +78,6 @@ scale0to1 <- function(x)
   }
 ################################################################################
 ################################################################################
-browser()
 if (missing(data)) stop("the data frame is missing")  
 if (missing(response)&&is.null(position.response)) stop("response (or its position) should be given")
 # The response can be given both as R or "R"   
