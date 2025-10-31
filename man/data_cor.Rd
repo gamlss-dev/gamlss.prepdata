@@ -60,7 +60,7 @@ low_val(table, val = 0.05, digits = 3, plot = FALSE, igraph = TRUE)
   \item{outline.color}{the outline colour}
   \item{colors}{the range of colours}
   \item{legend.title}{title for the legend}
-  \item{title}{the main tittle}
+  \item{title}{the main title}
   \item{ggtheme}{the theme for the plot, see package \pkg{ggthemes} for more themes}
   \item{tl.cex}{the text size for the marginal labels}
   \item{tl.col}{the colour of the he marginal labels}

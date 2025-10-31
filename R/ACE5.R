@@ -20,7 +20,7 @@
 # this function plots the iterations and it design for seeing what is 
 #function I
 # going in the transformation  
- ACE3 <- function(x, y, weights, 
+ ACE.iter <- function(x, y, weights, 
                   data = NULL, 
               con_crit = 0.001, 
             fit.method = c("loess", "P-splines"),
@@ -116,6 +116,22 @@ class(out) <- "ACE"
  }
 ################################################################################
 ################################################################################
+ weighted_mean <- function(x, w) 
+ {
+   w <- w / sum(w)           # normalize weights
+   mu <- sum(w * x)          # weighted mean
+   mu
+ } 
+################################################################################
+################################################################################ 
+  weighted_sd <- function(x, w) 
+   {
+        w <- w / sum(w)           # normalize weights
+       mu <- sum(w * x)          # weighted mean
+       sqrt(sum(w * (x - mu)^2)) # weighted standard deviation
+  } 
+################################################################################
+################################################################################
 ################################################################################
 ################################################################################
 # function II
@@ -137,58 +153,54 @@ if (missing(y)|missing(x)) stop("one of two variables is missing")
                else deparse(substitute(y))
 if (!is.null(data))
    {
-     y <- data[,yname]
-     x <- data[,xname]
-     w <- if (!missing(weights)) data[,wname]
+         y <- data[,yname]
+         x <- data[,xname]
+        
    }   
-if (missing(weights))  w <- rep(1, length(x))
-# standardise
-#browser()
-    sy <- (y-mean(y))/sd(y)# robustify
-    sx <- (x-mean(x))/sd(x)
-   # wh <- c(which(abs(sy)>robust), which(abs(sx)>robust))
-   #lwh <- length(wh)
-#y <- if(lwh>1) y[-wh] else y
-   #  x <- if(lwh>1) x[-wh] else x
- # browser()
-     y <- y-mean(y)
-     x <- x-mean(x)
-    # w <- if(lwh>1) w[-wh] else w
-    r1 <- 1
-    r0 <- ro <- cor(y,x)
+if (missing(weights))
+  {
+         w <- rep(1, length(x))
+        sy <- (y-mean(y)) #/sd(y)# standardize
+        sx <- (x-mean(x)) #/sd(x)
+ } else 
+ {
+        w <- data[,wname]
+        y <- (y-weighted_mean(y,w)) #/weighted_sd(y, w)# robustify
+        x <- (y-weighted_mean(x,w)) #/weighted_sd(x, w)# robustify
+ }
+       r1 <- 1
+       r0 <- ro <- cor(y,x)
 if (any(abs(r0>0.99))){ 
    out <- list(y=y, x=x, ty=NULL, tx=NULL, rsq=r0^2, cor=r0, dist=0) 
      class(out) <- "ACE"
-#     invisible(out)
      stop("ACE failed: very high linear correlation in the original variables")
    }
-    e2 <- sum((y-x)^2)        
-    di <- e2
-#di <- r1-r0
-   theta_1_y <- y/sqrt(sum(y^2))
+     e2 <- sum((y-x)^2)        
+     di <- e2
+theta_1_y <- y/sqrt(sum(y^2))
 switch(fit.method,
     "P-splines"={
             while (abs(di)>con_crit)
             {
               # regress theta(y) against x     
-               ma <- fit_PB(x, theta_1_y, weights = w, plot = FALSE, nseg=nseg,  max.df = 6, ...)
-          phi_1_x <- as.vector(ma$fv)
-            phi_x <- phi_1_x/sqrt(sum(phi_1_x^2))
+       ma <- fit_PB(x, theta_1_y, weights = w, plot = FALSE, 
+                                     nseg=nseg,  max.df = 6, ...)
+   phi_1_x <- as.vector(ma$fv)
+     phi_x <- phi_1_x/sqrt(sum(phi_1_x^2))
               # regress phi(x) against Y  
-               mb <- fit_PB(y, phi_x, weights = w, plot = FALSE, nseg=nseg,  max.df = 6, ...) 
-        theta_1_y <- as.vector(mb$fv)     
-          theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
-               r1 <- cor(theta_y, phi_x)
-              e21 <- sum((theta_y-phi_x)^2) 
-               di <- abs(e21-e2)
-               e2 <- e21
+        mb <- fit_PB(y, phi_x, weights = w, plot = FALSE, 
+                                     nseg=nseg,  max.df = 6, ...) 
+ theta_1_y <- as.vector(mb$fv)     
+   theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
+        r1 <- cor(theta_y, phi_x)
+       e21 <- sum((theta_y-phi_x)^2) 
+        di <- abs(e21-e2)
+        e2 <- e21
             } 
           },
     "loess"= {
-            # regress theta(y) against x     
             phi_1_x <- fitted(loess(theta_1_y~x, weights=w, ...))            
               phi_x <- phi_1_x#/sqrt(sum(phi_1_x^2))
-            # regress phi(x) against Y      
           theta_1_y <- fitted(loess(phi_x~y, weights=w, ...)) 
             theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
                  r1 <- cor(theta_y, phi_x)
@@ -199,12 +211,12 @@ switch(fit.method,
    )
    tyname <- paste0("t(", yname,")")
    txname <- paste0("t(", xname,")")
-   out <- list(y = y, x = x, 
-               ty=theta_y, tx=phi_x, rsq=r1^2, cor=r1, 
-               r=ro, diff=r1-ro,fit.method =fit.method) 
-   names(out) <- c(yname, xname, tyname, txname, "rsq", "cor", "r", "diff", "method")   
-   class(out) <- "ACE" 
-   invisible(out)
+      out <- list(y = y, x = x, 
+                   ty=theta_y, tx=phi_x, rsq=r1^2, cor=r1, 
+                   r=ro, diff=r1-ro,fit.method =fit.method) 
+names(out) <- c(yname, xname, tyname, txname, "rsq", "cor", "r", "diff", "method")   
+class(out) <- "ACE" 
+invisible(out)
  }
 ################################################################################
 ################################################################################
@@ -364,7 +376,7 @@ if (any(is.na(data)))
 if (is.null(dimD)) stop("only one variable in the data") 
 if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
                              "to detect non-linear correlations", "\n"))   
-TT <- lapply(data, unique)
+  TT <- lapply(data, unique)
 daTa <- subset(data, select=
                    ifelse(sapply(data,is.factor) | sapply(data,is.character) |
                             sapply(data,is.integer)&lapply(TT, length)<10, FALSE, TRUE))

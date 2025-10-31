@@ -54,15 +54,19 @@ export( data_cor,
         y_factor,
         data_vars2data,
         data_formulae,
-        data_form2X
+        data_form2X,
+        data_mcor,
+        mcor,
+        ACE,
+        ACE.iter
 )
 ################################################################################
 # ACE object
-#S3method(plot, ACE)
-#S3method(print, ACE)
+S3method(plot, ACE)
+S3method(print, ACE)
 ################################################################################
 # fit_PB object
-#S3method(print, Psplines)
+#S3method(print, ACE)
 #S3method(coef, Psplines)
 #S3method(deviance, Psplines)
 #S3method(fitted, Psplines)
