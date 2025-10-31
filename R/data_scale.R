@@ -9,6 +9,7 @@
 # 6) y_unscale0to1 (not exported)
 # 7) y_factor  
 # 8) data_factor
+# 9) data_form2data (it may be redundant sinse it only uses mode.frame)
 ################################################################################
 ################################################################################
 ################################################################################
@@ -26,13 +27,15 @@
 ################################################################################
 # the function   data_scale() creates a data frame with all continuous variables 
 # standardise of as z-scores ot as 0 to 1 variables
-# the function data_create() takes a data frame and creates a data frame 
+# the function data_vars2data() takes a data frame and creates a data frame 
 # using a `main effects' or `first order` interactions formula
 # the new data frame will have all factors as dummies rather in their original 
 # scale 
 # if scaling for the continuous variables is required the function have to used 
-# recursively
-# da |> data_stand(, response=...) |> data_create(, response=...) |> danew
+# recursively also variables can be excluded from the new data
+# 
+# da |> data_stand(, response=...) |> data_vars2data(, response=...) |> newdata
+# note tha yuy may have to use data_factors() to chenge the relevant levels of the factors before creating the dummies  
 ################################################################################
 ################################################################################
 ################################################################################
@@ -137,10 +140,10 @@ if (scale.to  =="0to1")                              # if 0 to 1
 ################################################################################
 ################################################################################
 ################################################################################
-################################################################################          
+###############################################################################          
 #  FUNCTION 2
-# this function creates a new dataframe where the continuous variables are remain 
-# the same or became polynomial ans the factors becomes dummy variables    
+# this function creates a new data.frame where the continuous variables are remain 
+# the same or became polynomial and the factors becomes dummy variables    
 data_vars2data <- function(data, response, 
                          exclude = NULL,
                             type = c("main.effect", "first.order"),
@@ -164,19 +167,19 @@ data_vars2data <- function(data, response,
     response_t <- deparse(substitute(response))   
    }  
    if (!is.null(exclude))  data <- data[, setdiff(names(data),exclude)]    
-        type <- match.arg(type)  
-  pos_res <- match(response_t, names(data))
-  x_Names <- names(data)[-pos_res]  
-  daT <- data[,x_Names]
-  whetherFactor <- sapply(daT, is.factor)|   # checking for factors
-    sapply(daT, is.character)|
+         type <- match.arg(type)  
+      pos_res <- match(response_t, names(data))
+      x_Names <- names(data)[-pos_res]  
+          daT <- data[,x_Names]
+whetherFactor <- sapply(daT, is.factor)|   # checking for factors
+  sapply(daT, is.character)|
     sapply(daT, is.logical)|
     data_distinct(data[,-pos_res],get.distinct=TRUE) <10|
     sapply(data[,-pos_res], function(x) is(x, class2="Date"))
-  theFactors <- x_Names[whetherFactor]
-  pp <- unlist(sapply(theFactors, grep, names(data)))
-  ## get the formula according to type 
-  if (type=="main.effect")
+   theFactors <- x_Names[whetherFactor]
+           pp <- unlist(sapply(theFactors, grep, names(data)))
+## get the formula according to type 
+if (type=="main.effect")
   {
     if (nonlinear)
     {
@@ -201,8 +204,8 @@ data_vars2data <- function(data, response,
       formula <- as.formula(paste(paste0(response_t,"~"), 
                                   paste(x_Names, collapse='+'))) 
       XX <- model.matrix(formula, weights=weights, data=data)[,-1]
-      for (i in 1:lndc) 
-      {
+  for (i in 1:lndc) 
+    {
         colnames(XX)[grep(ndc[i], colnames(XX))] <- paste0(ndc[i], c("",2:naa))}
       dXX <- data.frame(data[, response_t], as.data.frame(XX))# the data frame
       names(dXX)[1] <- response_t
@@ -248,15 +251,15 @@ names(dXX)[1] <- response_t
       {
         Names[i] <-  gsub(":", ".", colnames(XX)[i])
       }
-      colnames(XX) <- Names
-      dXX <-  as.data.frame(XX)
-      dXX <- data.frame(data[, response_t], as.data.frame(XX))# 
-      names(dXX)[1] <- response_t
+ colnames(XX) <- Names
+          dXX <-  as.data.frame(XX)
+          dXX <- data.frame(data[, response_t], as.data.frame(XX))# 
+names(dXX)[1] <- response_t
       return(dXX)        
     } else
     {
       formula <- as.formula(paste(paste0(response_t,"~"), 
-                                  paste0(paste0("(",paste(x_Names, collapse='+')), ")^2"))) 
+              paste0(paste0("(",paste(x_Names, collapse='+')), ")^2"))) 
       XX <- model.matrix(formula, weights=weights, data=data)[,-1] 
       d2 <- dim(XX)[2]
       Names <- character(d2)
@@ -279,7 +282,7 @@ names(dXX)[1] <- response_t
 ################################################################################
 ################################################################################
 # function 3
-# from data to formula
+# from data to formula NOTE that all variables will be in the formula
 data_formulae <- function(data, response)
 {
 if (is(data, "list"))  
@@ -315,7 +318,6 @@ if (any(class(Y)%in%"try-error"))
                  data=data,      env=.GlobalEnv)#.GlobalEnv
   return(list(main=f1, inter=f2, no_res_main=f3, no_res_inter=f4))         
 }
-
 ################################################################################
 ################################################################################
 ################################################################################
@@ -325,7 +327,7 @@ if (any(class(Y)%in%"try-error"))
 ################################################################################ 
 # function 4
 data_form2X <- function(data, formula, response, 
-                          scale.to = c("no", "z-scores", "0to1"),  
+                         scale.to = c("no", "z-scores", "0to1"),  
                          family = NO) 
 {
 ################################################################################  
@@ -425,7 +427,7 @@ y_factor <- function(x, how = c("lower", "higher"))
 # It take a data frame and readjust the reference level of all 
 #  factors in the data.frame to the level with "lower" or "higher" 
 #  number of observations 
-data_factor <- function(data, how = c("lower", "higher") )
+data_factor <- data_rel_level <- function(data, how = c("lower", "higher") )
 {
   is_nominal <- function(x) class(x) %in% c("factor", "character")  
   how <- match.arg(how)    
@@ -450,6 +452,33 @@ data_factor <- function(data, how = c("lower", "higher") )
   }  
   data
 }  
+################################################################################
+################################################################################
+################################################################################
+#  FUNCTION 
+# this function creates a new data.frame from a formula  
+# equivalent to model.frame
+data_form2data <- function(data, formula, 
+                          # exclude = NULL,
+                          # type = c("main.effect", "first.order"),
+                           weights = NULL
+                          # nonlinear = FALSE, #for "main.effect" 
+                          # basis = "poly",
+                          # arg = 2 # "2, raw=T" (will do) 
+)
+{
+  ################################################################################  
+  # all the variable in data are used to create the data.frame
+  # unless the 'exclude' is used
+  # the argument `data' is compulsory 
+  # the argument `response' is compulsory
+  ################################################################################   
+  if (missing(data)) stop("the data frame is missing")  
+  if (missing(formula)) stop("a formula should be given")
+  newdata <-   if (missing(weights)) model.frame(formula, data=data )
+              else   model.frame(formula, data=data, weights=weights )
+  newdata
+}
 ################################################################################
 ################################################################################
 ################################################################################
