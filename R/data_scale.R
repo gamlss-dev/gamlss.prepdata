@@ -83,12 +83,15 @@ scale0to1 <- function(x)
 ################################################################################
 if (missing(data)) stop("the data frame is missing")  
 if (missing(response)&&is.null(position.response)) stop("response (or its position) should be given")
-# The response can be given both as R or "R"   
-      response_t <- try(eval(response), silent=TRUE)
-  if (any(class(response_t)%in%"try-error"))
-  { 
-    response_t <- deparse(substitute(response))   
-  }
+# The response can be given both as R or "R"  
+  pp <- try(is(response,"character"),silent = TRUE )
+if (is(class(pp), "try-error"))
+{
+   response_t <- response
+}else 
+{
+   response_t <- deparse(substitute(response))   
+}  
       scale.to <- match.arg(scale.to)   
 if (is.null(position.response))
 {
