@@ -142,7 +142,7 @@ plot.permutationTest <- function(obj,
    maxx <- max(c(obj$observed,obj$sample))
    minx <-  min(c(obj$observed,obj$sample))
      d <- data.frame(y=obj$sample) 
-    gg <- ggplot(d, aes(x = y)) + geom_histogram(aes(y = ggplot2::..density..), 
+    gg <- ggplot(d, aes(x = y)) + geom_histogram(aes(y = ggplot2::after_stat(density)), 
              binwidth = binwidth, colour = hist.col, fill = hist.fill) + 
              xlim(minx, maxx) + 
              geom_density(alpha = 0.2,  fill = dens.fill) + 
@@ -237,7 +237,7 @@ plot.cor_bootstrap <- function(obj,
    minx <-  min(c(obj$observed,obj$sample))
       d <- data.frame(y = obj$sample) 
      d1 <- data.frame(x = c(obj$observed, obj$mean), color=c("observed","mean"))
-     gg <- ggplot(d, aes(x = y)) + geom_histogram(aes(y = ..density..), 
+     gg <- ggplot(d, aes(x = y)) + geom_histogram(aes(y = ggplot2::after_stat(density)), 
             binwidth = binwidth, colour = hist.col, fill = hist.fill) + 
     xlim(minx, maxx) + 
     geom_density(alpha = 0.2,  fill = dens.fill) + 
