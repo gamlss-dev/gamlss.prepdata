@@ -58,12 +58,18 @@ export( data_cor,
         data_mcor,
         mcor,
         ACE,
-        ACE.iter
+        ACE.iter,
+        cor_perm_test,
+        cor_boot
 )
 ################################################################################
 # ACE object
 S3method(plot, ACE)
 S3method(print, ACE)
+S3method(plot, permutationTest)
+S3method(print, permutationTest)
+S3method(plot, cor_bootstrap)
+S3method(print, cor_bootstrap)
 ################################################################################
 # fit_PB object
 #S3method(print, ACE)

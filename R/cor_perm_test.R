@@ -10,7 +10,7 @@
 # it take two variables 
 # it creates a data matrix Da with  v =v(x,y) and factor f
 #  for i=1 to B
-require(ggplot2)
+#require(ggplot2)
 ################################################################################
 ################################################################################
 ################################################################################
@@ -128,8 +128,8 @@ print.permutationTest <- function (x, digits = max(3, getOption("digits") - 3), 
 ################################################################################
 ################################################################################
 ################################################################################
-plot.permutationTest <- function(obj,  
-                        binwidth = (max(obj$sample) - min(obj$sample))/20,  
+plot.permutationTest <- function(x, y, ..., 
+                        binwidth = (max(x$sample) - min(x$sample))/20,  
                         hist.col = "black", hist.fill="white",
                         points.col="steelblue4", points.size=1,
                         dens.fill = "#FF6666",
@@ -137,18 +137,18 @@ plot.permutationTest <- function(obj,
                        save.data=FALSE)
 {
   y <- x <-  NULL
-  yname <- obj$yname
-  xname <- obj$xname
-   maxx <- max(c(obj$observed,obj$sample))
-   minx <-  min(c(obj$observed,obj$sample))
-     d <- data.frame(y=obj$sample) 
+  yname <- x$yname
+  xname <- x$xname
+   maxx <- max(c(x$observed,x$sample))
+   minx <-  min(c(x$observed,x$sample))
+     d <- data.frame(y=x$sample) 
     gg <- ggplot(d, aes(x = y)) + geom_histogram(aes(y = ggplot2::after_stat(density)), 
              binwidth = binwidth, colour = hist.col, fill = hist.fill) + 
              xlim(minx, maxx) + 
              geom_density(alpha = 0.2,  fill = dens.fill) + 
              xlab("sample") + ylab("density") + 
-             ggtitle(paste0(obj$fname, " permutation test"))+
-             geom_vline(aes(xintercept=obj$observed), col="red") 
+             ggtitle(paste0(x$fname, " permutation test"))+
+             geom_vline(aes(xintercept=x$observed), col="red") 
   gg
 }
 ################################################################################
@@ -156,7 +156,7 @@ plot.permutationTest <- function(obj,
 ################################################################################
 ################################################################################
 # this function bootsrap the x and y and create B samples for correlations 
-cor_bootstrap <- function(x,y, data = NULL, 
+cor_boot <- function(x,y, data = NULL, 
                                   B = 1000, 
                                seed = 123, 
                                tail = c("one", "two"),
@@ -207,6 +207,7 @@ cor_bootstrap <- function(x,y, data = NULL,
 ################################################################################
 print.cor_bootstrap <- function (x, digits = max(3, getOption("digits") - 3), ...) 
 {   
+if (!is(x, "cor_bootstrap"))  stop( "the object has to be cor_bootstrap")
   yname <- x$yname
   xname <- x$xname
   fname <- x$fname
@@ -216,33 +217,34 @@ print.cor_bootstrap <- function (x, digits = max(3, getOption("digits") - 3), ..
   cat("sample mean:", format(signif(x$mean,     digits=3)), "\n")
   cat("       bias:", format(signif(bias,       digits=3)), "\n")
   cat("  sample SD:", format(signif(x$sd,       digits=3)), "\n")
-  
+  cat("  sample size:", format(signif(length(x$sample),   digits=0)), "\n")
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-plot.cor_bootstrap <- function(obj,  
-                      binwidth = (max(obj$sample) - min(obj$sample))/20,  
+plot.cor_bootstrap <- function(x, y,...,   
+                      binwidth = (max(x$sample) - min(x$sample))/20,  
                       hist.col = "black", hist.fill="white",
                     points.col = "steelblue4", points.size=1,
                      dens.fill = "#FF6666",
                       line.col = "darkgray",line.size=1.5,
                      save.data = FALSE)
 {
+  if (!is(x, "cor_bootstrap"))  stop( "the object has to be cor_bootstrap")
   x <- y <- NULL
-  yname <- obj$yname
-  xname <- obj$xname
-   maxx <- max(c(obj$observed,obj$sample))
-   minx <-  min(c(obj$observed,obj$sample))
-      d <- data.frame(y = obj$sample) 
-     d1 <- data.frame(x = c(obj$observed, obj$mean), color=c("observed","mean"))
+  yname <- x$yname
+  xname <- x$xname
+   maxx <- max(c(x$observed,x$sample))
+   minx <-  min(c(x$observed,x$sample))
+      d <- data.frame(y = x$sample) 
+     d1 <- data.frame(x = c(x$observed, x$mean), color=c("observed","mean"))
      gg <- ggplot(d, aes(x = y)) + geom_histogram(aes(y = ggplot2::after_stat(density)), 
             binwidth = binwidth, colour = hist.col, fill = hist.fill) + 
     xlim(minx, maxx) + 
     geom_density(alpha = 0.2,  fill = dens.fill) + 
     xlab("sample") + ylab("density") + 
-    ggtitle(paste0(obj$fname, " bootstrap dist."))+
+    ggtitle(paste0(x$fname, " bootstrap dist."))+
     geom_vline(data=d1, aes(xintercept=x[1],  color = "Observed"))+
     geom_vline(data=d1, aes(xintercept=x[2],  color = "Sample mean"))+
     scale_color_manual(
