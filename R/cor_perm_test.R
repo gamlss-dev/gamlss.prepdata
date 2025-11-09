@@ -129,23 +129,26 @@ print.permutationTest <- function (x, digits = max(3, getOption("digits") - 3), 
 ################################################################################
 ################################################################################
 plot.permutationTest <- function(x, y, ..., 
-                        binwidth = (max(x$sample) - min(x$sample))/20,  
-                        hist.col = "black", hist.fill="white",
-                        points.col="steelblue4", points.size=1,
+                         binwidth = (max(x$sample) - min(x$sample))/20,  
+                         hist.col = "black", 
+                        hist.fill = "white",
+                       points.col = "steelblue4", 
+                      points.size = 1,
                         dens.fill = "#FF6666",
-                       line.col="darkgray",line.size=1.5,
-                       save.data=FALSE)
+                         line.col = "darkgray",line.size=1.5,
+                        save.data = FALSE)
 {
-  y <- x <-  NULL
+       y <-   NULL
   yname <- x$yname
   xname <- x$xname
    maxx <- max(c(x$observed,x$sample))
    minx <-  min(c(x$observed,x$sample))
-     d <- data.frame(y=x$sample) 
-    gg <- ggplot(d, aes(x = y)) + geom_histogram(aes(y = ggplot2::after_stat(density)), 
-             binwidth = binwidth, colour = hist.col, fill = hist.fill) + 
-             xlim(minx, maxx) + 
-             geom_density(alpha = 0.2,  fill = dens.fill) + 
+      d <- data.frame(y=x$sample) 
+     gg <- ggplot(d, aes(x = y)) + 
+          geom_histogram(aes(y = ggplot2::after_stat(density)), 
+           binwidth = binwidth, colour = hist.col, fill = hist.fill) + 
+              xlim(minx, maxx) + 
+             geom_density(alpha = 0.2,  stat = "density") + 
              xlab("sample") + ylab("density") + 
              ggtitle(paste0(x$fname, " permutation test"))+
              geom_vline(aes(xintercept=x$observed), col="red") 
@@ -232,7 +235,7 @@ plot.cor_bootstrap <- function(x, y,...,
                      save.data = FALSE)
 {
   if (!is(x, "cor_bootstrap"))  stop( "the object has to be cor_bootstrap")
-  x <- y <- NULL
+       y <- NULL
   yname <- x$yname
   xname <- x$xname
    maxx <- max(c(x$observed,x$sample))
