@@ -3,9 +3,16 @@
 ################################################################################
 ################################################################################
 #  Function 1 fit_PB
-fit_PB <- function(x, y, weights, data,  xmin, xmax, nseg = 20,
-                   lambda = 10, order=2, degree=3, max.df=20, ylim, 
-                   plot=FALSE, col.ribbon="pink")
+fit_PB <- function(x, y, weights, data,  xmin, xmax, 
+                   nseg = 20,
+                 lambda = 10, 
+                  order = 2, 
+                 degree = 3, 
+                 max.df = 10, 
+                   ylim, 
+                   plot = FALSE, 
+             col.ribbon = "pink")
+            
 {
 ################################################################################
 bbase <- function(x, xl, xr, ndx, deg)
