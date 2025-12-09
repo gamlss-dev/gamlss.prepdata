@@ -285,7 +285,7 @@
 ################################################################################
 # function 1    
 association <-  function(x, y, xname=NULL, yname=NULL, data,
-              cor_method="spearman", adjust_cramersv_bias=TRUE)
+               cor_method="spearman", adjust_cramersv_bias=TRUE)
 {
 ######### local functions 1 ####################################################
   is_nominal <- function(x) class(x) %in% c("factor", "character")
@@ -299,19 +299,19 @@ if (!missing(data))
   x <- data[,xname] #
   y <- data[,yname] #
 }
-  result <- if(is_nominal(x) && is_nominal(y)){
-           cv  <-  cramer_phi(as.character(x), as.character(y), 
+     result <- if(is_nominal(x) && is_nominal(y)){
+        cv  <-  cramer_phi(as.character(x), as.character(y), 
                            bias.correct = adjust_cramersv_bias)
-     names(cv) <- NULL
+   names(cv) <- NULL
   data.frame(xname, yname, assoc=cv, type="cramersV")
   }else if(is.numeric(x) && is.numeric(y)){
     correlation = abs(cor(x, y, method=cor_method, use="complete.obs"))
     data.frame(xname, yname, assoc=correlation, type="correlation")
   }else if(is.numeric(x) && is_nominal(y)){
-    r_squared = summary(lm(x ~ y))$r.squared
+    r_squared <- summary(lm(x ~ y))$r.squared
     data.frame(xname, yname, assoc=sqrt(r_squared), type="anova")
   }else if(is_nominal(x) && is.numeric(y)){
-    r_squared = summary(lm(y ~x))$r.squared
+    r_squared <- summary(lm(y ~x))$r.squared
     data.frame(xname, yname, assoc=sqrt(r_squared), type="anova")
   }else {
     warning(paste("unmatched column type combination: ", class(x), class(y)))
@@ -470,9 +470,9 @@ cramer_phi <- function (x, y,
 {
     CV <- NULL
 if (is.factor(x)) 
-  { x <- as.vector(x)}
+  {  x <- as.vector(x)}
 if (is.factor(y)) 
-  { y <- as.vector(y)}
+  {  y <- as.vector(y)}
 if (is.vector(x) & is.vector(y)) 
   {
              N <- length(x)
