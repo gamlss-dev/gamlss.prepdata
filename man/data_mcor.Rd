@@ -4,23 +4,23 @@
 \alias{ACE}
 \alias{ACE.iter}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-Functions to fit Maximal Correlation to  Data
+Functions to fit Maximal Correlation to Data
 }
 \description{
-The function \code{dsata_mcor()} is using the function \code{mcor()} to find the non-linear maximal correlation between the continuous variabes of the data. 
+The function \code{data_mcor()} is using either the function \code{mcor()} or the function \code{cor_M()} to find the non-linear maximal correlation between the continuous variabes of the data. Note that the function \code{cor_M()} is usinf the function \code{ace()} of the package \code{acepack} which is is faster for large data. 
 
 The function \code{mcor()} fits a single  maximal correlation. It uses the function `\code{ACE()}.
 
 
-The function \code{ACE()} it takes two variables and produce a mong other thing the maximal coefficient.
+The function \code{ACE()} it takes two variables and produce among other thing the maximal coefficient.
 
-The function \code{ACE.iter()} it takes two variables and show the fitting to acheive the maximal coefficient.
+The function \code{ACE.iter()} it takes two variables and shows the fittings to acheive the maximal coefficient.
 
 }
 \usage{
-data_mcor(data, digits = 3, plot = TRUE, diag.off = TRUE, 
+data_mcor(data, fun = cor_M, digits = 3, plot = TRUE, diag.off = TRUE, 
        lower.tri.off = FALSE, method = c("square", "circle"), 
        fit.method = c("P-splines", "loess"), 
        outline.color = "gray", colors = c("blue", "white", "red"), 
@@ -32,7 +32,7 @@ data_mcor(data, digits = 3, plot = TRUE, diag.off = TRUE,
 mcor(x, y, data = NULL, fit.method = c("loess", "P-splines"), 
                nseg = 10, max.df = 6, ...)       
 
-ACE(x, y, weights, data = NULL, con_crit = 0.001, 
+ACE(x, y, weights, data = NULL, con_crit = 0.01, 
         fit.method = c("loess", "P-splines"), 
         nseg = 10, max.df = 6, ...)   
         
@@ -43,6 +43,7 @@ ACE.iter(x, y, weights, data = NULL, con_crit = 0.001,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{a data frame}
+  \item{fun}{the function \code{mcor} or \code{cor_M}}
   \item{digits}{how many digit to show in the correlation table}
   \item{plot}{whether to plot the results}
   \item{diag.off}{whether to show the diagonal entries}
