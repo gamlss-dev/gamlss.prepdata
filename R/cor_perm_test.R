@@ -122,7 +122,7 @@ print.permutationTest <- function (x, digits = max(3, getOption("digits") - 3), 
   fname <- x$fname
   cat("Permutaion test between", yname, "and", xname, "\n")
   cat("Null hypothesis", fname, "is zero","\n")
-  cat("Probability of ASL:", format(signif(x$ASL)), "\n")
+  cat("P-value:", format(signif(x$ASL)), "\n")
 }
 ################################################################################
 ################################################################################
