@@ -417,8 +417,9 @@ y_factor <- function(x, how = c("lower", "higher"))
 {
   how <- match.arg(how)  
   if   (!is.factor(x)) stop("x is not a factor")
+  if   (is.ordered(x)) stop("the factor is ordered"); 
   f <- if (how=="lower")  stats::relevel(x,ref=levels(x)[which.min(table(x))])
-       else  relevel(x,ref=levels(x)[which.max(table(x))])
+       else  stats::relevel(x,ref=levels(x)[which.max(table(x))])
   f
 }
 ################################################################################
