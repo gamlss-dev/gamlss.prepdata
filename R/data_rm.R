@@ -108,11 +108,7 @@ if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array"))
     stop("the data is an array the function needs a data.frame")
-#         Y <-  deparse(substitute(response))
-#if (any(!(Y %in%names(data)))) stop("the response should be in data")
      Names <- names(data)
-     #  pos <- match(Y, Names)
-     # daTa <- data[,-pos] # data without response
 class_Vars <-  sapply(data,function(x) class(x)[1])
       data <- data[,(class_Vars=="numeric")|(class_Vars=="integer")]
       # only numeric
