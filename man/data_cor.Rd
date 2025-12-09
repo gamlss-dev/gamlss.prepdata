@@ -100,7 +100,7 @@ data_cor(rent99)
 Pearson.cor <-  data_cor(rent99, plot=FALSE)
 
 data_pcor(rent99)
-partial.cor  <-  data_cor(rent99, plot=FALSE) 
+partial.cor  <-  data_pcor(rent99, plot=FALSE) 
 
 
 high_val(partial.cor, val=0.5)
