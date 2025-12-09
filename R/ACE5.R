@@ -4,15 +4,14 @@
 ################################################################################
 # maximal correlation coefficient
 # functions 
-# i)   ACE3
-# ii)  ACE
-# iii) print.ACE                      
-# iv)  plot.ACE
-# v)   mcor
-# vi)  data_mcor:   m-correlations for data using foreach 
-# vii) data_mcor_old:   m-correlations for data old
-################################################################################
-################################################################################
+# i)    ACE.iter
+# ii)   ACE
+# iii)  print.ACE                      
+# iv)   plot.ACE
+# v)    mcor  : maximul correlation function using ACE
+# vi)   cor_M : maximul correlation function using ace of package `acepack`
+# vii)  data_mcor:   maximal-correlations for data using foreach 
+# viii)  data_mcor_old:   m-correlations for data old
 ################################################################################
 ################################################################################
 ################################################################################
@@ -37,46 +36,40 @@ if (missing(y)|missing(x)) stop("one of two variables is missing")
             else deparse(substitute(y))
  if (!is.null(data))
  {
-   y <- data[,yname]
-   x <- data[,xname]
-   w <- if (!missing(weights)) data[,wname]
+      y <- data[,yname]
+      x <- data[,xname]
+      w <- if (!missing(weights)) data[,wname]
  }   
 if (missing(weights))  w <- rep(1, length(x))
 # standardise
-        sy <- (y-mean(y))/sd(y)# robustify
-        sx <- (x-mean(x))/sd(x)
-  #     wh <- c(which(abs(sy)>robust), which(abs(sx)>robust))
-  #     lwh <- length(wh)
-  #       y <- if(lwh>1) y[-wh] else y
-  #       x <- if(lwh>1) x[-wh] else x
-         y <- y-mean(y)
-         x <- x-mean(x)
-   #      w <- if(lwh>1) w[-wh] else w
-        r1 <- 1
-        r0 <- ro <- cor(y,x)
-if (any(r0>0.99)){ 
+     y <- (y-mean(y))/sd(y)# robustify
+     x <- (x-mean(x))/sd(x)
+    r1 <- 1
+    r0 <- ro <- cor(y,x)
+if (any(r0>0.99))
+  { 
        out <- list(y=y, x=x, ty=NULL, tx=NULL, rsq=r0^2, cor=r0, dist=0) 
-class(out) <- "PB_ACE"
+  class(out) <- "ACE"
 invisible(out)
     stop("ACE failed: very high linear correlation in the original variables")
   }
-e2 <- sum((y-x)^2)        
-       di <- e2
-       #di <- r1-r0
+ e2 <- sum((y-x)^2)        
+        di <- e2
+#       di <- r1-r0
 theta_1_y <- y/sqrt(sum(y^2))
 switch(fit.method,
-       "P-splines"={
+  "P-splines"={
          while (abs(di)>con_crit)
          {
 # regress theta(y) against x     
-          ma <- fit_PB(x,theta_1_y, weights=w, plot=TRUE, nseg=nseg, max.df = 6, ...)
-          Sys.sleep(1)
+          ma <- fit_PB(x,theta_1_y, weights=w, 
+                       plot=TRUE, nseg=nseg, max.df = 6, ...)
+       #   Sys.sleep(1)
        #   cat(ma$df, "\n")
       phi_1_x <- as.vector(ma$fv)
         phi_x <- phi_1_x/sqrt(sum(phi_1_x^2))
 # regress phi(x) against Y  
            mb <-  fit_PB(y,phi_x,weights=w, plot=TRUE,  nseg=nseg,  max.df = 6, ...) 
-           Sys.sleep(1)
          #  cat(mb$df, "\n")
     theta_1_y <- as.vector(mb$fv)     
       theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
@@ -110,26 +103,10 @@ switch(fit.method,
        out <- list(y = y, x = x, 
                    ty=theta_y, tx=phi_x, rsq=r1^2, cor=r1, 
                    r=ro, diff=r1-ro, fit.method = fit.method) 
-    names(out) <- c(yname, xname, tyname, txname, "rsq", "cor", "r", "diff", "method")   
+    names(out) <- c(yname, xname, tyname, txname, "rsq", "mcor", "r", "diff", "method")   
 class(out) <- "ACE" 
- invisible(out)
+ return(out)
  }
-################################################################################
-################################################################################
- weighted_mean <- function(x, w) 
- {
-   w <- w / sum(w)           # normalize weights
-   mu <- sum(w * x)          # weighted mean
-   mu
- } 
-################################################################################
-################################################################################ 
-  weighted_sd <- function(x, w) 
-   {
-        w <- w / sum(w)           # normalize weights
-       mu <- sum(w * x)          # weighted mean
-       sqrt(sum(w * (x - mu)^2)) # weighted standard deviation
-  } 
 ################################################################################
 ################################################################################
 ################################################################################
@@ -139,7 +116,7 @@ class(out) <- "ACE"
 # it works only for one x and one y
 ACE <- function(x, y, weights, 
                   data = NULL, 
-              con_crit = 0.001, 
+              con_crit = 0.01, 
             fit.method = c("loess", "P-splines"),
                   nseg = 10,
                 max.df = 6,
@@ -150,13 +127,13 @@ if (missing(y)|missing(x)) stop("one of two variables is missing")
       xname <- deparse(substitute(x))
       yname <- deparse(substitute(y)) 
       wname <- if (missing(weights)) "w"
-               else deparse(substitute(y))
+               else deparse(substitute(weights))
 if (!is.null(data))
    {
          y <- data[,yname]
          x <- data[,xname]
-        
-   }   
+   } 
+# take the mean
 if (missing(weights))
   {
          w <- rep(1, length(x))
@@ -169,27 +146,35 @@ if (missing(weights))
         x <- (y-weighted_mean(x,w)) #/weighted_sd(x, w)# robustify
  }
        r1 <- 1
-       r0 <- ro <- cor(y,x)
+       r0 <- cor(y,x)
 if (any(abs(r0>0.99))){ 
-   out <- list(y=y, x=x, ty=NULL, tx=NULL, rsq=r0^2, cor=r0, dist=0) 
-     class(out) <- "ACE"
+      out <- list(y=y, x=x, ty=NULL, tx=NULL, rsq=r0^2, cor=r0, dist=0) 
      stop("ACE failed: very high linear correlation in the original variables")
    }
-     e2 <- sum((y-x)^2)        
-     di <- e2
+       e2 <- sum((y-x)^2)        
+       di <- e2
 theta_1_y <- y/sqrt(sum(y^2))
 switch(fit.method,
     "P-splines"={
             while (abs(di)>con_crit)
             {
-              # regress theta(y) against x     
-       ma <- fit_PB(x, theta_1_y, weights = w, plot = FALSE, 
-                                     nseg=nseg,  max.df = 6, ...)
+## regress theta(y) against x    
+              
+              # phi_1_x <- as.vector(fitPB(x,theta_1_y, plot=F, nseg=nseg)$fv)
+              # phi_x <- phi_1_x/sqrt(sum(phi_1_x^2))
+              # theta_1_y <- as.vector(fitPB(y,phi_x, plot=F, nseg=nseg)$fv)
+              # theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
+              # r1 <- cor(theta_y, phi_x)
+              # di <- r1-r0
+              # #       cat(di, "\n")
+              # r0 <- r1          
+        ma <- fit_PB(x, theta_1_y, weights = w, 
+                      plot = FALSE, nseg=nseg,  max.df = 6, ...)
    phi_1_x <- as.vector(ma$fv)
      phi_x <- phi_1_x/sqrt(sum(phi_1_x^2))
-              # regress phi(x) against Y  
-        mb <- fit_PB(y, phi_x, weights = w, plot = FALSE, 
-                                     nseg=nseg,  max.df = 6, ...) 
+## regress phi(x) against Y  
+        mb <- fit_PB(y, phi_x, weights = w, 
+                      plot = FALSE, nseg=nseg,  max.df = 6, ...) 
  theta_1_y <- as.vector(mb$fv)     
    theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
         r1 <- cor(theta_y, phi_x)
@@ -199,24 +184,24 @@ switch(fit.method,
             } 
           },
     "loess"= {
-            phi_1_x <- fitted(loess(theta_1_y~x, weights=w, ...))            
-              phi_x <- phi_1_x#/sqrt(sum(phi_1_x^2))
-          theta_1_y <- fitted(loess(phi_x~y, weights=w, ...)) 
-            theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
-                 r1 <- cor(theta_y, phi_x)
-                e21 <- sum((theta_y-phi_x)^2) 
-                 di <- abs(e21-e2)
-                 e2 <- e21          
+   phi_1_x <- fitted(loess(theta_1_y~x, weights=w, ...))            
+     phi_x <- phi_1_x#/sqrt(sum(phi_1_x^2))
+ theta_1_y <- fitted(loess(phi_x~y, weights=w, ...)) 
+   theta_y <- theta_1_y/sqrt(sum(theta_1_y^2))
+        r1 <- cor(theta_y, phi_x)
+       e21 <- sum((theta_y-phi_x)^2) 
+        di <- abs(e21-e2)
+        e2 <- e21          
           }
    )
-   tyname <- paste0("t(", yname,")")
-   txname <- paste0("t(", xname,")")
-      out <- list(y = y, x = x, 
-                   ty=theta_y, tx=phi_x, rsq=r1^2, cor=r1, 
-                   r=ro, diff=r1-ro,fit.method =fit.method) 
-names(out) <- c(yname, xname, tyname, txname, "rsq", "cor", "r", "diff", "method")   
+    tyname <- paste0("t_", yname)
+    txname <- paste0("t_", xname)
+       out <- list(y = y, x = x, 
+                   ty=theta_y, tx=phi_x, rsq=r1^2, cor=abs(r1), 
+                    r=r0, diff=r1-r0, fit.method = fit.method) 
+names(out) <- c(yname, xname, tyname, txname, "mrsq", "mcor", "r", "diff", "method")   
 class(out) <- "ACE" 
-invisible(out)
+return(out)
  }
 ################################################################################
 ################################################################################
@@ -227,9 +212,9 @@ print.ACE <- function (x, digits = max(3, getOption("digits") - 3), ...)
  {   
     yname <- names(x)[1]
     xname <- names(x)[2]
-  fit.method <-  x$fit.method
-   cat("P-spline ACE fit of", yname, "against", xname, "using", fit.method, "\n")
-   cat("Estimated maximal correlation:", format(signif(x$cor)), "\n")
+  fit.method <-  x$method
+   cat( fit.method, "ACE fit of", yname, "against", xname, "\n")
+   cat("maximal correlation:", format(signif(x$mcor)), "\n")
  }
 ################################################################################
 ################################################################################
@@ -304,9 +289,147 @@ mcor <- function(x,y, data = NULL,
     y <- data[,yname]
     x <- data[,xname]
   }     
-cor <- ACE(x, y, fit.method = fit.method, nseg = nseg, ...)$cor 
+cor <- ACE(x, y, fit.method = fit.method, nseg = nseg, ...)$mcor 
 cor
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+cor_M <- function(x,y, data=NULL, ...)
+{
+#  require(acepack)
+  xname <- deparse(substitute(x))
+  yname <- deparse(substitute(y)) 
+  if (!is.null(data))
+  {
+    y <- data[,yname]
+    x <- data[,xname]
+  }     
+  OBS <- acepack::ace(x,y, ...)
+  cor <- sqrt(OBS$rsq) 
+  cor
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### Pearson's r
+cor_r <- function(x, y, na.rm=FALSE){
+  if(isTRUE(na.rm)){
+    cor(x, y, method = "pearson", use="na.or.complete")
+  }else{
+    cor(x, y, method = "pearson")
+  }
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### Spearman's rho
+cor_rho <- function(x, y, na.rm=NULL){
+  if(isTRUE(na.rm)){
+    cor(x, y, method = "spearman", use="na.or.complete")
+  }else{
+    cor(x, y, method = "spearman")
+  }
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### kendall's tau
+cor_tau <- function(x, y, na.rm=NULL){
+  if(isTRUE(na.rm)){
+    cor(x, y, method = "kendall", use="na.or.complete")
+  }else{
+    cor(x, y, method = "kendall")
+  }
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### Predictive power score (using decision tree) 
+### (nl_cor_ppsr - original function from nlcor package)
+# cor_pps <- function(x,y)
+# {
+#  # require(ppsr)  
+#   r1 <- score(data.frame(y,x), "x", "y")$pps
+#   r2 <- score(data.frame(y,x), "y", "x")$pps
+#   return(cor=max(r1,r2))
+# }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### dynamic partition (using segmented regression)
+# cor_dp <- function(x,y, plot=FALSE)
+# {
+# #  require(nlcor) 
+#   r1 <- nlcor(x,y, plt = plot)$cor.estimate
+#   r2 <- nlcor(y,x, plt = plot)$cor.estimate
+#   return(cor=max(r1,r2))
+# }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### P-splines
+# cor_pb <- function(x,y, plot=FALSE)
+# {
+#    df <- data.frame(x,y)
+#   # require(gamlss.dist) #for the dNo function in fitPB
+#   #source("/home/alisson/Documentos/Nonlinear correlation/fitPB.R")
+#    m1 <- fit_PB(x,y, data=df, plot=FALSE)
+#    m2 <- fit_PB(y,x, data=df, plot=FALSE)
+#    r1 <- cor(fitted(m1), y)
+#    r2 <- cor(fitted(m2), x)
+#   cor <- max(r1,r2)
+#   return(cor)
+# }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### Frobenius F norm (concurvity) - Simon Wood method
+# cor_F <- function(x, y){
+#   df = data.frame(cbind(y,x))
+#   #source("G:\\Meu Drive\\Pós-graduação - UFPE\\Tese\\(Article 1) Nonlinear Correlation\\scripts-IWSM-2022\\scripts-IWSM-2022\\concurvity_new.R")
+#   out <- get_concurvity(df, full=F, inter=15)$worst[2,3]
+#   return(out)
+# }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### cananical correlation
+# cor_cc <- function(x, y){
+#   #source("G:\\Meu Drive\\Pós-graduação - UFPE\\Tese\\(Article 1) Nonlinear Correlation\\scripts-IWSM-2022\\scripts-IWSM-2022\\cca-function.R")
+#   corr=xy_cc_1(y,x)
+#   return(corr)
+#}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### MIC
+# cor_mic <- function(x, y){
+#   mine(y,x)$MIC 
+# }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### Distance correlation
+# cor_dC <- function(x, y){
+#   energy::dcor(y,x)# minerva::
+# }
+# 
+# ### Canova
+# cor_canova <- function(x, y, k=2){
+#   canova(y, x)
+# }
 ################################################################################
 ################################################################################
 ################################################################################
@@ -316,7 +439,8 @@ cor
 # it check whether they are factor and only show the
 # correlation for continuous variables
 # This version uses foreach
-data_mcor <- function(data,   
+data_mcor <- function( data,  
+                     fun = cor_M,   
                   digits = 3,
                     plot = TRUE,
                 diag.off = TRUE,
@@ -337,11 +461,9 @@ data_mcor <- function(data,
              circle.size = 20,
                       ...) # c(1,15) maybe will do
 {
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-  # local function 
+################################################################################
+################################################################################
+# local function 
 meltit <- function(mat)
   {
      rna <- rownames(mat)
@@ -352,8 +474,8 @@ meltit <- function(mat)
      daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
     daf
   }
-#################################################################### 
-####################################################################    
+################################################################################ 
+################################################################################    
 # data.frame missing 
  i <- j <- NULL
 if (missing(data) || NROW(data) <= 1) 
@@ -398,7 +520,7 @@ if (Dim[2]==1) stop("only one variable is left after taking out the factors")
             foreach(j=1:lcnames, .combine='c') %do% 
               {
               xj <- if(is.null(dim(daTa[,j]))) daTa[,j] else daTa[,j][,1] 
-              if (i<j) CC[i,j]  <- mcor(xi, xj, ...)
+              if (i<j) CC[i,j]  <- fun(xi, xj, ...)
                else CC[i,j] <- 0
               }
          }
@@ -460,9 +582,6 @@ if (class(ggtheme)[[1]] == "function") {
   }
   p
 }          
-################################################################################
-################################################################################
-################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
@@ -619,7 +738,28 @@ if (lab) {
                      label = label, color = lab_col, size = lab_size)
     }
     p
-  }
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+weighted_mean <- function(x, w) 
+{
+  w <- w / sum(w)           # normalize weights
+  mu <- sum(w * x)          # weighted mean
+  return(mu)
+} 
+################################################################################
+################################################################################ 
+################################################################################ 
+################################################################################ 
+weighted_sd <- function(x, w) 
+{
+  w <- w / sum(w)           # normalize weights
+  mu <- sum(w * x)          # weighted mean
+  sd <- sqrt(sum(w * (x - mu)^2)) # weighted standard deviation
+  return(sd)
+} 
 ################################################################################
 ################################################################################
 ################################################################################

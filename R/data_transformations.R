@@ -3,21 +3,15 @@
 # functions to check the data
 ################################################################################
 ################################################################################
-# rm(list=ls())
-# # checking for missing values
-# function available
 ################################################################################
-#  NOT THIS ONE 1) data_check       : will be fixed in the end
 ################################################################################   :
 #  1) xy_Ptrans  :  takes x and y and find power best lambda in power 
 #                 transformation
-#  2) data_Ptrans_plot; 
+#  2) data_Ptrans_plot; Plot for 
 #  3) data_Ptrans : it uses xy_Ptrans to fu=nd the best power transormation for 
 #                   all continuous variables
-#  4) y_factor; a factor to changed its reference level  
-#  5) data_factor: all factors in data  changed reference level
-#  6) time_dt2dh: take date-hours and create data and hours variables  
-#  6) time_hour2num: takes time  and create a numeric 
+#  4) time_dt2dh: take date-hours and create data and hours variables  
+#  5) time_hour2num: takes time  and create a numeric 
 #. 
 ################################################################################
 ################################################################################
