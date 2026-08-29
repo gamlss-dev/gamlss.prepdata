@@ -15,9 +15,9 @@ Those  functions idententify outliers in variables in the data.
 
 The function \code{data_outliers()} takes a \code{data.frame} and applies the  \code{y_outliers()} function on all its continuous variables. 
 
-The function \code{y_outliers()} takes one continuous variable and identify which observations could be classified as outliers.  It does this for both z-scores (fitting a distribution and then taking the residuals) or quantile measures  for example K times \code{MAD}) way from the median.
+The function \code{y_outliers()} takes a continuous (numeric) variable, power transform it (if it takes only positive values). Finally either calculates the z-scores (after fitting a `SHASHo` distribution) and identify observations with values of z-score higher that the option \code{value} (default 3) or used the \eqn{\mathrm{IQR}} method which identify points \eqn{\text{value} \times \mathrm{IQR}} way from the median. The option is \code{"zscores"} or \code{"quantile"}", respectively.
 
-Te function \code{y_outliers_both()} takes one continuous variable and identify outliers using both the z-scores and the quantile method. It prints or the \code{union} or the \code{intersect} of the two resuls. 
+Te function \code{y_outliers_both()} takes one continuous variable and identify outliers using both the \code{"zscores"} and the \code{"quantile"} method. It prints or the \code{union} or the \code{intersect} of the two resulting observions indeces. 
 
 The function \code{y_outliers_by()} takes one continuous variable and a factor and indentify outliers within each level of the factor. 
 
